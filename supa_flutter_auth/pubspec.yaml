@@ -10,7 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  supabase_flutter: ^0.3.3
+  email_validator: ^2.0.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
