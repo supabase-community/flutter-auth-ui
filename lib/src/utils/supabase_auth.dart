@@ -1,7 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+SupabaseClient supaClient = Supabase.instance.client;
+
 class SupabaseAuth {
-  final supaClient = Supabase.instance.client;
+
+  initSupabase(String url, String anonKey) {
+    Supabase.initialize(
+      url: url,
+      anonKey: anonKey,
+    );
+  }
 
   // email-password sign up
   Future<GotrueSessionResponse> createNewEmailUser(
@@ -26,7 +34,7 @@ class SupabaseAuth {
   Future<GotrueSessionResponse> createNewPhoneUser(
       String phone, String password) async {
     final res = await supaClient.auth.signUpWithPhone(phone, password);
-    
+
     return res;
   }
 
@@ -62,12 +70,11 @@ class SupabaseAuth {
   }
 
   // social login with Google
-  Future<bool> signInWithGoogle(String? redirectUrl) async {
-    final res = await supaClient.auth.signInWithProvider(Provider.google,
-        options:
-            AuthOptions(redirectTo: redirectUrl));
+  Future<bool> signInWithGoogle() async {
+     return await supaClient.auth.signInWithProvider(Provider.google);
+        // options: AuthOptions(redirectTo: redirectUrl));
 
-    return res;
+    // return res;
   }
 
   // sign out active user
@@ -106,5 +113,4 @@ class SupabaseAuth {
 
     return user;
   }
-
 }
