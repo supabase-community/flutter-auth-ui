@@ -85,8 +85,8 @@ class SupabaseAuth {
   }
 
   // sends user a reset password email, redirectTo - screen user comes back to
-  Future<GotrueJsonResponse> resetExistingUserPassword(
-      String email, String? redirectUrl) async {
+  Future<GotrueJsonResponse> sendResetPasswordEmail(
+      String email, [String? redirectUrl]) async {
     final res = await supaClient.auth.api.resetPasswordForEmail(
       email,
       options: AuthOptions(
