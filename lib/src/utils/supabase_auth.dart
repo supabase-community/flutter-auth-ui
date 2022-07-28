@@ -90,22 +90,23 @@ class SupabaseAuth {
     final res = await supaClient.auth.api.resetPasswordForEmail(
       email,
       options: AuthOptions(
-        redirectTo: redirectUrl,
+        redirectTo: redirectUrl ?? '',
       ),
     );
 
     return res;
   }
 
-  // Future<GotrueUserResponse> updateUserPassword(
-  //     String accessToken, String password) async {
-  //   final res = await supaClient.auth.api.updateUser(
-  //     accessToken,
-  //     UserAttributes(password: password),
-  //   );
+  // update user password
+  Future<GotrueUserResponse> updateUserPassword(
+      String accessToken, String password) async {
+    final res = await supaClient.auth.api.updateUser(
+      accessToken,
+      UserAttributes(password: password),
+    );
 
-  //   return res;
-  // }
+    return res;
+  }
 
   // get active user
   User? getActiveUser() {
