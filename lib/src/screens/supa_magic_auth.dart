@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supa_flutter_auth/supa_flutter_auth.dart';
 
-enum AuthAction { sendMagicLink }
+enum MagicLink { sendMagicLink }
 
 class SupaMagicAuth extends StatefulWidget {
   final AuthAction authAction;
