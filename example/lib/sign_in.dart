@@ -19,23 +19,47 @@ class SignIn extends StatelessWidget {
               redirectUrl: '/home',
             ),
             TextButton(
-                    child: const Text(
-                      'Forgot Password? Click here',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      // Navigator.pushNamed(context, '/forgot-password');
-                    },
-                  ),
-                  TextButton(
-                    child: const Text(
-                      'Don\'t have an account? Sign Up',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/');
-                    },
-                  ),
+              child: const Text(
+                'Forgot Password? Click here',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                // Navigator.pushNamed(context, '/forgot-password');
+              },
+            ),
+            TextButton(
+              child: const Text(
+                'Don\'t have an account? Sign Up',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/');
+              },
+            ),
+            const Divider(),
+            const Text(
+              'Or',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: ElevatedButton(
+                child: const Text(
+                  'Sign In with Magic Link',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/magic_link');
+                },
+              ),
+            ),
           ],
         ),
       ),

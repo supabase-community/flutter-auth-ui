@@ -5,6 +5,7 @@ import 'package:supa_flutter_auth/supa_flutter_auth.dart';
 import './home.dart';
 import './sign_up.dart';
 import './sign_in.dart';
+import './magic_link.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,24 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SignUp(),
         '/sign_in': (context) => const SignIn(),
+        '/magic_link': (context) => const MagicLink(),
         '/home': (context) => Home(),
+      },
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (BuildContext context) => const Scaffold(
+            body: Center(
+              child: Text(
+                'Not Found',
+                style: TextStyle(
+                  fontSize: 42,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

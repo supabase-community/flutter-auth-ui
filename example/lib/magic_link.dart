@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supa_flutter_auth/supa_flutter_auth.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({Key? key}) : super(key: key);
+class MagicLink extends StatelessWidget {
+  const MagicLink({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +14,7 @@ class SignUp extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaEmailAuth(
-              authAction: AuthAction.signUp,
-              redirectUrl: '/home',
-            ),
+            const SupaMagicAuth(),
             TextButton(
               child: const Text(
                 'Already have an account? Sign In',
@@ -26,30 +23,6 @@ class SignUp extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/sign_in');
               },
-            ),
-            const Divider(),
-            const Text(
-              'Or',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                child: const Text(
-                  'Sign Up with Magic Link',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/magic_link');
-                },
-              ),
             ),
             TextButton(
               child: const Text(
