@@ -21,7 +21,7 @@ class SupabaseAuth {
 
   // email-password sign in
   Future<GotrueSessionResponse> signInExistingUser(
-      String email, String? password) async {
+      String email, String password) async {
     final res = await supaClient.auth.signIn(
       email: email,
       password: password,
@@ -40,7 +40,7 @@ class SupabaseAuth {
 
   // verify phone user OTP
   Future<GotrueSessionResponse> verifyPhoneUser(
-      String phone, String token, String? redirectUrl) async {
+      String phone, String token, [String? redirectUrl]) async {
     final res = await supaClient.auth.verifyOTP(
       phone,
       token,
@@ -70,11 +70,9 @@ class SupabaseAuth {
   }
 
   // social login with Google
-  Future<bool> signInWithGoogle() async {
-     return await supaClient.auth.signInWithProvider(Provider.google);
-        // options: AuthOptions(redirectTo: redirectUrl));
-
-    // return res;
+  Future<bool> signInWithGoogle([String? redirectUrl]) async {
+     return await supaClient.auth.signInWithProvider(Provider.google, 
+        options: AuthOptions(redirectTo: redirectUrl ?? ''));
   }
 
   // sign out active user
