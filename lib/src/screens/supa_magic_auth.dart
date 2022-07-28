@@ -2,13 +2,10 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supa_flutter_auth/supa_flutter_auth.dart';
 
-enum MagicLink { sendMagicLink }
-
 class SupaMagicAuth extends StatefulWidget {
-  final AuthAction authAction;
   final String? redirectUrl;
 
-  const SupaMagicAuth({Key? key, required this.authAction, this.redirectUrl})
+  const SupaMagicAuth({Key? key, this.redirectUrl})
       : super(key: key);
 
   @override
