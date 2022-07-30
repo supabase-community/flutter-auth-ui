@@ -51,13 +51,20 @@ class SignUp extends StatelessWidget {
                 },
               ),
             ),
+            const SizedBox(
+              height: 12,
+            ),
+            const SupaSocialsAuth(
+              socialProviders: [SocialProviders.google, SocialProviders.github],
+              colored: false,
+            ),
             TextButton(
               child: const Text(
                 'Test Google sign in',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () async {
-                await SupabaseAuth().signInWithGoogle();
+                // await SupabaseAuthUi().socialSignIn();
               },
             ),
           ],
