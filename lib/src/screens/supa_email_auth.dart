@@ -20,7 +20,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {

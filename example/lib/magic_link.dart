@@ -30,7 +30,7 @@ class MagicLink extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () async {
-                await SupabaseAuth().signInWithGoogle();
+                // await SupabaseAuthUi().signInWithGoogle();
               },
             ),
           ],
