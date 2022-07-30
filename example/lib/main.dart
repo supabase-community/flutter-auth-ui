@@ -6,6 +6,8 @@ import './home.dart';
 import './sign_up.dart';
 import './sign_in.dart';
 import './magic_link.dart';
+import './forgot_password.dart';
+import './update_password.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SignUp(),
         '/sign_in': (context) => const SignIn(),
         '/magic_link': (context) => const MagicLink(),
+        '/forgot_password': (context) => const ForgotPassword(),
+        '/update_password': (context) => const UpdatePassword(),
         '/home': (context) => Home(),
       },
       onUnknownRoute: (RouteSettings settings) {

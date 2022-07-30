@@ -24,7 +24,7 @@ class SignIn extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                // Navigator.pushNamed(context, '/forgot-password');
+                Navigator.pushNamed(context, '/forgot_password');
               },
             ),
             TextButton(
@@ -40,7 +40,7 @@ class SignIn extends StatelessWidget {
             const Text(
               'Or',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),

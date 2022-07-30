@@ -31,7 +31,7 @@ class SignUp extends StatelessWidget {
             const Text(
               'Or',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
