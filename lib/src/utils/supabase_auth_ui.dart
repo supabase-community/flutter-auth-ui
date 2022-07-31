@@ -70,8 +70,7 @@ class SupabaseAuthUi {
 
   // social login with Google
   Future<bool?> socialSignIn(String socialProvider, [String? redirectUrl]) async {
-    final getProvider = socialProvider.split('.')[1];
-    final provider = Provider.values.byName(getProvider); 
+    final provider = Provider.values.byName(socialProvider); 
     return await supaClient.auth.signInWithProvider(provider,
         options: AuthOptions(redirectTo: redirectUrl));
   }
