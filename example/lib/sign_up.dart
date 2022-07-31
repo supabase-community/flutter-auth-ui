@@ -55,8 +55,21 @@ class SignUp extends StatelessWidget {
               height: 12,
             ),
             const SupaSocialsAuth(
-              socialProviders: [SocialProviders.google, SocialProviders.github],
-              colored: false,
+              colored: true,
+              socialProviders: [
+                SocialProviders.apple,
+                SocialProviders.azure,
+                SocialProviders.bitbucket,
+                SocialProviders.discord,
+                SocialProviders.facebook,
+                SocialProviders.github,
+                SocialProviders.gitlab,
+                SocialProviders.google,
+                SocialProviders.slack,
+                SocialProviders.spotify,
+                SocialProviders.twitch,
+                SocialProviders.twitter,
+              ],
             ),
             TextButton(
               child: const Text(
