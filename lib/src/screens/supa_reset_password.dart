@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
@@ -17,7 +17,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {

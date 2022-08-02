@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
@@ -15,7 +15,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {

@@ -52,13 +52,33 @@ class SignUp extends StatelessWidget {
                 },
               ),
             ),
+            const SizedBox(
+              height: 12,
+            ),
+            const SupaSocialsAuth(
+              colored: true,
+              socialProviders: [
+                SocialProviders.apple,
+                SocialProviders.azure,
+                SocialProviders.bitbucket,
+                SocialProviders.discord,
+                SocialProviders.facebook,
+                SocialProviders.github,
+                SocialProviders.gitlab,
+                SocialProviders.google,
+                SocialProviders.slack,
+                SocialProviders.spotify,
+                SocialProviders.twitch,
+                SocialProviders.twitter,
+              ],
+            ),
             TextButton(
               child: const Text(
                 'Test Google sign in',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () async {
-                await SupabaseAuth().signInWithGoogle();
+                // await SupabaseAuthUi().socialSignIn();
               },
             ),
           ],

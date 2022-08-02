@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 enum AuthAction { signIn, signUp }
 
@@ -20,7 +20,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {

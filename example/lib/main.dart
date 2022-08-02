@@ -12,7 +12,7 @@ import './update_password.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await SupabaseAuth().initSupabase(
+  await SupabaseAuthUi().initSupabase(
     dotenv.env['SUPABASE_URL']!,
     dotenv.env['SUPABASE_ANON_KEY']!,
   );

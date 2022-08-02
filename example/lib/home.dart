@@ -4,7 +4,7 @@ import 'package:supabase_auth_ui/supa_flutter_auth.dart';
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
-  final user = SupabaseAuth().getActiveUser();
+  final user = SupabaseAuthUi().getActiveUser();
 
   void checkUser(context) {
     if (user == null) Navigator.popAndPushNamed(context, '/');
