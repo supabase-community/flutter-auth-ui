@@ -2,8 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 SupabaseClient supaClient = Supabase.instance.client;
 
-class SupabaseAuth {
-
+class SupabaseAuthUi {
   initSupabase(String url, String anonKey) {
     Supabase.initialize(
       url: url,
@@ -39,8 +38,8 @@ class SupabaseAuth {
   }
 
   // verify phone user OTP
-  Future<GotrueSessionResponse> verifyPhoneUser(
-      String phone, String token, [String? redirectUrl]) async {
+  Future<GotrueSessionResponse> verifyPhoneUser(String phone, String token,
+      [String? redirectUrl]) async {
     final res = await supaClient.auth.verifyOTP(
       phone,
       token,
@@ -70,9 +69,10 @@ class SupabaseAuth {
   }
 
   // social login with Google
-  Future<bool> signInWithGoogle([String? redirectUrl]) async {
-     return await supaClient.auth.signInWithProvider(Provider.google, 
-        options: AuthOptions(redirectTo: redirectUrl ?? ''));
+  Future<bool?> socialSignIn(String socialProvider, [String? redirectUrl]) async {
+    final provider = Provider.values.byName(socialProvider); 
+    return await supaClient.auth.signInWithProvider(provider,
+        options: AuthOptions(redirectTo: redirectUrl));
   }
 
   // sign out active user
@@ -83,8 +83,8 @@ class SupabaseAuth {
   }
 
   // sends user a reset password email, redirectTo - screen user comes back to
-  Future<GotrueJsonResponse> sendResetPasswordEmail(
-      String email, [String? redirectUrl]) async {
+  Future<GotrueJsonResponse> sendResetPasswordEmail(String email,
+      [String? redirectUrl]) async {
     final res = await supaClient.auth.api.resetPasswordForEmail(
       email,
       options: AuthOptions(

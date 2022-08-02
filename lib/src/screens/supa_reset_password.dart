@@ -17,7 +17,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {

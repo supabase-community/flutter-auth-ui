@@ -15,7 +15,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
 
-  SupabaseAuth supaAuth = SupabaseAuth();
+  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
