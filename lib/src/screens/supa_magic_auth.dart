@@ -1,12 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth.dart';
 
 class SupaMagicAuth extends StatefulWidget {
   final String? redirectUrl;
 
-  const SupaMagicAuth({Key? key, this.redirectUrl})
-      : super(key: key);
+  const SupaMagicAuth({Key? key, this.redirectUrl}) : super(key: key);
 
   @override
   _SupaMagicAuthState createState() => _SupaMagicAuthState();

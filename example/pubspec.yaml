@@ -30,7 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
-  supa_flutter_auth:
+  supabase_auth_ui:
     path: ../
 
 

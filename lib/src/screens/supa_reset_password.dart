@@ -1,12 +1,12 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
   final String? redirectUrl;
 
-  const SupaResetPassword({Key? key, required this.accessToken, this.redirectUrl})
+  const SupaResetPassword(
+      {Key? key, required this.accessToken, this.redirectUrl})
       : super(key: key);
 
   @override

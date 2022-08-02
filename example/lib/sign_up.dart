@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/supa_flutter_auth.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);

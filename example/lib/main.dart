@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/supa_flutter_auth.dart';
 
 import './home.dart';
 import './sign_up.dart';

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/supa_flutter_auth.dart';
 
 class Home extends StatelessWidget {
-   Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   final user = SupabaseAuth().getActiveUser();
 
   void checkUser(context) {
-    if(user == null) Navigator.popAndPushNamed(context, '/');
+    if (user == null) Navigator.popAndPushNamed(context, '/');
   }
 
   @override
@@ -17,9 +17,9 @@ class Home extends StatelessWidget {
      * maybe use provider?
      * or implement that with go_router redirection check
     */
-    Future.delayed(Duration.zero,(){
-        checkUser(context);
-  });
+    Future.delayed(Duration.zero, () {
+      checkUser(context);
+    });
     return const Scaffold(
       body: Center(
         child: Text(
@@ -29,4 +29,4 @@ class Home extends StatelessWidget {
       ),
     );
   }
-}       
+}
