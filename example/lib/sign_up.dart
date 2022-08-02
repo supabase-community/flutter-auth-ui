@@ -12,7 +12,7 @@ class SignUp extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
+        child: ListView(
           children: [
             const SupaEmailAuth(
               authAction: AuthAction.signUp,
