@@ -30,6 +30,7 @@ class SignUp extends StatelessWidget {
             const Divider(),
             const Text(
               'Or',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
