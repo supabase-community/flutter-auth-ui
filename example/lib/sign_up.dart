@@ -10,79 +10,77 @@ class SignUp extends StatelessWidget {
       appBar: AppBar(
         title: const Text('auth ui example'),
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(24.0),
-        child: ListView(
-          children: [
-            const SupaEmailAuth(
-              authAction: AuthAction.signUp,
-              redirectUrl: '/home',
+        children: [
+          const SupaEmailAuth(
+            authAction: AuthAction.signUp,
+            redirectUrl: '/home',
+          ),
+          TextButton(
+            child: const Text(
+              'Already have an account? Sign In',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/sign_in');
+            },
+          ),
+          const Divider(),
+          const Text(
+            'Or',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 40,
+            child: ElevatedButton(
               child: const Text(
-                'Already have an account? Sign In',
+                'Sign Up with Magic Link',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.pushNamed(context, '/magic_link');
               },
             ),
-            const Divider(),
-            const Text(
-              'Or',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          const SupaSocialsAuth(
+            colored: true,
+            socialProviders: [
+              SocialProviders.apple,
+              SocialProviders.azure,
+              SocialProviders.bitbucket,
+              SocialProviders.discord,
+              SocialProviders.facebook,
+              SocialProviders.github,
+              SocialProviders.gitlab,
+              SocialProviders.google,
+              SocialProviders.slack,
+              SocialProviders.spotify,
+              SocialProviders.twitch,
+              SocialProviders.twitter,
+            ],
+          ),
+          TextButton(
+            child: const Text(
+              'Test Google sign in',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                child: const Text(
-                  'Sign Up with Magic Link',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/magic_link');
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            const SupaSocialsAuth(
-              colored: true,
-              socialProviders: [
-                SocialProviders.apple,
-                SocialProviders.azure,
-                SocialProviders.bitbucket,
-                SocialProviders.discord,
-                SocialProviders.facebook,
-                SocialProviders.github,
-                SocialProviders.gitlab,
-                SocialProviders.google,
-                SocialProviders.slack,
-                SocialProviders.spotify,
-                SocialProviders.twitch,
-                SocialProviders.twitter,
-              ],
-            ),
-            TextButton(
-              child: const Text(
-                'Test Google sign in',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                // await SupabaseAuthUi().socialSignIn();
-              },
-            ),
-          ],
-        ),
+            onPressed: () async {
+              // await SupabaseAuthUi().socialSignIn();
+            },
+          ),
+        ],
       ),
     );
   }

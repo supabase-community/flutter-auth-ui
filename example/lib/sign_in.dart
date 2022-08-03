@@ -10,58 +10,56 @@ class SignIn extends StatelessWidget {
       appBar: AppBar(
         title: const Text('auth ui example'),
       ),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            const SupaEmailAuth(
-              authAction: AuthAction.signIn,
-              redirectUrl: '/home',
+        children: [
+          const SupaEmailAuth(
+            authAction: AuthAction.signIn,
+            redirectUrl: '/home',
+          ),
+          TextButton(
+            child: const Text(
+              'Forgot Password? Click here',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/forgot_password');
+            },
+          ),
+          TextButton(
+            child: const Text(
+              'Don\'t have an account? Sign Up',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/');
+            },
+          ),
+          const Divider(),
+          const Text(
+            'Or',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 40,
+            child: ElevatedButton(
               child: const Text(
-                'Forgot Password? Click here',
+                'Sign In with Magic Link',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/forgot_password');
+                Navigator.pushNamed(context, '/magic_link');
               },
             ),
-            TextButton(
-              child: const Text(
-                'Don\'t have an account? Sign Up',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
-              },
-            ),
-            const Divider(),
-            const Text(
-              'Or',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                child: const Text(
-                  'Sign In with Magic Link',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/magic_link');
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
