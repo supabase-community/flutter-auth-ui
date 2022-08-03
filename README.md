@@ -4,6 +4,10 @@ A simple library of predefined widgets to easily and quickly create a auth compo
 
 > :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v0.0.1. 
 
+[supabase/supabase/master/packages/common/assets/images/supabase-logo-wordmark--dark.svg]
+
+![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
+
 ## Email Auth
 
 Use a `SupaEmailAuth` widget to create an email and password signin/ signup form.
