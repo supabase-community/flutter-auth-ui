@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
@@ -10,7 +11,7 @@ class SupaResetPassword extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SupaResetPasswordState createState() => _SupaResetPasswordState();
+  State<SupaResetPassword> createState() => _SupaResetPasswordState();
 }
 
 class _SupaResetPasswordState extends State<SupaResetPassword> {
@@ -60,38 +61,53 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                final res = await supaAuth.updateUserPassword(
-                    widget.accessToken, _password.text);
-                if (res.error?.message != null) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(res.error!.message),
-                        contentTextStyle: const TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text('Success!'),
-                        contentTextStyle: TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
-                  if (!mounted) return;
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
-                }
-                _password.text = '';
+              if (!_formKey.currentState!.validate()) {
+                return;
               }
+              try {
+                await supaAuth.updateUserPassword(
+                    widget.accessToken, _password.text);
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      title: Text('Success!'),
+                      contentTextStyle: TextStyle(
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  },
+                );
+                if (!mounted) return;
+                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+              } on GotrueError catch (error) {
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(error.message),
+                      contentTextStyle: const TextStyle(
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  },
+                );
+              } catch (error) {
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const AlertDialog(
+                      title: Text('Unexpected error has occured'),
+                      contentTextStyle: TextStyle(
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  },
+                );
+              }
+              setState(() {
+                _password.text = '';
+              });
             },
           ),
           const SizedBox(

@@ -32,15 +32,14 @@ class SupaSocialsAuth extends StatefulWidget {
 }
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
-  var iconColor, icon;
   capitalizeName(String providerName) {
     return providerName[0].toUpperCase() + providerName.substring(1);
   }
-  
+
   getIcon(String providerName) {
     if (providerName == 'apple') return FontAwesomeIcons.apple;
     if (providerName == 'azure') return FontAwesomeIcons.microsoft;
-    if (providerName == 'bitbucket') return FontAwesomeIcons.bitbucket; 
+    if (providerName == 'bitbucket') return FontAwesomeIcons.bitbucket;
     if (providerName == 'discord') return FontAwesomeIcons.discord;
     if (providerName == 'facebook') return FontAwesomeIcons.facebook;
     if (providerName == 'github') return FontAwesomeIcons.github;
@@ -55,7 +54,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   getBtnBgColor(String providerName) {
     if (providerName == 'apple') return Colors.black;
     if (providerName == 'azure') return Colors.blueAccent;
-    if (providerName == 'bitbucket') return Colors.blue; 
+    if (providerName == 'bitbucket') return Colors.blue;
     if (providerName == 'discord') return Colors.purple;
     if (providerName == 'facebook') return Colors.blue;
     if (providerName == 'github') return Colors.black;
@@ -65,7 +64,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     if (providerName == 'spotify') return Colors.green;
     if (providerName == 'twitch') return Colors.purpleAccent;
     if (providerName == 'twitter') return Colors.lightBlue;
-
   }
 
   @override
@@ -73,17 +71,17 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final providers = widget.socialProviders;
     final coloredBg = widget.colored == true;
     final emptyList = providers.isEmpty;
-    return Expanded(
-      child: emptyList
-          ? ErrorWidget(Exception('Social provider list cannot be empty'))
-          : ListView.builder(
-              itemCount: providers.length,
-              itemBuilder: (context, index) => Container(
+    return emptyList
+        ? ErrorWidget(Exception('Social provider list cannot be empty'))
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(
+              providers.length,
+              (index) => Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: OutlinedButton.icon(
                   icon: Icon(
                     getIcon(providers[index].name),
-                    // icon,
                     color: coloredBg ? Colors.white : Colors.black,
                   ),
                   style: ButtonStyle(
@@ -92,8 +90,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     ),
                     padding:
                         MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(
-                        coloredBg ? getBtnBgColor(providers[index].name) : null),
+                    backgroundColor: MaterialStateProperty.all(coloredBg
+                        ? getBtnBgColor(providers[index].name)
+                        : null),
                   ),
                   onPressed: () {
                     SupabaseAuthUi().socialSignIn(providers[index].name);
@@ -108,6 +107,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                 ),
               ),
             ),
-    );
+          );
   }
 }
