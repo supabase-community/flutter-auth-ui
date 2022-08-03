@@ -32,15 +32,14 @@ class SupaSocialsAuth extends StatefulWidget {
 }
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
-  var iconColor, icon;
   capitalizeName(String providerName) {
     return providerName[0].toUpperCase() + providerName.substring(1);
   }
-  
+
   getIcon(String providerName) {
     if (providerName == 'apple') return FontAwesomeIcons.apple;
     if (providerName == 'azure') return FontAwesomeIcons.microsoft;
-    if (providerName == 'bitbucket') return FontAwesomeIcons.bitbucket; 
+    if (providerName == 'bitbucket') return FontAwesomeIcons.bitbucket;
     if (providerName == 'discord') return FontAwesomeIcons.discord;
     if (providerName == 'facebook') return FontAwesomeIcons.facebook;
     if (providerName == 'github') return FontAwesomeIcons.github;
@@ -55,7 +54,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   getBtnBgColor(String providerName) {
     if (providerName == 'apple') return Colors.black;
     if (providerName == 'azure') return Colors.blueAccent;
-    if (providerName == 'bitbucket') return Colors.blue; 
+    if (providerName == 'bitbucket') return Colors.blue;
     if (providerName == 'discord') return Colors.purple;
     if (providerName == 'facebook') return Colors.blue;
     if (providerName == 'github') return Colors.black;
@@ -65,7 +64,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     if (providerName == 'spotify') return Colors.green;
     if (providerName == 'twitch') return Colors.purpleAccent;
     if (providerName == 'twitter') return Colors.lightBlue;
-
   }
 
   @override
@@ -92,8 +90,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     ),
                     padding:
                         MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(
-                        coloredBg ? getBtnBgColor(providers[index].name) : null),
+                    backgroundColor: MaterialStateProperty.all(coloredBg
+                        ? getBtnBgColor(providers[index].name)
+                        : null),
                   ),
                   onPressed: () {
                     SupabaseAuthUi().socialSignIn(providers[index].name);
