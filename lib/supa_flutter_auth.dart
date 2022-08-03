@@ -1,4 +1,4 @@
-library supa_flutter_auth;
+library supabase_auth_ui;
 
 export 'src/utils/supabase_auth_ui.dart';
 export 'src/screens/supa_email_auth.dart';

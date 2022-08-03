@@ -1,12 +1,12 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
   final String? redirectUrl;
 
-  const SupaResetPassword({Key? key, required this.accessToken, this.redirectUrl})
+  const SupaResetPassword(
+      {Key? key, required this.accessToken, this.redirectUrl})
       : super(key: key);
 
   @override
@@ -36,6 +36,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
             validator: (value) {
@@ -45,8 +46,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               return null;
             },
             decoration: const InputDecoration(
-              icon: Icon(Icons.lock),
-              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.lock),
               hintText: 'Enter your password',
             ),
             controller: _password,
@@ -54,50 +54,45 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
           const SizedBox(
             height: 16,
           ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ElevatedButton(
-              child: const Text(
-                'Update Password',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final res = await supaAuth.updateUserPassword(
-                      widget.accessToken, _password.text);
-                  if (res.error?.message != null) {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(res.error!.message),
-                          contentTextStyle: const TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const AlertDialog(
-                          title: Text('Success!'),
-                          contentTextStyle: TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                    if (!mounted) return;
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '');
-                  }
-                  _password.text = '';
-                }
-              },
+          ElevatedButton(
+            child: const Text(
+              'Update Password',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                final res = await supaAuth.updateUserPassword(
+                    widget.accessToken, _password.text);
+                if (res.error?.message != null) {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(res.error!.message),
+                        contentTextStyle: const TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Success!'),
+                        contentTextStyle: TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                  if (!mounted) return;
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                }
+                _password.text = '';
+              }
+            },
           ),
           const SizedBox(
             height: 10,

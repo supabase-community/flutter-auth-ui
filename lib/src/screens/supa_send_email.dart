@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
@@ -34,6 +34,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
             validator: (value) {
@@ -54,51 +55,44 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
           const SizedBox(
             height: 16,
           ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ElevatedButton(
-              child: const Text(
-                'Send Reset Email',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  final res =
-                      await supaAuth.sendResetPasswordEmail(_email.text);
-                  if (res.error?.message != null) {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(res.error!.message),
-                          contentTextStyle: const TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                    _email.text = '';
-                  } else {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const AlertDialog(
-                          title: Text('Success!'),
-                          contentTextStyle: TextStyle(
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      },
-                    );
-                    if (!mounted) return;
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '');
-                  }
-                }
-                ;
-              },
+          ElevatedButton(
+            child: const Text(
+              'Send Reset Email',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                final res = await supaAuth.sendResetPasswordEmail(_email.text);
+                if (res.error?.message != null) {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(res.error!.message),
+                        contentTextStyle: const TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                  _email.text = '';
+                } else {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Success!'),
+                        contentTextStyle: TextStyle(
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                  );
+                  if (!mounted) return;
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                }
+              }
+            },
           ),
           const SizedBox(
             height: 10,

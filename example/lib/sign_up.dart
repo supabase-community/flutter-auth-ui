@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/supa_flutter_auth.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class SignUp extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
+        child: ListView(
           children: [
             const SupaEmailAuth(
               authAction: AuthAction.signUp,
@@ -30,6 +30,7 @@ class SignUp extends StatelessWidget {
             const Divider(),
             const Text(
               'Or',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

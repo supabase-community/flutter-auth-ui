@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:supa_flutter_auth/supa_flutter_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 
 enum AuthAction { signIn, signUp }
 
@@ -42,6 +42,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
             validator: (value) {
@@ -53,8 +54,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               return null;
             },
             decoration: const InputDecoration(
-              icon: Icon(Icons.email),
-              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email),
               hintText: 'Enter your email',
             ),
             controller: _email,
@@ -70,93 +70,87 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               return null;
             },
             decoration: const InputDecoration(
-              icon: Icon(Icons.lock),
-              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.lock),
               hintText: 'Enter your password',
             ),
+            obscureText: true,
             controller: _password,
           ),
           const SizedBox(
             height: 16,
           ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ElevatedButton(
-              child: Text(
-                signingIn ? 'Sign In' : 'Sign Up',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                if (_formKey.currentState!.validate() && signingIn) {
-                  final res = await supaAuth.signInExistingUser(
-                      _email.text, _password.text);
-                  if (res.error?.message != null) {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(res.error!.message),
-                          contentTextStyle: const TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                    _email.text = '';
-                    _password.text = '';
-                  } else {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const AlertDialog(
-                          title: Text('Success!'),
-                          contentTextStyle: TextStyle(
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      },
-                    );
-                    if (!mounted) return;
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '');
-                  }
-                } else {
-                  final res = await supaAuth.createNewEmailUser(
-                      _email.text, _password.text);
-                  if (res.error?.message != null) {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(res.error!.message),
-                          contentTextStyle: const TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const AlertDialog(
-                          title: Text('Success!'),
-                          contentTextStyle: TextStyle(
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      },
-                    );
-                    if (!mounted) return;
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '');
-                  }
+          ElevatedButton(
+            child: Text(
+              signingIn ? 'Sign In' : 'Sign Up',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () async {
+              if (_formKey.currentState!.validate() && signingIn) {
+                final res = await supaAuth.signInExistingUser(
+                    _email.text, _password.text);
+                if (res.error?.message != null) {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(res.error!.message),
+                        contentTextStyle: const TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
                   _email.text = '';
                   _password.text = '';
+                } else {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Success!'),
+                        contentTextStyle: TextStyle(
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    },
+                  );
+                  if (!mounted) return;
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
                 }
-              },
-            ),
+              } else {
+                final res = await supaAuth.createNewEmailUser(
+                    _email.text, _password.text);
+                if (res.error?.message != null) {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(res.error!.message),
+                        contentTextStyle: const TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return const AlertDialog(
+                        title: Text('Success!'),
+                        contentTextStyle: TextStyle(
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    },
+                  );
+                  if (!mounted) return;
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                }
+                _email.text = '';
+                _password.text = '';
+              }
+            },
           ),
           const SizedBox(
             height: 10,
