@@ -9,7 +9,7 @@ class SupaMagicAuth extends StatefulWidget {
   const SupaMagicAuth({Key? key, this.redirectUrl}) : super(key: key);
 
   @override
-  _SupaMagicAuthState createState() => _SupaMagicAuthState();
+  State<SupaMagicAuth> createState() => _SupaMagicAuthState();
 }
 
 class _SupaMagicAuthState extends State<SupaMagicAuth> {

@@ -9,7 +9,7 @@ class SupaSendEmail extends StatefulWidget {
   const SupaSendEmail({Key? key, this.redirectUrl}) : super(key: key);
 
   @override
-  _SupaSendEmailState createState() => _SupaSendEmailState();
+  State<SupaSendEmail> createState() => _SupaSendEmailState();
 }
 
 class _SupaSendEmailState extends State<SupaSendEmail> {

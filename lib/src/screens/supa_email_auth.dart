@@ -13,7 +13,7 @@ class SupaEmailAuth extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SupaEmailAuthState createState() => _SupaEmailAuthState();
+  State<SupaEmailAuth> createState() => _SupaEmailAuthState();
 }
 
 class _SupaEmailAuthState extends State<SupaEmailAuth> {

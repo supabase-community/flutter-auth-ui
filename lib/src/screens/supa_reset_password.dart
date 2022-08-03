@@ -11,7 +11,7 @@ class SupaResetPassword extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SupaResetPasswordState createState() => _SupaResetPasswordState();
+  State<SupaResetPassword> createState() => _SupaResetPasswordState();
 }
 
 class _SupaResetPasswordState extends State<SupaResetPassword> {
