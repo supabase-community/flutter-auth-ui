@@ -64,9 +64,10 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     minimumSize: MaterialStateProperty.all(
                       const Size(double.infinity, 0),
                     ),
-                    padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor:
-                        MaterialStateProperty.all(coloredBg ? providers[index].btnBgColor : null),
+                    padding:
+                        MaterialStateProperty.all(const EdgeInsets.all(15)),
+                    backgroundColor: MaterialStateProperty.all(
+                        coloredBg ? providers[index].btnBgColor : null),
                   ),
                   onPressed: () {
                     SupabaseAuthUi().socialSignIn(providers[index].name);
