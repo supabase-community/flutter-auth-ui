@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/supa_flutter_auth.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
