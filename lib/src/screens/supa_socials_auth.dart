@@ -3,18 +3,28 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utils/supabase_auth_ui.dart';
 
 enum SocialProviders {
-  apple,
-  azure,
-  bitbucket,
-  discord,
-  facebook,
-  github,
-  gitlab,
-  google,
-  slack,
-  spotify,
-  twitch,
-  twitter
+  apple(iconData: FontAwesomeIcons.apple, btnBgColor: Colors.black),
+  azure(iconData: FontAwesomeIcons.microsoft, btnBgColor: Colors.blueAccent),
+  bitbucket(iconData: FontAwesomeIcons.bitbucket, btnBgColor: Colors.blue),
+  discord(iconData: FontAwesomeIcons.discord, btnBgColor: Colors.purple),
+  facebook(iconData: FontAwesomeIcons.facebook, btnBgColor: Colors.blue),
+  github(iconData: FontAwesomeIcons.github, btnBgColor: Colors.black),
+  gitlab(iconData: FontAwesomeIcons.gitlab, btnBgColor: Colors.deepOrange),
+  google(iconData: FontAwesomeIcons.google, btnBgColor: Colors.red),
+  slack(iconData: FontAwesomeIcons.slack, btnBgColor: Colors.deepPurple),
+  spotify(iconData: FontAwesomeIcons.spotify, btnBgColor: Colors.green),
+  twitch(iconData: FontAwesomeIcons.twitch, btnBgColor: Colors.purpleAccent),
+  twitter(iconData: FontAwesomeIcons.twitter, btnBgColor: Colors.lightBlue);
+
+  const SocialProviders({
+    required this.iconData,
+    required this.btnBgColor,
+  });
+
+  final IconData iconData;
+  final Color btnBgColor;
+
+  String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
 
 class SupaSocialsAuth extends StatefulWidget {
@@ -32,40 +42,6 @@ class SupaSocialsAuth extends StatefulWidget {
 }
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
-  capitalizeName(String providerName) {
-    return providerName[0].toUpperCase() + providerName.substring(1);
-  }
-
-  getIcon(String providerName) {
-    if (providerName == 'apple') return FontAwesomeIcons.apple;
-    if (providerName == 'azure') return FontAwesomeIcons.microsoft;
-    if (providerName == 'bitbucket') return FontAwesomeIcons.bitbucket;
-    if (providerName == 'discord') return FontAwesomeIcons.discord;
-    if (providerName == 'facebook') return FontAwesomeIcons.facebook;
-    if (providerName == 'github') return FontAwesomeIcons.github;
-    if (providerName == 'gitlab') return FontAwesomeIcons.gitlab;
-    if (providerName == 'google') return FontAwesomeIcons.google;
-    if (providerName == 'slack') return FontAwesomeIcons.slack;
-    if (providerName == 'spotify') return FontAwesomeIcons.spotify;
-    if (providerName == 'twitch') return FontAwesomeIcons.twitch;
-    if (providerName == 'twitter') return FontAwesomeIcons.twitter;
-  }
-
-  getBtnBgColor(String providerName) {
-    if (providerName == 'apple') return Colors.black;
-    if (providerName == 'azure') return Colors.blueAccent;
-    if (providerName == 'bitbucket') return Colors.blue;
-    if (providerName == 'discord') return Colors.purple;
-    if (providerName == 'facebook') return Colors.blue;
-    if (providerName == 'github') return Colors.black;
-    if (providerName == 'gitlab') return Colors.deepOrange;
-    if (providerName == 'google') return Colors.red;
-    if (providerName == 'slack') return Colors.deepPurple;
-    if (providerName == 'spotify') return Colors.green;
-    if (providerName == 'twitch') return Colors.purpleAccent;
-    if (providerName == 'twitter') return Colors.lightBlue;
-  }
-
   @override
   Widget build(BuildContext context) {
     final providers = widget.socialProviders;
@@ -81,24 +57,22 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: OutlinedButton.icon(
                   icon: Icon(
-                    getIcon(providers[index].name),
+                    providers[index].iconData,
                     color: coloredBg ? Colors.white : Colors.black,
                   ),
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all(
                       const Size(double.infinity, 0),
                     ),
-                    padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(coloredBg
-                        ? getBtnBgColor(providers[index].name)
-                        : null),
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+                    backgroundColor:
+                        MaterialStateProperty.all(coloredBg ? providers[index].btnBgColor : null),
                   ),
                   onPressed: () {
                     SupabaseAuthUi().socialSignIn(providers[index].name);
                   },
                   label: Text(
-                    'Sign in with ${capitalizeName(providers[index].name)}',
+                    'Sign in with ${providers[index].capitalizedName}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: coloredBg ? Colors.white : Colors.black,
