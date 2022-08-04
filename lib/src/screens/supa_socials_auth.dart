@@ -98,7 +98,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     SupabaseAuthUi().socialSignIn(providers[index].name);
                   },
                   label: Text(
-                    'Sign In With ${capitalizeName(providers[index].name)}',
+                    'Sign in with ${capitalizeName(providers[index].name)}',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: coloredBg ? Colors.white : Colors.black,
