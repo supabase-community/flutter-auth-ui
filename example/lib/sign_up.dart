@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
+import 'constants.dart';
+
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('auth ui example'),
-      ),
+      appBar: appBar,
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
@@ -70,15 +70,6 @@ class SignUp extends StatelessWidget {
               SocialProviders.twitch,
               SocialProviders.twitter,
             ],
-          ),
-          TextButton(
-            child: const Text(
-              'Test Google sign in',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () async {
-              // await SupabaseAuthUi().socialSignIn();
-            },
           ),
         ],
       ),
