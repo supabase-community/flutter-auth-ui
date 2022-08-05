@@ -69,7 +69,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 if (!mounted) return;
                 Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
               } on GotrueError catch (error) {
-                await warningAlert(context, error.toString());
+                await warningAlert(context, error.message);
               } catch (error) {
                 await warningAlert(context, 'Unexpected error has occured');
               }
