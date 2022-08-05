@@ -77,10 +77,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     try {
                       await SupabaseAuthUi()
                           .socialSignIn(providers[index].name);
-                      await successAlert(context);
-                      if (!mounted) return;
-                      Navigator.popAndPushNamed(
-                          context, widget.redirectUrl ?? '/');
+                      // if (!mounted) return;
+                      // await Navigator.popAndPushNamed(
+                      //     context, widget.redirectUrl ?? '/');
                     } on GotrueError catch (error) {
                       await warningAlert(context, error.message);
                     } catch (error) {
