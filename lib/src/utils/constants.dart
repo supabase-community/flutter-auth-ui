@@ -17,6 +17,7 @@ successAlert(BuildContext context) {
               'OK',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.green
               ),
             ),
           ),
@@ -43,6 +44,7 @@ warningAlert(BuildContext context, String errMsg) {
               'OK',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                color: Colors.redAccent
               ),
             ),
           ),
