@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
@@ -52,9 +53,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
             ),
             controller: _password,
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          spacer(16),
           ElevatedButton(
             child: const Text(
               'Update Password',
@@ -67,52 +66,20 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               try {
                 await supaAuth.updateUserPassword(
                     widget.accessToken, _password.text);
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialog(
-                      title: Text('Success!'),
-                      contentTextStyle: TextStyle(
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
+                await successAlert(context);
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
               } on GotrueError catch (error) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(error.message),
-                      contentTextStyle: const TextStyle(
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
+                await warningAlert(context, error.toString());
               } catch (error) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialog(
-                      title: Text('Unexpected error has occured'),
-                      contentTextStyle: TextStyle(
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
+                await warningAlert(context, 'Unexpected error has occured');
               }
               setState(() {
                 _password.text = '';
               });
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          spacer(10),
         ],
       ),
     );
