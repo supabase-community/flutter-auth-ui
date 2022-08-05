@@ -21,7 +21,7 @@ class ForgotPassword extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                // Navigator.pushNamed(context, '/forgot-password');
+                Navigator.pushNamed(context, '/forgot_password');
               },
             ),
             TextButton(

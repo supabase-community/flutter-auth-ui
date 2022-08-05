@@ -24,7 +24,7 @@ class Home extends StatelessWidget {
                 Navigator.of(context).popUntil(ModalRoute.withName('/'));
               },
               child: const Text(
-                'LogOut',
+                'Log Out',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             )

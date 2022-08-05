@@ -27,33 +27,10 @@ class SignUp extends StatelessWidget {
             },
           ),
           const Divider(),
-          const Text(
-            'Or',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ElevatedButton(
-              child: const Text(
-                'Sign Up with Magic Link',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/magic_link');
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
+          optionText,
+          spacer,
+          magicSignInBtn(context),
+          spacer,
           const SupaSocialsAuth(
             colored: true,
             socialProviders: [

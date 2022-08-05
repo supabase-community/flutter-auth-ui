@@ -24,15 +24,6 @@ class MagicLink extends StatelessWidget {
                 Navigator.pushNamed(context, '/sign_in');
               },
             ),
-            TextButton(
-              child: const Text(
-                'Test Google sign in',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () async {
-                // await SupabaseAuthUi().signInWithGoogle();
-              },
-            ),
           ],
         ),
       ),
