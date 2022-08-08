@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-successAlert(BuildContext context) {
+Future<void> successAlert(BuildContext context) {
   return showDialog(
     context: context,
     builder: (BuildContext context) {
