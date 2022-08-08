@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-Future<void> successAlert(BuildContext context) {
-  return showDialog(
+successAlert(BuildContext context) {
+  showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -15,10 +15,8 @@ Future<void> successAlert(BuildContext context) {
             onPressed: () => Navigator.pop(context),
             child: const Text(
               'OK',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.green
-              ),
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
             ),
           ),
         ],
@@ -28,7 +26,7 @@ Future<void> successAlert(BuildContext context) {
 }
 
 warningAlert(BuildContext context, String errMsg) {
-  return showDialog(
+  showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -43,9 +41,7 @@ warningAlert(BuildContext context, String errMsg) {
             child: const Text(
               'OK',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.redAccent
-              ),
+                  fontWeight: FontWeight.bold, color: Colors.redAccent),
             ),
           ),
         ],
