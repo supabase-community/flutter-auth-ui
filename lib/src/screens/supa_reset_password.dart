@@ -66,7 +66,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               try {
                 await supaAuth.updateUserPassword(
                     widget.accessToken, _password.text);
-                await successAlert(context);
+                successAlert;
                 if (!mounted) return;
                 Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
               } on GotrueError catch (error) {

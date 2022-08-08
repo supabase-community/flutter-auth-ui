@@ -90,7 +90,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 try {
                   await supaAuth.signInExistingUser(
                       _email.text, _password.text);
-                  await successAlert(context);
+                  successAlert;
                   if (!mounted) return;
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 } on GotrueError catch (error) {
@@ -102,7 +102,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 try {
                   await supaAuth.createNewEmailUser(
                       _email.text, _password.text);
-                  await successAlert(context);
+                  successAlert;
                   if (!mounted) return;
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 } on GotrueError catch (error) {
