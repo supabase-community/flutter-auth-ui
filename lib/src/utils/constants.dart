@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-successAlert(BuildContext context) {
-  showDialog(
+Future<void> successAlert(BuildContext context) {
+  return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -25,8 +25,8 @@ successAlert(BuildContext context) {
   );
 }
 
-warningAlert(BuildContext context, String errMsg) {
-  showDialog(
+Future<void> warningAlert(BuildContext context, String errMsg) {
+  return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(

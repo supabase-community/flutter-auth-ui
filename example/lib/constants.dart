@@ -18,7 +18,7 @@ const spacer = SizedBox(
   height: 12,
 );
 
-dynamic magicSignInBtn(BuildContext context) {
+ElevatedButton magicSignInBtn(BuildContext context) {
     return ElevatedButton(
     style: ButtonStyle(
       padding: MaterialStateProperty.all(
