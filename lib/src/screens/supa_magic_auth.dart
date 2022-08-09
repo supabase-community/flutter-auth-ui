@@ -79,7 +79,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 );
                 if (!mounted) return;
                 Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
-              } on GotrueError catch (error) {
+              } on GoTrueException catch (error) {
                 await showDialog(
                   context: context,
                   builder: (BuildContext context) {

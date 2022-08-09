@@ -80,7 +80,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 );
                 if (!mounted) return;
                 Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
-              } on GotrueError catch (error) {
+              } on GoTrueException catch (error) {
                 await showDialog(
                   context: context,
                   builder: (BuildContext context) {

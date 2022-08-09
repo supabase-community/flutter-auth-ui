@@ -162,7 +162,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.1"
+    version: "1.0.0-dev.2"
   hive:
     dependency: transitive
     description:
@@ -316,7 +316,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.1"
+    version: "1.0.0-dev.2"
   process:
     dependency: transitive
     description:
@@ -356,7 +356,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.1"
+    version: "1.0.0-dev.3"
   stream_channel:
     dependency: transitive
     description:
@@ -377,21 +377,21 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.2"
+    version: "1.0.0-dev.3"
   supabase_auth_ui:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   supabase_flutter:
     dependency: transitive
     description:
       name: supabase_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.1"
+    version: "1.0.0-dev.3"
   term_glyph:
     dependency: transitive
     description:
