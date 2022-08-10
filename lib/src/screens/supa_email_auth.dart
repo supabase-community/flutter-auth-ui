@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -60,9 +61,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             ),
             controller: _email,
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          spacer(16),
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
@@ -77,9 +76,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             obscureText: true,
             controller: _password,
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          spacer(16),
           ElevatedButton(
             child: Text(
               signingIn ? 'Sign In' : 'Sign Up',
@@ -93,85 +90,25 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 try {
                   await supaAuth.signInExistingUser(
                       _email.text, _password.text);
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text('Success!'),
-                        contentTextStyle: TextStyle(
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    },
-                  );
+                  successAlert;
                   if (!mounted) return;
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 } on GoTrueException catch (error) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(error.message),
-                        contentTextStyle: const TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
+                  await warningAlert(context, error.message);
                 } catch (error) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text('Unexpected error has occured'),
-                        contentTextStyle: TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
+                  await warningAlert(context, 'Unexpected error has occured');
                 }
               } else {
                 try {
                   await supaAuth.createNewEmailUser(
                       _email.text, _password.text);
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text('Success!'),
-                        contentTextStyle: TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
+                  successAlert;
                   if (!mounted) return;
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 } on GoTrueException catch (error) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(error.message),
-                        contentTextStyle: const TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
+                  await warningAlert(context, error.message);
                 } catch (error) {
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        title: Text('Unexpected error has occured'),
-                        contentTextStyle: TextStyle(
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    },
-                  );
+                  await warningAlert(context, 'Unexpected error has occured');
                 }
               }
               setState(() {
@@ -180,9 +117,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               });
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          spacer(10),
         ],
       ),
     );

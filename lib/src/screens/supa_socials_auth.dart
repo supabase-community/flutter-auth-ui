@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utils/supabase_auth_ui.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 enum SocialProviders {
   apple(iconData: FontAwesomeIcons.apple, btnBgColor: Colors.black),
@@ -30,11 +32,13 @@ enum SocialProviders {
 class SupaSocialsAuth extends StatefulWidget {
   final List<SocialProviders> socialProviders;
   final bool colored;
+  final String? redirectUrl;
 
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
     required this.colored,
+    this.redirectUrl,
   }) : super(key: key);
 
   @override
@@ -69,8 +73,19 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     backgroundColor: MaterialStateProperty.all(
                         coloredBg ? providers[index].btnBgColor : null),
                   ),
-                  onPressed: () {
-                    SupabaseAuthUi().socialSignIn(providers[index].name);
+                  onPressed: () async {
+                    try {
+                      await SupabaseAuthUi()
+                          .socialSignIn(providers[index].name);
+                      // if (!mounted) return;
+                      // await Navigator.popAndPushNamed(
+                      //     context, widget.redirectUrl ?? '/');
+                    } on GoTrueException catch (error) {
+                      await warningAlert(context, error.message);
+                    } catch (error) {
+                      await warningAlert(
+                          context, 'Unexpected error has occured');
+                    }
                   },
                   label: Text(
                     'Sign in with ${providers[index].capitalizedName}',

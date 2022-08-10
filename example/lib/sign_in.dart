@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
+import 'constants.dart';
+
 class SignIn extends StatelessWidget {
   const SignIn({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('auth ui example'),
-      ),
+      appBar: appBar,
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
@@ -36,29 +36,9 @@ class SignIn extends StatelessWidget {
             },
           ),
           const Divider(),
-          const Text(
-            'Or',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: ElevatedButton(
-              child: const Text(
-                'Sign In with Magic Link',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/magic_link');
-              },
-            ),
-          ),
+          optionText,
+          spacer,
+          magicSignInBtn(context),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
@@ -47,15 +48,12 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               return null;
             },
             decoration: const InputDecoration(
-              icon: Icon(Icons.email),
-              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email),
               hintText: 'Enter your email',
             ),
             controller: _email,
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          spacer(16),
           ElevatedButton(
             child: const Text(
               'Send Reset Email',
@@ -67,52 +65,20 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               }
               try {
                 await supaAuth.sendResetPasswordEmail(_email.text);
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialog(
-                      title: Text('Success!'),
-                      contentTextStyle: TextStyle(
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                  },
-                );
+                successAlert;
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
               } on GoTrueException catch (error) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(error.message),
-                      contentTextStyle: const TextStyle(
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
+                await warningAlert(context, error.message);
               } catch (error) {
-                await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const AlertDialog(
-                      title: Text('Unexpeted error has occured'),
-                      contentTextStyle: TextStyle(
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  },
-                );
+                await warningAlert(context, 'Unexpected error has occured');
               }
               setState(() {
                 _email.text = '';
               });
             },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          spacer(10),
         ],
       ),
     );

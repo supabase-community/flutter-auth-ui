@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/magic_link': (context) => const MagicLink(),
         '/forgot_password': (context) => const ForgotPassword(),
         '/update_password': (context) => const UpdatePassword(),
-        '/home': (context) => Home(),
+        '/home': (context) => const Home(),
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute<void>(
