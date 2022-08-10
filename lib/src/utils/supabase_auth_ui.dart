@@ -3,12 +3,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 SupabaseClient supaClient = Supabase.instance.client;
 
 class SupabaseAuthUi {
-  Future<void> initSupabase(String url, String anonKey) async {
-    await Supabase.initialize(
+  Future<Supabase> initSupabase(String url, String anonKey) async {
+    return Supabase.initialize(
       url: url,
       anonKey: anonKey,
     );
-    return;
   }
 
   // email-password sign up
