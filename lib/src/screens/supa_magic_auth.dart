@@ -20,11 +20,6 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _supaAuth = SupabaseAuthUi();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _email.dispose();
     super.dispose();

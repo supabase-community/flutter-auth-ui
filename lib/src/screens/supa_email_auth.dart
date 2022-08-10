@@ -25,11 +25,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _supaAuth = SupabaseAuthUi();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _email.dispose();
     _password.dispose();

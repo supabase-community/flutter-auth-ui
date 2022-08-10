@@ -22,11 +22,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _supaAuth = SupabaseAuthUi();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _password.dispose();
     super.dispose();
