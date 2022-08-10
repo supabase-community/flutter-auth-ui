@@ -3,8 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 SupabaseClient supaClient = Supabase.instance.client;
 
 class SupabaseAuthUi {
-  initSupabase(String url, String anonKey) {
-    Supabase.initialize(
+  Future<Supabase> initSupabase(String url, String anonKey) async {
+    return Supabase.initialize(
       url: url,
       anonKey: anonKey,
     );

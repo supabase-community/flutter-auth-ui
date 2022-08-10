@@ -93,7 +93,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   successAlert;
                   if (!mounted) return;
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
-                } on GotrueError catch (error) {
+                } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(context, 'Unexpected error has occured');
@@ -105,7 +105,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   successAlert;
                   if (!mounted) return;
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
-                } on GotrueError catch (error) {
+                } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(context, 'Unexpected error has occured');
