@@ -22,7 +22,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
+  final _supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -88,11 +88,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               }
               if (signingIn) {
                 try {
-                  await supaAuth.signInExistingUser(
+                  await _supaAuth.signInExistingUser(
                       _email.text, _password.text);
-                  successAlert;
                   if (!mounted) return;
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                  await successAlert(context);
+                  if (mounted) {
+                    Navigator.popAndPushNamed(
+                        context, widget.redirectUrl ?? '/');
+                  }
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
@@ -100,11 +103,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 }
               } else {
                 try {
-                  await supaAuth.createNewEmailUser(
+                  await _supaAuth.createNewEmailUser(
                       _email.text, _password.text);
-                  successAlert;
                   if (!mounted) return;
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                  await successAlert(context);
+                  if (mounted) {
+                    Navigator.popAndPushNamed(
+                        context, widget.redirectUrl ?? '/');
+                  }
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {

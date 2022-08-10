@@ -17,7 +17,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
 
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
+  final _supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -64,10 +64,12 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 return;
               }
               try {
-                await supaAuth.createNewPasswordlessUser(_email.text);
-                successAlert;
+                await _supaAuth.createNewPasswordlessUser(_email.text);
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                await successAlert(context);
+                if (mounted) {
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                }
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {

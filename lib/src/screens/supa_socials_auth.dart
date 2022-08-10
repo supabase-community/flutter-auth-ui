@@ -50,53 +50,49 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   Widget build(BuildContext context) {
     final providers = widget.socialProviders;
     final coloredBg = widget.colored == true;
-    final emptyList = providers.isEmpty;
-    return emptyList
-        ? ErrorWidget(Exception('Social provider list cannot be empty'))
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: List.generate(
-              providers.length,
-              (index) => Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: OutlinedButton.icon(
-                  icon: Icon(
-                    providers[index].iconData,
-                    color: coloredBg ? Colors.white : Colors.black,
-                  ),
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                      const Size(double.infinity, 0),
-                    ),
-                    padding:
-                        MaterialStateProperty.all(const EdgeInsets.all(15)),
-                    backgroundColor: MaterialStateProperty.all(
-                        coloredBg ? providers[index].btnBgColor : null),
-                  ),
-                  onPressed: () async {
-                    try {
-                      await SupabaseAuthUi()
-                          .socialSignIn(providers[index].name);
-                      // if (!mounted) return;
-                      // await Navigator.popAndPushNamed(
-                      //     context, widget.redirectUrl ?? '/');
-                    } on GoTrueException catch (error) {
-                      await warningAlert(context, error.message);
-                    } catch (error) {
-                      await warningAlert(
-                          context, 'Unexpected error has occured');
-                    }
-                  },
-                  label: Text(
-                    'Sign in with ${providers[index].capitalizedName}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: coloredBg ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
+
+    if (providers.isEmpty) {
+      return ErrorWidget(Exception('Social provider list cannot be empty'));
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: List.generate(
+        providers.length,
+        (index) => Container(
+          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: OutlinedButton.icon(
+            icon: Icon(
+              providers[index].iconData,
+              color: coloredBg ? Colors.white : Colors.black,
+            ),
+            style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(
+                const Size(double.infinity, 0),
+              ),
+              padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
+              backgroundColor: MaterialStateProperty.all(
+                  coloredBg ? providers[index].btnBgColor : null),
+            ),
+            onPressed: () async {
+              try {
+                await SupabaseAuthUi().socialSignIn(providers[index].name);
+              } on GoTrueException catch (error) {
+                await warningAlert(context, error.message);
+              } catch (error) {
+                await warningAlert(context, 'Unexpected error has occured');
+              }
+            },
+            label: Text(
+              'Sign in with ${providers[index].capitalizedName}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: coloredBg ? Colors.white : Colors.black,
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
