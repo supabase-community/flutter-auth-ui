@@ -9,7 +9,9 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: AppBar(
+        title: const Text('auth ui example'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
@@ -29,7 +31,13 @@ class SignUp extends StatelessWidget {
           const Divider(),
           optionText,
           spacer,
-          magicSignInBtn(context),
+          signInBtn(context, Icons.email, 'Sign in with Magic Link', () {
+            Navigator.popAndPushNamed(context, '/magic_link');
+          }),
+          spacer,
+          signInBtn(context, Icons.phone, 'Sign in with Phone', () {
+            Navigator.popAndPushNamed(context, '/phone_auth');
+          }),
           spacer,
           const SupaSocialsAuth(
             colored: true,
