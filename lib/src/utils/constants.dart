@@ -50,7 +50,7 @@ Future<void> warningAlert(BuildContext context, String errMsg) {
   );
 }
 
-spacer(double height) {
+SizedBox spacer(double height) {
   return SizedBox(
     height: height,
   );
