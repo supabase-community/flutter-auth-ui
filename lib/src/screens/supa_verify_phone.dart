@@ -34,7 +34,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)?.settings.arguments;
     if (args != null) data = args as Map;
-    print(data);
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
@@ -45,7 +44,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
             validator: (value) {
               if (value == null ||
                   value.isEmpty ) {
-                return 'Please enter a valid email address';
+                return 'Please enter the one time code sent';
               }
               return null;
             },
