@@ -42,7 +42,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a valid email address';
+                return 'Please enter a valid phone number';
               }
               return null;
             },
