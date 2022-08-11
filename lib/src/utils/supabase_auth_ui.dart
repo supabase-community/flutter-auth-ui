@@ -10,107 +10,104 @@ class SupabaseAuthUi {
     );
   }
 
-  // email-password sign up
+  /// Email-password sign up
   Future<GotrueSessionResponse> createNewEmailUser(
-      String email, String password) async {
-    final res = await supaClient.auth.signUp(email, password);
-
-    return res;
+    String email,
+    String password,
+  ) {
+    return supaClient.auth.signUp(email, password);
   }
 
-  // email-password sign in
+  /// Email-password sign in
   Future<GotrueSessionResponse> signInExistingUser(
-      String email, String password) async {
-    final res = await supaClient.auth.signIn(
+    String email,
+    String password,
+  ) {
+    return supaClient.auth.signIn(
       email: email,
       password: password,
     );
-
-    return res;
   }
 
-  // phone auth with password and verification step
+  /// Phone auth with password and verification step
   Future<GotrueSessionResponse> createNewPhoneUser(
-      String phone, String password) async {
-    final res = await supaClient.auth.signUpWithPhone(phone, password);
-
-    return res;
+    String phone,
+    String password,
+  ) {
+    return supaClient.auth.signUpWithPhone(phone, password);
   }
 
-  // verify phone user OTP
-  Future<GotrueSessionResponse> verifyPhoneUser(String phone, String token,
-      [String? redirectUrl]) async {
-    final res = await supaClient.auth.verifyOTP(
+  /// Verify phone user OTP
+  Future<GotrueSessionResponse> verifyPhoneUser(
+    String phone,
+    String token, [
+    String? redirectUrl,
+  ]) async {
+    return supaClient.auth.verifyOTP(
       phone,
       token,
       options: AuthOptions(redirectTo: redirectUrl),
     );
-
-    return res;
   }
 
   Future<GotrueSessionResponse> signInUserWithPhone(
-      String phone, String password) async {
-    final res = await supaClient.auth.signIn(
+    String phone,
+    String password,
+  ) {
+    return supaClient.auth.signIn(
       phone: phone,
       password: password,
     );
-
-    return res;
   }
 
-  // email magic link sign in
-  Future<GotrueSessionResponse> createNewPasswordlessUser(String email) async {
-    final res = await supaClient.auth.signIn(
+  /// Email magic link sign in
+  Future<GotrueSessionResponse> createNewPasswordlessUser(String email) {
+    return supaClient.auth.signIn(
       email: email,
     );
-
-    return res;
   }
 
-  // social login with Google
-  Future<bool?> socialSignIn(String socialProvider,
-      [String? redirectUrl]) async {
+  /// Social login with Google
+  Future<bool?> socialSignIn(
+    String socialProvider, [
+    String? redirectUrl,
+  ]) {
     final provider = Provider.values.byName(socialProvider);
-    return await supaClient.auth.signInWithProvider(provider,
+    return supaClient.auth.signInWithProvider(provider,
         options: AuthOptions(redirectTo: redirectUrl));
   }
 
-  // sign out active user
-  Future<GotrueResponse> signOutActiveUser() async {
-    final res = await supaClient.auth.signOut();
-
-    return res;
+  /// Sign out active user
+  Future<GotrueResponse> signOutActiveUser() {
+    return supaClient.auth.signOut();
   }
 
-  // sends user a reset password email, redirectTo - screen user comes back to
-  Future<GotrueJsonResponse> sendResetPasswordEmail(String email,
-      [String? redirectUrl]) async {
-    final res = await supaClient.auth.api.resetPasswordForEmail(
+  /// Sends user a reset password email, redirectTo - screen user comes back to
+  Future<GotrueJsonResponse> sendResetPasswordEmail(
+    String email, [
+    String? redirectUrl,
+  ]) {
+    return supaClient.auth.api.resetPasswordForEmail(
       email,
       options: AuthOptions(
         redirectTo: redirectUrl ?? '',
       ),
     );
-
-    return res;
   }
 
-  // update user password
+  /// Update user password
   Future<GotrueUserResponse> updateUserPassword(
-      String accessToken, String password) async {
-    final res = await supaClient.auth.api.updateUser(
+    String accessToken,
+    String password,
+  ) {
+    return supaClient.auth.api.updateUser(
       accessToken,
       UserAttributes(password: password),
     );
-
-    return res;
   }
 
-  // get active user
+  /// Get active user
   User? getActiveUser() {
-    final user = supaClient.auth.currentUser;
-
-    return user;
+    return supaClient.auth.currentUser;
   }
 }

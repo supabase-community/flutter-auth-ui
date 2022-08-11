@@ -19,12 +19,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
 
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final _supaAuth = SupabaseAuthUi();
 
   @override
   void dispose() {
@@ -64,11 +59,13 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                await supaAuth.updateUserPassword(
+                await _supaAuth.updateUserPassword(
                     widget.accessToken, _password.text);
-                successAlert;
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                await successAlert(context);
+                if (mounted) {
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                }
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
