@@ -80,9 +80,11 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
               try {
                 await supaAuth.signInUserWithPhone(_phone.text, _password.text);
-                successAlert;
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl, arguments: {"phone": _phone.text});
+                await successAlert(context);
+                if(mouted) {
+                  Navigator.popAndPushNamed(context, widget.redirectUrl, arguments: {"phone": _phone.text});
+                }
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
