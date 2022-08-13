@@ -42,8 +42,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
         children: [
           TextFormField(
             validator: (value) {
-              if (value == null ||
-                  value.isEmpty ) {
+              if (value == null || value.isEmpty) {
                 return 'Please enter the one time code sent';
               }
               return null;
@@ -66,9 +65,11 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               }
               try {
                 await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
-                successAlert;
                 if (!mounted) return;
-                Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                successAlert;
+                if (mounted) {
+                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
+                }
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
