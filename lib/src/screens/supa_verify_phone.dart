@@ -66,7 +66,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               try {
                 await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
                 if (!mounted) return;
-                successAlert;
+                await successAlert(context);
                 if (mounted) {
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 }
