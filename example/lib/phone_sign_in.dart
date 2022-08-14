@@ -20,11 +20,11 @@ class PhoneSignIn extends StatelessWidget {
             ),
             TextButton(
               child: const Text(
-                'Already have an account? Sign In',
+                'Don\'t have an account? Sign Up',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.pushNamed(context, '/');
               },
             ),
           ],
