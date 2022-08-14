@@ -1,3 +1,8 @@
+## 0.0.1-dev.3
+
+- feat: add phone auth support
+- chore: cleaned up the code
+
 ## 0.0.1-dev.2
 
 - fix: add github actions and fix errors in example
