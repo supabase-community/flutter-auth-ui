@@ -38,7 +38,9 @@ class SignIn extends StatelessWidget {
           const Divider(),
           optionText,
           spacer,
-          magicSignInBtn(context),
+          signInBtn(context, Icons.email, 'Sign in with Magic Link', () {
+            Navigator.popAndPushNamed(context, '/magic_link');
+          }),
         ],
       ),
     );

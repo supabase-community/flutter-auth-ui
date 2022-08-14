@@ -6,3 +6,5 @@ export 'src/screens/supa_magic_auth.dart';
 export 'src/screens/supa_reset_password.dart';
 export 'src/screens/supa_send_email.dart';
 export 'src/screens/supa_socials_auth.dart';
+export 'src/screens/supa_phone_auth.dart';
+export 'src/screens/supa_verify_phone.dart';

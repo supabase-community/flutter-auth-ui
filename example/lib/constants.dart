@@ -18,19 +18,19 @@ const spacer = SizedBox(
   height: 12,
 );
 
-ElevatedButton magicSignInBtn(BuildContext context) {
-    return ElevatedButton(
+ElevatedButton signInBtn(
+    BuildContext context, IconData icon, String labelText, void Function() onPressed) {
+  return ElevatedButton.icon(
+    icon: Icon(icon),
     style: ButtonStyle(
       padding: MaterialStateProperty.all(
         const EdgeInsets.all(18),
       ),
     ),
-    child: const Text(
-      'Sign In with Magic Link',
-      style: TextStyle(fontWeight: FontWeight.bold),
+    onPressed: onPressed,
+    label: Text(
+      labelText,
+      style: const TextStyle(fontWeight: FontWeight.bold),
     ),
-    onPressed: () {
-      Navigator.pushNamed(context, '/magic_link');
-    },
   );
 }

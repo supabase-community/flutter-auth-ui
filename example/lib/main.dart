@@ -8,6 +8,8 @@ import './sign_in.dart';
 import './magic_link.dart';
 import './forgot_password.dart';
 import './update_password.dart';
+import './phone_auth.dart';
+import './verify_phone.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +43,8 @@ class MyApp extends StatelessWidget {
         '/magic_link': (context) => const MagicLink(),
         '/forgot_password': (context) => const ForgotPassword(),
         '/update_password': (context) => const UpdatePassword(),
+        '/phone_auth': (context) => const PhoneAuth(),
+        '/verify_phone': (context) => const VerifyPhone(),
         '/home': (context) => const Home(),
       },
       onUnknownRoute: (RouteSettings settings) {
