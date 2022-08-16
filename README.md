@@ -2,7 +2,7 @@
 <p float="left">
 <img src="https://github.com/supabase/supabase/blob/master/packages/common/assets/images/supabase-logo-wordmark--dark.png"  width="60%" height="50%" />
 </p>
-A simple library of predefined widgets to easily and quickly create a auth components using Flutter and Supabase. 
+A simple library of predefined widgets to easily and quickly create auth components using Flutter and Supabase. 
 
 > :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v0.0.1. 
 
