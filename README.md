@@ -4,7 +4,7 @@ A simple library of predefined widgets to easily and quickly create a auth compo
 
 > :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v0.0.1. 
 
-![](supabase/supabase/blob/master/packages/common/assets/images/supabase-logo-wordmark--dark.png)
+![](https://github.com/supabase/supabase/blob/master/packages/common/assets/images/supabase-logo-wordmark--dark.png)
 
 ![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
 
