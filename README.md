@@ -1,10 +1,10 @@
-# flutter-auth-ui
-
-A simple library of predefined widgets to easily and quickly create a auth compooents using Flutter and Supabase. 
+# flutter-auth-ui :iphone:
+<p float="left">
+<img src="https://github.com/supabase/supabase/blob/master/packages/common/assets/images/supabase-logo-wordmark--dark.png"  width="60%" height="50%" />
+</p>
+A simple library of predefined widgets to easily and quickly create auth components using Flutter and Supabase. 
 
 > :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v0.0.1. 
-
-[supabase/supabase/master/packages/common/assets/images/supabase-logo-wordmark--dark.svg]
 
 ![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
 
