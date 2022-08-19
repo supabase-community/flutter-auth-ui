@@ -38,7 +38,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final signingIn = widget.phoneAuthAction == PhoneAuthAction.signIn;
+    final isSigningIn = widget.phoneAuthAction == PhoneAuthAction.signIn;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
