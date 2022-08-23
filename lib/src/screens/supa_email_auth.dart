@@ -33,7 +33,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final signingIn = widget.authAction == AuthAction.signIn;
+    final isSigningIn = widget.authAction == AuthAction.signIn;
 
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -74,14 +74,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           spacer(16),
           ElevatedButton(
             child: Text(
-              signingIn ? 'Sign In' : 'Sign Up',
+              isSigningIn ? 'Sign In' : 'Sign Up',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-              if (signingIn) {
+              if (isSigningIn) {
                 try {
                   await _supaAuth.signInExistingUser(
                       _email.text, _password.text);

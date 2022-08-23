@@ -76,14 +76,14 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
           spacer(16),
           ElevatedButton(
             child: Text(
-              signingIn ? 'Sign In' : 'Sign Up',
+              isSigningIn ? 'Sign In' : 'Sign Up',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-              if (signingIn) {
+              if (isSigningIn) {
                 try {
                   await supaAuth.signInUserWithPhone(
                       _phone.text, _password.text);
