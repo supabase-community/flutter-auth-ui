@@ -88,7 +88,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   await supaAuth.signInUserWithPhone(
                       _phone.text, _password.text);
                   if (!mounted) return;
-                  successAlert;
+                  await successAlert(context);
                   if (mounted) {
                     Navigator.popAndPushNamed(context, widget.redirectUrl,
                         arguments: {"phone": _phone.text});
@@ -103,7 +103,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   await supaAuth.createNewPhoneUser(
                       _phone.text, _password.text);
                   if (!mounted) return;
-                  successAlert;
+                  await successAlert(context);
                   if (mounted) {
                     Navigator.popAndPushNamed(context, widget.redirectUrl,
                         arguments: {"phone": _phone.text});
