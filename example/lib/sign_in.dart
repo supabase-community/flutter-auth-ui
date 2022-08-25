@@ -41,6 +41,10 @@ class SignIn extends StatelessWidget {
           signInBtn(context, Icons.email, 'Sign in with Magic Link', () {
             Navigator.popAndPushNamed(context, '/magic_link');
           }),
+          spacer,
+          signInBtn(context, Icons.phone, 'Sign in with Phone', () {
+            Navigator.popAndPushNamed(context, '/phone_sign_in');
+          }),
         ],
       ),
     );

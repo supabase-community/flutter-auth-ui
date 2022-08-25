@@ -3,10 +3,15 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+enum PhoneAuthAction { signIn, signUp }
+
 class SupaPhoneAuth extends StatefulWidget {
+  final PhoneAuthAction phoneAuthAction;
   final String redirectUrl;
 
-  const SupaPhoneAuth({Key? key, required this.redirectUrl}) : super(key: key);
+  const SupaPhoneAuth(
+      {Key? key, required this.phoneAuthAction, required this.redirectUrl})
+      : super(key: key);
 
   @override
   State<SupaPhoneAuth> createState() => _SupaPhoneAuthState();
@@ -33,6 +38,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final isSigningIn = widget.phoneAuthAction == PhoneAuthAction.signIn;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
@@ -69,27 +75,44 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: const Text(
-              'Sign Up',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Text(
+              isSigningIn ? 'Sign In' : 'Sign Up',
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-
-              try {
-                await supaAuth.signInUserWithPhone(_phone.text, _password.text);
-                if (!mounted) return;
-                successAlert;
-                if (mounted) {
-                  Navigator.popAndPushNamed(context, widget.redirectUrl,
-                      arguments: {"phone": _phone.text});
+              if (isSigningIn) {
+                try {
+                  await supaAuth.signInUserWithPhone(
+                      _phone.text, _password.text);
+                  if (!mounted) return;
+                  await successAlert(context);
+                  if (mounted) {
+                    Navigator.popAndPushNamed(context, widget.redirectUrl,
+                        arguments: {"phone": _phone.text});
+                  }
+                } on GoTrueException catch (error) {
+                  await warningAlert(context, error.message);
+                } catch (error) {
+                  await warningAlert(context, 'Unexpected error has occured');
                 }
-              } on GoTrueException catch (error) {
-                await warningAlert(context, error.message);
-              } catch (error) {
-                await warningAlert(context, 'Unexpected error has occured');
+              } else {
+                try {
+                  await supaAuth.createNewPhoneUser(
+                      _phone.text, _password.text);
+                  if (!mounted) return;
+                  await successAlert(context);
+                  if (mounted) {
+                    Navigator.popAndPushNamed(context, widget.redirectUrl,
+                        arguments: {"phone": _phone.text});
+                  }
+                } on GoTrueException catch (error) {
+                  await warningAlert(context, error.message);
+                } catch (error) {
+                  await warningAlert(context, 'Unexpected error has occured');
+                }
               }
 
               setState(() {

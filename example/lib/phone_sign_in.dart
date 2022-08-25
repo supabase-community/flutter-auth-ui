@@ -3,8 +3,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import 'constants.dart';
 
-class PhoneAuth extends StatelessWidget {
-  const PhoneAuth({Key? key}) : super(key: key);
+class PhoneSignIn extends StatelessWidget {
+  const PhoneSignIn({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +14,17 @@ class PhoneAuth extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaPhoneAuth(redirectUrl: '/verify_phone'),
+            const SupaPhoneAuth(
+              phoneAuthAction: PhoneAuthAction.signIn,
+              redirectUrl: '/home',
+            ),
             TextButton(
               child: const Text(
-                'Already have an account? Sign In',
+                'Don\'t have an account? Sign Up',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.pushNamed(context, '/');
               },
             ),
           ],

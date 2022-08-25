@@ -1,3 +1,4 @@
+import 'package:example/phone_sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
@@ -8,7 +9,7 @@ import './sign_in.dart';
 import './magic_link.dart';
 import './forgot_password.dart';
 import './update_password.dart';
-import './phone_auth.dart';
+import 'phone_sign_in.dart';
 import './verify_phone.dart';
 
 void main() async {
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
         '/magic_link': (context) => const MagicLink(),
         '/forgot_password': (context) => const ForgotPassword(),
         '/update_password': (context) => const UpdatePassword(),
-        '/phone_auth': (context) => const PhoneAuth(),
+        '/phone_sign_in': (context) => const PhoneSignIn(),
+        '/phone_sign_up': (context) => const PhoneSignUp(),
         '/verify_phone': (context) => const VerifyPhone(),
         '/home': (context) => const Home(),
       },
