@@ -76,7 +76,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             ),
             onPressed: () async {
               try {
-                await SupabaseAuthUi().socialSignIn(providers[index].name);
+                await SupabaseAuthUi().socialSignIn(providers[index].name, widget.redirectUrl);
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
