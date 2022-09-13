@@ -51,7 +51,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
           spacer(16),
           ElevatedButton(
             child: const Text(
-              'Sign Up with Magic Link',
+              'Continue with Magic Link',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {

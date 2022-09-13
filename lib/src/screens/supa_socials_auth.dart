@@ -84,7 +84,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               }
             },
             label: Text(
-              'Sign in with ${providers[index].capitalizedName}',
+              'Continue with ${providers[index].capitalizedName}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: coloredBg ? Colors.white : Colors.black,
