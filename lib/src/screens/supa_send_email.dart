@@ -59,12 +59,13 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 return;
               }
               try {
-                await supaAuth.sendResetPasswordEmail(_email.text);
                 if (!mounted) return;
                 await successAlert(context);
                 if (mounted) {
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 }
+                final result = await supaAuth.sendResetPasswordEmail(
+                    _email.text, widget.redirectUrl);
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {

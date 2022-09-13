@@ -13,9 +13,13 @@ class SupabaseAuthUi {
   /// Email-password sign up
   Future<GotrueSessionResponse> createNewEmailUser(
     String email,
-    String password,
-  ) {
-    return supaClient.auth.signUp(email, password);
+    String password, {
+    String? redirectUrl,
+  }) {
+    return supaClient.auth.signUp(email, password,
+        options: AuthOptions(
+          redirectTo: redirectUrl,
+        ));
   }
 
   /// Email-password sign in
@@ -61,17 +65,20 @@ class SupabaseAuthUi {
   }
 
   /// Email magic link sign in
-  Future<GotrueSessionResponse> createNewPasswordlessUser(String email) {
+  Future<GotrueSessionResponse> createNewPasswordlessUser(String email,
+      {String? redirectUrl}) {
     return supaClient.auth.signIn(
-      email: email,
-    );
+        email: email,
+        options: AuthOptions(
+          redirectTo: redirectUrl,
+        ));
   }
 
   /// Social login with Google
   Future<bool?> socialSignIn(
-    String socialProvider, [
+    String socialProvider, {
     String? redirectUrl,
-  ]) {
+  }) {
     final provider = Provider.values.byName(socialProvider);
     return supaClient.auth.signInWithProvider(provider,
         options: AuthOptions(redirectTo: redirectUrl));
@@ -90,7 +97,7 @@ class SupabaseAuthUi {
     return supaClient.auth.api.resetPasswordForEmail(
       email,
       options: AuthOptions(
-        redirectTo: redirectUrl ?? '',
+        redirectTo: redirectUrl,
       ),
     );
   }

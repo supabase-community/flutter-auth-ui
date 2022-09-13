@@ -99,7 +99,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               } else {
                 try {
                   await _supaAuth.createNewEmailUser(
-                      _email.text, _password.text);
+                      _email.text, _password.text,
+                      redirectUrl: widget.redirectUrl);
                   if (!mounted) return;
                   await successAlert(context);
                   if (mounted) {

@@ -59,12 +59,14 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 return;
               }
               try {
-                await _supaAuth.createNewPasswordlessUser(_email.text);
                 if (!mounted) return;
                 await successAlert(context);
                 if (mounted) {
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
                 }
+                final result = await _supaAuth.createNewPasswordlessUser(
+                    _email.text,
+                    redirectUrl: widget.redirectUrl);
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
