@@ -68,7 +68,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occured');
+                await warningAlert(context, 'Unexpected error has occurred');
               }
               setState(() {
                 _email.text = '';

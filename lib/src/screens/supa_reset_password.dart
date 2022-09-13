@@ -38,7 +38,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
-                return 'Please enter a password that is atleast 6 characters long';
+                return 'Please enter a password that is at least 6 characters long';
               }
               return null;
             },
@@ -69,7 +69,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occured');
+                await warningAlert(context, 'Unexpected error has occurred');
               }
               setState(() {
                 _password.text = '';
