@@ -9,8 +9,10 @@ enum AuthAction { signIn, signUp }
 class SupaEmailAuth extends StatefulWidget {
   final AuthAction authAction;
   final String? redirectUrl;
+  final void Function(GotrueSessionResponse response)? callback;
 
-  const SupaEmailAuth({Key? key, required this.authAction, this.redirectUrl})
+  const SupaEmailAuth(
+      {Key? key, required this.authAction, this.redirectUrl, this.callback})
       : super(key: key);
 
   @override
@@ -83,40 +85,32 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               }
               if (isSigningIn) {
                 try {
-                  await _supaAuth.signInExistingUser(
+                  final result = await _supaAuth.signInExistingUser(
                       _email.text, _password.text);
                   if (!mounted) return;
-                  await successAlert(context);
-                  if (mounted) {
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '/');
-                  }
+                  // await successAlert(context);
+                  widget.callback?.call(result);
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
-                  await warningAlert(context, 'Unexpected error has occured');
+                  await warningAlert(context, 'Unexpected error has occurred');
                 }
               } else {
                 try {
-                  await _supaAuth.createNewEmailUser(
+                  final result = await _supaAuth.createNewEmailUser(
                       _email.text, _password.text,
                       redirectUrl: widget.redirectUrl);
+                  widget.callback?.call(result);
                   if (!mounted) return;
-                  await successAlert(context);
-                  if (mounted) {
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '/');
-                  }
+                  setState(() {
+                    isLoading = false;
+                  });
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(context, 'Unexpected error has occurred');
                 }
               }
-              setState(() {
-                _email.text = '';
-                _password.text = '';
-              });
             },
           ),
           spacer(10),

@@ -6,8 +6,10 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
+  final void Function(GotrueJsonResponse response)? callback;
 
-  const SupaSendEmail({Key? key, this.redirectUrl}) : super(key: key);
+  const SupaSendEmail({Key? key, this.redirectUrl, this.callback})
+      : super(key: key);
 
   @override
   State<SupaSendEmail> createState() => _SupaSendEmailState();
@@ -59,21 +61,14 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 return;
               }
               try {
-                if (!mounted) return;
-                await successAlert(context);
-                if (mounted) {
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
-                }
                 final result = await supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);
+                widget.callback?.call(result);
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
                 await warningAlert(context, 'Unexpected error has occurred');
               }
-              setState(() {
-                _email.text = '';
-              });
             },
           ),
           spacer(10),

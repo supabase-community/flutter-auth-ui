@@ -6,9 +6,10 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 class SupaResetPassword extends StatefulWidget {
   final String accessToken;
   final String? redirectUrl;
+  final void Function(GotrueUserResponse response)? callback;
 
   const SupaResetPassword(
-      {Key? key, required this.accessToken, this.redirectUrl})
+      {Key? key, required this.accessToken, this.redirectUrl, this.callback})
       : super(key: key);
 
   @override
@@ -59,8 +60,9 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                await _supaAuth.updateUserPassword(
+                final result = await _supaAuth.updateUserPassword(
                     widget.accessToken, _password.text);
+                widget.callback?.call(result);
                 if (!mounted) return;
                 await successAlert(context);
                 if (mounted) {
@@ -71,9 +73,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               } catch (error) {
                 await warningAlert(context, 'Unexpected error has occurred');
               }
-              setState(() {
-                _password.text = '';
-              });
             },
           ),
           spacer(10),

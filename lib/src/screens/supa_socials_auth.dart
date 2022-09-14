@@ -34,11 +34,14 @@ class SupaSocialsAuth extends StatefulWidget {
   final bool colored;
   final String? redirectUrl;
 
+  final void Function()? callback;
+
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
     required this.colored,
     this.redirectUrl,
+    this.callback,
   }) : super(key: key);
 
   @override
@@ -78,6 +81,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               try {
                 await SupabaseAuthUi().socialSignIn(providers[index].name,
                     redirectUrl: widget.redirectUrl);
+                widget.callback?.call();
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
