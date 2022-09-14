@@ -19,14 +19,14 @@ SupaEmailAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/'
-),
+)
 // Create a Signin form
 SupaEmailAuth(
     authAction: AuthAction.signIn,
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/'
-),
+)
 ```
 
 ## Magic Link Auth
@@ -64,4 +64,32 @@ SupaSocialsAuth(
           ? null
           : 'io.supabase.flutter://reset-callback/'
 )
+```
+
+## onSuccess / onError callbacks
+
+For `SupaSocialsAuth`, `SupaEmailAuth`, `SupaResetPassword` and `SupaMagicAuth` it is possible to specify a ```onSuccess``` and a ```onError``` callback.
+
+```onSuccess``` will be called when the *Supabase* operation succeeds with the object returned from *GoTrue*.
+```onError``` will be called when the *Supabase* operation fails because of *GoTrue* with a *GotrueException* as a parameter.
+
+```dart
+SupaEmailAuth(
+    authAction: AuthAction.signIn,
+    redirectUrl: kIsWeb
+          ? null
+          : 'io.supabase.flutter://reset-callback/',
+    onSuccess: (response) {
+        if (response.user != null) {
+            // navigate('home');
+        }
+    },
+    onError: (error) {
+        if (error.message == "Email not confirmed") {
+            // navigate("wait_for_email");
+            return true; // we handled the error
+        }
+        return false; // false to let the library display an error message.
+    },
+);
 ```
