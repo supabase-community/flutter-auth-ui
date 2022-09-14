@@ -16,10 +16,13 @@ class SupabaseAuthUi {
     String password, {
     String? redirectUrl,
   }) {
-    return supaClient.auth.signUp(email, password,
-        options: AuthOptions(
-          redirectTo: redirectUrl,
-        ));
+    return supaClient.auth.signUp(
+      email,
+      password,
+      options: AuthOptions(
+        redirectTo: redirectUrl,
+      ),
+    );
   }
 
   /// Email-password sign in
@@ -50,7 +53,9 @@ class SupabaseAuthUi {
     return supaClient.auth.verifyOTP(
       phone,
       token,
-      options: AuthOptions(redirectTo: redirectUrl),
+      options: AuthOptions(
+        redirectTo: redirectUrl,
+      ),
     );
   }
 
@@ -68,10 +73,11 @@ class SupabaseAuthUi {
   Future<GotrueSessionResponse> createNewPasswordlessUser(String email,
       {String? redirectUrl}) {
     return supaClient.auth.signIn(
-        email: email,
-        options: AuthOptions(
-          redirectTo: redirectUrl,
-        ));
+      email: email,
+      options: AuthOptions(
+        redirectTo: redirectUrl,
+      ),
+    );
   }
 
   /// Social login with Google
@@ -80,8 +86,12 @@ class SupabaseAuthUi {
     String? redirectUrl,
   }) {
     final provider = Provider.values.byName(socialProvider);
-    return supaClient.auth.signInWithProvider(provider,
-        options: AuthOptions(redirectTo: redirectUrl));
+    return supaClient.auth.signInWithProvider(
+      provider,
+      options: AuthOptions(
+        redirectTo: redirectUrl,
+      ),
+    );
   }
 
   /// Sign out active user
@@ -109,7 +119,9 @@ class SupabaseAuthUi {
   ) {
     return supaClient.auth.api.updateUser(
       accessToken,
-      UserAttributes(password: password),
+      UserAttributes(
+        password: password,
+      ),
     );
   }
 
