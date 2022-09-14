@@ -26,6 +26,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   final _supaAuth = SupabaseAuthUi();
 
+  bool isLoading = false;
+
   @override
   void dispose() {
     _email.dispose();
@@ -75,11 +77,23 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: Text(
-              isSigningIn ? 'Sign In' : 'Sign Up',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: (isLoading)
+                ? const SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1.5,
+                    ),
+                  )
+                : Text(
+                    isSigningIn ? 'Sign In' : 'Sign Up',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
             onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
               if (!_formKey.currentState!.validate()) {
                 return;
               }
@@ -87,8 +101,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 try {
                   final result = await _supaAuth.signInExistingUser(
                       _email.text, _password.text);
-                  if (!mounted) return;
-                  // await successAlert(context);
                   widget.callback?.call(result);
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
@@ -101,15 +113,16 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       _email.text, _password.text,
                       redirectUrl: widget.redirectUrl);
                   widget.callback?.call(result);
-                  if (!mounted) return;
-                  setState(() {
-                    isLoading = false;
-                  });
                 } on GoTrueException catch (error) {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(context, 'Unexpected error has occurred');
                 }
+              }
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
               }
             },
           ),

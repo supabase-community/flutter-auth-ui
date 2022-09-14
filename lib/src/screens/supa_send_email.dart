@@ -1,8 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
@@ -20,6 +20,8 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
   final _email = TextEditingController();
 
   SupabaseAuthUi supaAuth = SupabaseAuthUi();
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -52,11 +54,23 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
           ),
           spacer(16),
           ElevatedButton(
-            child: const Text(
-              'Send Reset Email',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: (isLoading)
+                ? const SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1.5,
+                    ),
+                  )
+                : const Text(
+                    'Send Reset Email',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
             onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
               if (!_formKey.currentState!.validate()) {
                 return;
               }
@@ -68,6 +82,11 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 await warningAlert(context, error.message);
               } catch (error) {
                 await warningAlert(context, 'Unexpected error has occurred');
+              }
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
               }
             },
           ),
