@@ -82,7 +82,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occurred');
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
               if (mounted) {
                 setState(() {

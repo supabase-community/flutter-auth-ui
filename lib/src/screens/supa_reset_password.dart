@@ -71,7 +71,8 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occurred');
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
             },
           ),

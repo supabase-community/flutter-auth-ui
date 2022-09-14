@@ -73,7 +73,8 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occurred');
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
               setState(() {
                 _code.text = '';

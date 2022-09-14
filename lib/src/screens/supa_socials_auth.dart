@@ -85,7 +85,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occurred');
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
             },
             label: Text(

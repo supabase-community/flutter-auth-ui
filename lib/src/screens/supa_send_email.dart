@@ -81,7 +81,8 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               } on GoTrueException catch (error) {
                 await warningAlert(context, error.message);
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occurred');
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
               if (mounted) {
                 setState(() {
