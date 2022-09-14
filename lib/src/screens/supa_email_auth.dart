@@ -108,10 +108,12 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       _email.text, _password.text);
                   widget.onSuccess?.call(result);
                 } else {
-                  final result = await _supaAuth.createNewEmailUser(
+                  await _supaAuth.createNewEmailUser(
                       _email.text, _password.text,
                       redirectUrl: widget.redirectUrl);
-
+                  // call SignIn to support case where the user exists, or no email confirmation are needed
+                  final result = await _supaAuth.signInExistingUser(
+                      _email.text, _password.text);
                   widget.onSuccess?.call(result);
                 }
               } on GoTrueException catch (error) {
