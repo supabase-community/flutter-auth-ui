@@ -6,9 +6,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
-  final void Function(GotrueJsonResponse response)? callback;
+  final void Function(GotrueJsonResponse response)? onSuccess;
+  final bool Function(GoTrueException error)? onError;
 
-  const SupaSendEmail({Key? key, this.redirectUrl, this.callback})
+  const SupaSendEmail(
+      {Key? key, this.redirectUrl, this.onSuccess, this.onError})
       : super(key: key);
 
   @override
@@ -77,9 +79,12 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               try {
                 final result = await supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);
-                widget.callback?.call(result);
+                widget.onSuccess?.call(result);
               } on GoTrueException catch (error) {
-                await warningAlert(context, error.message);
+                if (widget.onError == null ||
+                    widget.onError?.call(error) == false) {
+                  await warningAlert(context, error.message);
+                }
               } catch (error) {
                 await warningAlert(
                     context, 'Unexpected error has occurred: ${error}');

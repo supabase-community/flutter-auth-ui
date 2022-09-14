@@ -9,10 +9,15 @@ enum AuthAction { signIn, signUp }
 class SupaEmailAuth extends StatefulWidget {
   final AuthAction authAction;
   final String? redirectUrl;
-  final void Function(GotrueSessionResponse response)? callback;
+  final void Function(GotrueSessionResponse response)? onSuccess;
+  final bool Function(GoTrueException error)? onError;
 
   const SupaEmailAuth(
-      {Key? key, required this.authAction, this.redirectUrl, this.callback})
+      {Key? key,
+      required this.authAction,
+      this.redirectUrl,
+      this.onSuccess,
+      this.onError})
       : super(key: key);
 
   @override
@@ -97,29 +102,26 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-              if (isSigningIn) {
-                try {
+              try {
+                if (isSigningIn) {
                   final result = await _supaAuth.signInExistingUser(
                       _email.text, _password.text);
-                  widget.callback?.call(result);
-                } on GoTrueException catch (error) {
-                  await warningAlert(context, error.message);
-                } catch (error) {
-                  await warningAlert(
-                      context, 'Unexpected error has occurred: ${error}');
-                }
-              } else {
-                try {
+                  widget.onSuccess?.call(result);
+                } else {
                   final result = await _supaAuth.createNewEmailUser(
                       _email.text, _password.text,
                       redirectUrl: widget.redirectUrl);
-                  widget.callback?.call(result);
-                } on GoTrueException catch (error) {
-                  await warningAlert(context, error.message);
-                } catch (error) {
-                  await warningAlert(
-                      context, 'Unexpected error has occurred: ${error}');
+
+                  widget.onSuccess?.call(result);
                 }
+              } on GoTrueException catch (error) {
+                if (widget.onError == null ||
+                    widget.onError?.call(error) == false) {
+                  await warningAlert(context, error.message);
+                }
+              } catch (error) {
+                await warningAlert(
+                    context, 'Unexpected error has occurred: ${error}');
               }
               if (mounted) {
                 setState(() {
