@@ -4,12 +4,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaResetPassword extends StatefulWidget {
-  final String accessToken;
+  final String? accessToken;
   final void Function(GotrueUserResponse response)? onSuccess;
   final bool Function(GoTrueException error)? onError;
 
   const SupaResetPassword(
-      {Key? key, required this.accessToken, this.onSuccess, this.onError})
+      {Key? key, this.accessToken, this.onSuccess, this.onError})
       : super(key: key);
 
   @override
@@ -30,6 +30,8 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final accessToken =
+        widget.accessToken ?? supaClient.auth.currentSession!.accessToken;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
@@ -61,7 +63,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               }
               try {
                 final result = await _supaAuth.updateUserPassword(
-                    widget.accessToken, _password.text);
+                    accessToken, _password.text);
                 widget.onSuccess?.call(result);
                 if (widget.onSuccess == null && mounted) {
                   successAlert(context);
