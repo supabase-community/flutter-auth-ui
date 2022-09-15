@@ -103,11 +103,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 return;
               }
               try {
-                if (isSigningIn) {
-                  final result = await _supaAuth.signInExistingUser(
-                      _email.text, _password.text);
-                  widget.onSuccess?.call(result);
-                } else {
+                if (isSigningIn == false) {
                   try {
                     await _supaAuth.createNewEmailUser(
                         _email.text, _password.text,
@@ -115,13 +111,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   } on GoTrueException catch (error) {
                     if (error.message != "User already registered") rethrow;
                   }
-                  // call SignIn to support case where the user exists, or no email confirmation are needed
-                  final result = await _supaAuth.signInExistingUser(
-                      _email.text, _password.text);
-                  widget.onSuccess?.call(result);
-                  if (widget.onSuccess == null && mounted) {
-                    successAlert(context);
-                  }
+                }
+                // Always call SignIn to support case where the user exists, or no email confirmation are needed
+                final result = await _supaAuth.signInExistingUser(
+                    _email.text, _password.text);
+                widget.onSuccess?.call(result);
+                if (widget.onSuccess == null && mounted) {
+                  successAlert(context);
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
