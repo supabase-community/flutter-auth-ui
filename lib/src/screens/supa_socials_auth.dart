@@ -84,6 +84,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                 await SupabaseAuthUi().socialSignIn(providers[index].name,
                     redirectUrl: widget.redirectUrl);
                 widget.onSuccess?.call();
+                if (widget.onSuccess == null && mounted) {
+                  successAlert(context);
+                }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {

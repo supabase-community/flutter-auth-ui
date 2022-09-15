@@ -80,6 +80,9 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 final result = await supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);
                 widget.onSuccess?.call(result);
+                if (widget.onSuccess == null && mounted) {
+                  successAlert(context);
+                }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {

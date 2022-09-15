@@ -119,6 +119,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   final result = await _supaAuth.signInExistingUser(
                       _email.text, _password.text);
                   widget.onSuccess?.call(result);
+                  if (widget.onSuccess == null && mounted) {
+                    successAlert(context);
+                  }
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||

@@ -81,6 +81,9 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                     _email.text,
                     redirectUrl: widget.redirectUrl);
                 widget.onSuccess?.call(result);
+                if (widget.onSuccess == null && mounted) {
+                  successAlert(context);
+                }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
