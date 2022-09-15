@@ -80,7 +80,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 }
               } catch (error) {
                 await warningAlert(
-                    context, 'Unexpected error has occurred: ${error}');
+                    context, 'Unexpected error has occurred: $error');
               }
             },
           ),

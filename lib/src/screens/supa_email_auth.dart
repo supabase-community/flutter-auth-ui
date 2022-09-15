@@ -127,7 +127,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 }
               } catch (error) {
                 await warningAlert(
-                    context, 'Unexpected error has occurred: ${error}');
+                    context, 'Unexpected error has occurred: $error');
               }
               if (mounted) {
                 setState(() {

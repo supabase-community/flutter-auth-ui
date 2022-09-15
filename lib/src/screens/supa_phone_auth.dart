@@ -97,7 +97,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(
-                      context, 'Unexpected error has occurred: ${error}');
+                      context, 'Unexpected error has occurred: $error');
                 }
               } else {
                 try {
@@ -113,7 +113,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   await warningAlert(context, error.message);
                 } catch (error) {
                   await warningAlert(
-                      context, 'Unexpected error has occurred: ${error}');
+                      context, 'Unexpected error has occurred: $error');
                 }
               }
 
