@@ -116,16 +116,16 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 final result = await _supaAuth.signInExistingUser(
                     _email.text, _password.text);
                 widget.onSuccess?.call(result);
-                if (widget.onSuccess == null && mounted) {
-                  successAlert(context);
+                if (mounted) {
+                  successSnackBar(context, 'Successfully signed in !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningAlert(context, error.message);
+                  await warningSnackBar(context, error.message);
                 }
               } catch (error) {
-                await warningAlert(
+                await warningSnackBar(
                     context, 'Unexpected error has occurred: $error');
               }
               if (mounted) {

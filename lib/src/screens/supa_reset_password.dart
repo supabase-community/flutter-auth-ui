@@ -65,16 +65,16 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 final result = await _supaAuth.updateUserPassword(
                     accessToken, _password.text);
                 widget.onSuccess?.call(result);
-                if (widget.onSuccess == null && mounted) {
-                  successAlert(context);
+                if (mounted) {
+                  successSnackBar(context, 'Successfully updated password !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningAlert(context, error.message);
+                  await warningSnackBar(context, error.message);
                 }
               } catch (error) {
-                await warningAlert(
+                await warningSnackBar(
                     context, 'Unexpected error has occurred: $error');
               }
             },

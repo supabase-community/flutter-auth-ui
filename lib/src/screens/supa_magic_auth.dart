@@ -81,16 +81,16 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                     _email.text,
                     redirectUrl: widget.redirectUrl);
                 widget.onSuccess?.call(result);
-                if (widget.onSuccess == null && mounted) {
-                  successAlert(context);
+                if (mounted) {
+                  successSnackBar(context, 'Created passwordless user !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningAlert(context, error.message);
+                  await warningSnackBar(context, error.message);
                 }
               } catch (error) {
-                await warningAlert(
+                await warningSnackBar(
                     context, 'Unexpected error has occurred: $error');
               }
               if (mounted) {

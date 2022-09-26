@@ -66,14 +66,14 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               try {
                 await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
                 if (!mounted) return;
-                await successAlert(context);
+                await successSnackBar(context, 'Successfully verified !');
                 if (mounted) {
                   Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
                 }
               } on GoTrueException catch (error) {
-                await warningAlert(context, error.message);
+                await warningSnackBar(context, error.message);
               } catch (error) {
-                await warningAlert(
+                await warningSnackBar(
                     context, 'Unexpected error has occurred: $error');
               }
               setState(() {
