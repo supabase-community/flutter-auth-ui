@@ -70,12 +70,12 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
             onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
               if (!_formKey.currentState!.validate()) {
                 return;
               }
+              setState(() {
+                isLoading = true;
+              });
               try {
                 final result = await supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);

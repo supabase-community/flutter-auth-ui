@@ -70,12 +70,12 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
             onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
               if (!_formKey.currentState!.validate()) {
                 return;
               }
+              setState(() {
+                isLoading = true;
+              });
               try {
                 final result = await _supaAuth.createNewPasswordlessUser(
                     _email.text,

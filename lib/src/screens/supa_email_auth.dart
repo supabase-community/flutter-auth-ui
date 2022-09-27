@@ -96,12 +96,12 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
             onPressed: () async {
-              setState(() {
-                isLoading = true;
-              });
               if (!_formKey.currentState!.validate()) {
                 return;
               }
+              setState(() {
+                isLoading = true;
+              });
               try {
                 if (isSigningIn == false) {
                   try {
