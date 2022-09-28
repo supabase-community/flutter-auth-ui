@@ -85,16 +85,16 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     redirectUrl: widget.redirectUrl);
                 widget.onSuccess?.call();
                 if (mounted) {
-                  successSnackBar(context, 'Successfully signed in !');
+                  context.showSnackBar('Successfully signed in !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
               }
             },
             label: Text(

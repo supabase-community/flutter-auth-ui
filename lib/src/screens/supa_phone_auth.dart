@@ -88,32 +88,32 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   await supaAuth.signInUserWithPhone(
                       _phone.text, _password.text);
                   if (!mounted) return;
-                  await successSnackBar(context, 'Successfully signed in !');
+                  context.showSnackBar('Successfully signed in !');
                   if (mounted) {
                     Navigator.popAndPushNamed(context, widget.redirectUrl,
                         arguments: {"phone": _phone.text});
                   }
                 } on GoTrueException catch (error) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 } catch (error) {
-                  await warningSnackBar(
-                      context, 'Unexpected error has occurred: $error');
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
                 }
               } else {
                 try {
                   await supaAuth.createNewPhoneUser(
                       _phone.text, _password.text);
                   if (!mounted) return;
-                  await successSnackBar(context, 'Successfully created !');
+                  context.showSnackBar('Successfully created !');
                   if (mounted) {
                     Navigator.popAndPushNamed(context, widget.redirectUrl,
                         arguments: {"phone": _phone.text});
                   }
                 } on GoTrueException catch (error) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 } catch (error) {
-                  await warningSnackBar(
-                      context, 'Unexpected error has occurred: $error');
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
                 }
               }
 

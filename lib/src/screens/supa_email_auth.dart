@@ -12,13 +12,13 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(GotrueSessionResponse response)? onSuccess;
   final bool Function(GoTrueException error)? onError;
 
-  const SupaEmailAuth(
-      {Key? key,
-      required this.authAction,
-      this.redirectUrl,
-      this.onSuccess,
-      this.onError})
-      : super(key: key);
+  const SupaEmailAuth({
+    Key? key,
+    required this.authAction,
+    this.redirectUrl,
+    this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaEmailAuth> createState() => _SupaEmailAuthState();
@@ -31,7 +31,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   final _supaAuth = SupabaseAuthUi();
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -82,7 +82,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: (isLoading)
+            child: (_isLoading)
                 ? const SizedBox(
                     height: 16,
                     width: 16,
@@ -100,7 +100,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 return;
               }
               setState(() {
-                isLoading = true;
+                _isLoading = true;
               });
               try {
                 if (isSigningIn == false) {
@@ -117,20 +117,20 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     _email.text, _password.text);
                 widget.onSuccess?.call(result);
                 if (mounted) {
-                  successSnackBar(context, 'Successfully signed in !');
+                  context.showSnackBar('Successfully signed in !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
               }
               if (mounted) {
                 setState(() {
-                  isLoading = false;
+                  _isLoading = false;
                 });
               }
             },

@@ -66,16 +66,16 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                     accessToken, _password.text);
                 widget.onSuccess?.call(result);
                 if (mounted) {
-                  successSnackBar(context, 'Successfully updated password !');
+                  context.showSnackBar('Successfully updated password !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
               }
             },
           ),

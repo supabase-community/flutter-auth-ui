@@ -81,16 +81,16 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                     _email.text, widget.redirectUrl);
                 widget.onSuccess?.call(result);
                 if (mounted) {
-                  successSnackBar(context, 'Email successfully sent !');
+                  context.showSnackBar('Email successfully sent !');
                 }
               } on GoTrueException catch (error) {
                 if (widget.onError == null ||
                     widget.onError?.call(error) == false) {
-                  await warningSnackBar(context, error.message);
+                  context.showErrorSnackBar(error.message);
                 }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
               }
               if (mounted) {
                 setState(() {
