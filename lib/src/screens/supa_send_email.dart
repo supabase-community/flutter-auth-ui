@@ -21,9 +21,9 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
 
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
+  final SupabaseAuthUi _supaAuth = SupabaseAuthUi();
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -56,7 +56,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
           ),
           spacer(16),
           ElevatedButton(
-            child: (isLoading)
+            child: (_isLoading)
                 ? const SizedBox(
                     height: 16,
                     width: 16,
@@ -74,10 +74,10 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 return;
               }
               setState(() {
-                isLoading = true;
+                _isLoading = true;
               });
               try {
-                final result = await supaAuth.sendResetPasswordEmail(
+                final result = await _supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);
                 widget.onSuccess?.call(result);
                 if (mounted) {
@@ -94,7 +94,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               }
               if (mounted) {
                 setState(() {
-                  isLoading = false;
+                  _isLoading = false;
                 });
               }
             },

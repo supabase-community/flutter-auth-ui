@@ -22,7 +22,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   final _phone = TextEditingController();
   final _password = TextEditingController();
 
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
+  final SupabaseAuthUi _supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -85,7 +85,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               }
               if (isSigningIn) {
                 try {
-                  await supaAuth.signInUserWithPhone(
+                  await _supaAuth.signInUserWithPhone(
                       _phone.text, _password.text);
                   if (!mounted) return;
                   context.showSnackBar('Successfully signed in !');
@@ -101,7 +101,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                 }
               } else {
                 try {
-                  await supaAuth.createNewPhoneUser(
+                  await _supaAuth.createNewPhoneUser(
                       _phone.text, _password.text);
                   if (!mounted) return;
                   context.showSnackBar('Successfully created !');

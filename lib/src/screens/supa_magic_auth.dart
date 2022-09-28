@@ -23,7 +23,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
 
   final _supaAuth = SupabaseAuthUi();
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -56,7 +56,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: (isLoading)
+            child: (_isLoading)
                 ? const SizedBox(
                     height: 16,
                     width: 16,
@@ -74,7 +74,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 return;
               }
               setState(() {
-                isLoading = true;
+                _isLoading = true;
               });
               try {
                 final result = await _supaAuth.createNewPasswordlessUser(
@@ -95,7 +95,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
               }
               if (mounted) {
                 setState(() {
-                  isLoading = false;
+                  _isLoading = false;
                 });
               }
             },
