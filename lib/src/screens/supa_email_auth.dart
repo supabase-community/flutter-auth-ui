@@ -9,8 +9,15 @@ enum AuthAction { signIn, signUp }
 class SupaEmailAuth extends StatefulWidget {
   final AuthAction authAction;
   final String? redirectUrl;
+  final void Function(GotrueSessionResponse response)? onSuccess;
+  final bool Function(GoTrueException error)? onError;
 
-  const SupaEmailAuth({Key? key, required this.authAction, this.redirectUrl})
+  const SupaEmailAuth(
+      {Key? key,
+      required this.authAction,
+      this.redirectUrl,
+      this.onSuccess,
+      this.onError})
       : super(key: key);
 
   @override
@@ -23,6 +30,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _password = TextEditingController();
 
   final _supaAuth = SupabaseAuthUi();
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -60,7 +69,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
-                return 'Please enter a password that is atleast 6 characters long';
+                return 'Please enter a password that is at least 6 characters long';
               }
               return null;
             },
@@ -73,49 +82,57 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: Text(
-              isSigningIn ? 'Sign In' : 'Sign Up',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: (isLoading)
+                ? const SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1.5,
+                    ),
+                  )
+                : Text(
+                    isSigningIn ? 'Sign In' : 'Sign Up',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-              if (isSigningIn) {
-                try {
-                  await _supaAuth.signInExistingUser(
-                      _email.text, _password.text);
-                  if (!mounted) return;
-                  await successAlert(context);
-                  if (mounted) {
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '/');
-                  }
-                } on GoTrueException catch (error) {
-                  await warningAlert(context, error.message);
-                } catch (error) {
-                  await warningAlert(context, 'Unexpected error has occured');
-                }
-              } else {
-                try {
-                  await _supaAuth.createNewEmailUser(
-                      _email.text, _password.text);
-                  if (!mounted) return;
-                  await successAlert(context);
-                  if (mounted) {
-                    Navigator.popAndPushNamed(
-                        context, widget.redirectUrl ?? '/');
-                  }
-                } on GoTrueException catch (error) {
-                  await warningAlert(context, error.message);
-                } catch (error) {
-                  await warningAlert(context, 'Unexpected error has occured');
-                }
-              }
               setState(() {
-                _email.text = '';
-                _password.text = '';
+                isLoading = true;
               });
+              try {
+                if (isSigningIn == false) {
+                  try {
+                    await _supaAuth.createNewEmailUser(
+                        _email.text, _password.text,
+                        redirectUrl: widget.redirectUrl);
+                  } on GoTrueException catch (error) {
+                    if (error.message != "User already registered") rethrow;
+                  }
+                }
+                // Always call SignIn to support case where the user exists, or no email confirmation are needed
+                final result = await _supaAuth.signInExistingUser(
+                    _email.text, _password.text);
+                widget.onSuccess?.call(result);
+                if (mounted) {
+                  successSnackBar(context, 'Successfully signed in !');
+                }
+              } on GoTrueException catch (error) {
+                if (widget.onError == null ||
+                    widget.onError?.call(error) == false) {
+                  await warningSnackBar(context, error.message);
+                }
+              } catch (error) {
+                await warningSnackBar(
+                    context, 'Unexpected error has occurred: $error');
+              }
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
+              }
             },
           ),
           spacer(10),

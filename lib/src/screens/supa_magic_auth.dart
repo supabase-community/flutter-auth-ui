@@ -1,13 +1,17 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaMagicAuth extends StatefulWidget {
   final String? redirectUrl;
+  final void Function(GotrueSessionResponse response)? onSuccess;
+  final bool Function(GoTrueException error)? onError;
 
-  const SupaMagicAuth({Key? key, this.redirectUrl}) : super(key: key);
+  const SupaMagicAuth(
+      {Key? key, this.redirectUrl, this.onSuccess, this.onError})
+      : super(key: key);
 
   @override
   State<SupaMagicAuth> createState() => _SupaMagicAuthState();
@@ -18,6 +22,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _email = TextEditingController();
 
   final _supaAuth = SupabaseAuthUi();
+
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -50,29 +56,48 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
           ),
           spacer(16),
           ElevatedButton(
-            child: const Text(
-              'Sign Up with Magic Link',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: (isLoading)
+                ? const SizedBox(
+                    height: 16,
+                    width: 16,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 1.5,
+                    ),
+                  )
+                : const Text(
+                    'Continue with magic Link',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
+              setState(() {
+                isLoading = true;
+              });
               try {
-                await _supaAuth.createNewPasswordlessUser(_email.text);
-                if (!mounted) return;
-                await successAlert(context);
+                final result = await _supaAuth.createNewPasswordlessUser(
+                    _email.text,
+                    redirectUrl: widget.redirectUrl);
+                widget.onSuccess?.call(result);
                 if (mounted) {
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '');
+                  successSnackBar(context, 'Created passwordless user !');
                 }
               } on GoTrueException catch (error) {
-                await warningAlert(context, error.message);
+                if (widget.onError == null ||
+                    widget.onError?.call(error) == false) {
+                  await warningSnackBar(context, error.message);
+                }
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occured');
+                await warningSnackBar(
+                    context, 'Unexpected error has occurred: $error');
               }
-              setState(() {
-                _email.text = '';
-              });
+              if (mounted) {
+                setState(() {
+                  isLoading = false;
+                });
+              }
             },
           ),
           spacer(10),

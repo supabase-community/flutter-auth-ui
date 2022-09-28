@@ -34,11 +34,16 @@ class SupaSocialsAuth extends StatefulWidget {
   final bool colored;
   final String? redirectUrl;
 
+  final void Function()? onSuccess;
+  final bool Function(GoTrueException error)? onError;
+
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
     required this.colored,
     this.redirectUrl,
+    this.onSuccess,
+    this.onError,
   }) : super(key: key);
 
   @override
@@ -76,15 +81,24 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             ),
             onPressed: () async {
               try {
-                await SupabaseAuthUi().socialSignIn(providers[index].name, widget.redirectUrl);
+                await SupabaseAuthUi().socialSignIn(providers[index].name,
+                    redirectUrl: widget.redirectUrl);
+                widget.onSuccess?.call();
+                if (mounted) {
+                  successSnackBar(context, 'Successfully signed in !');
+                }
               } on GoTrueException catch (error) {
-                await warningAlert(context, error.message);
+                if (widget.onError == null ||
+                    widget.onError?.call(error) == false) {
+                  await warningSnackBar(context, error.message);
+                }
               } catch (error) {
-                await warningAlert(context, 'Unexpected error has occured');
+                await warningSnackBar(
+                    context, 'Unexpected error has occurred: $error');
               }
             },
             label: Text(
-              'Sign in with ${providers[index].capitalizedName}',
+              'Continue with ${providers[index].capitalizedName}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: coloredBg ? Colors.white : Colors.black,
