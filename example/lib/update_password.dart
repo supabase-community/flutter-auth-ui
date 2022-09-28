@@ -14,7 +14,12 @@ class UpdatePassword extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaResetPassword(accessToken: 'gcdhg'),
+            SupaResetPassword(
+              accessToken: 'gcdhg',
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+            ),
             TextButton(
               child: const Text(
                 'Take me back to Sign Up',

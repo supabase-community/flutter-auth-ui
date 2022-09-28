@@ -14,9 +14,11 @@ class PhoneSignIn extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaPhoneAuth(
-              phoneAuthAction: PhoneAuthAction.signIn,
-              redirectUrl: '/home',
+            SupaPhoneAuth(
+              phoneAuthAction: AuthAction.signIn,
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
             ),
             TextButton(
               child: const Text(

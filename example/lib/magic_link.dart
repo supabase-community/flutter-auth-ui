@@ -14,7 +14,11 @@ class MagicLink extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaMagicAuth(),
+            SupaMagicAuth(
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+            ),
             TextButton(
               child: const Text(
                 'Already have an account? Sign In',

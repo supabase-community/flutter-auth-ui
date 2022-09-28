@@ -13,9 +13,11 @@ class SignIn extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          const SupaEmailAuth(
+          SupaEmailAuth(
             authAction: AuthAction.signIn,
-            redirectUrl: '/home',
+            onSuccess: (response) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
           TextButton(
             child: const Text(

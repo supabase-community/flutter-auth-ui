@@ -6,12 +6,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupaPhoneAuth extends StatefulWidget {
   final AuthAction phoneAuthAction;
-  final String redirectUrl;
+  final String? redirectUrl;
+
+  /// Method to be called when the auth action is success
+  final void Function(GotrueSessionResponse response) onSuccess;
+
+  /// Method to be called when the auth action threw an excepction
+  final bool Function(Object error)? onError;
 
   const SupaPhoneAuth({
     Key? key,
     required this.phoneAuthAction,
-    required this.redirectUrl,
+    this.redirectUrl,
+    required this.onSuccess,
+    this.onError,
   }) : super(key: key);
 
   @override
@@ -86,35 +94,33 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               }
               if (isSigningIn) {
                 try {
-                  await _supaAuth.signInUserWithPhone(
+                  final response = await _supaAuth.signInUserWithPhone(
                       _phone.text, _password.text);
                   if (!mounted) return;
                   context.showSnackBar('Successfully signed in !');
-                  if (mounted) {
-                    Navigator.popAndPushNamed(context, widget.redirectUrl,
-                        arguments: {"phone": _phone.text});
-                  }
+                  widget.onSuccess(response);
                 } on GoTrueException catch (error) {
                   context.showErrorSnackBar(error.message);
+                  widget.onError?.call(error);
                 } catch (error) {
                   context.showErrorSnackBar(
                       'Unexpected error has occurred: $error');
+                  widget.onError?.call(error);
                 }
               } else {
                 try {
-                  await _supaAuth.createNewPhoneUser(
+                  final response = await _supaAuth.createNewPhoneUser(
                       _phone.text, _password.text);
                   if (!mounted) return;
                   context.showSnackBar('Successfully created !');
-                  if (mounted) {
-                    Navigator.popAndPushNamed(context, widget.redirectUrl,
-                        arguments: {"phone": _phone.text});
-                  }
+                  widget.onSuccess(response);
                 } on GoTrueException catch (error) {
                   context.showErrorSnackBar(error.message);
+                  widget.onError?.call(error);
                 } catch (error) {
                   context.showErrorSnackBar(
                       'Unexpected error has occurred: $error');
+                  widget.onError?.call(error);
                 }
               }
 

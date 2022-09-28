@@ -42,9 +42,9 @@ class SignUp extends StatelessWidget {
             Navigator.popAndPushNamed(context, '/phone_sign_up');
           }),
           spacer,
-          const SupaSocialsAuth(
+          SupaSocialsAuth(
             colored: true,
-            socialProviders: [
+            socialProviders: const [
               SocialProviders.apple,
               SocialProviders.azure,
               SocialProviders.bitbucket,
@@ -58,6 +58,9 @@ class SignUp extends StatelessWidget {
               SocialProviders.twitch,
               SocialProviders.twitter,
             ],
+            onSuccess: () {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
         ],
       ),
