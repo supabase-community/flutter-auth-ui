@@ -1,3 +1,7 @@
+## 0.0.1-dev.4
+
+- BREAKING: 
+
 ## 0.0.1-dev.3
 
 - feat: add phone auth support

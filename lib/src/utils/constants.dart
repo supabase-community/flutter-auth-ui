@@ -33,14 +33,13 @@ extension ShowSnackBar on BuildContext {
   /// Displays a basic snackbar
   void showSnackBar(
     String message, {
-    Color backgroundColor = Colors.white,
+    Color? backgroundColor,
     String? actionLabel,
   }) {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(
       content: Text(message),
       backgroundColor: backgroundColor,
       action: SnackBarAction(
-        textColor: Colors.white,
         label: actionLabel ?? 'ok',
         onPressed: () {},
       ),
@@ -54,7 +53,7 @@ extension ShowSnackBar on BuildContext {
   }) {
     showSnackBar(
       message,
-      backgroundColor: Colors.red,
+      backgroundColor: Theme.of(this).errorColor,
       actionLabel: actionLabel,
     );
   }

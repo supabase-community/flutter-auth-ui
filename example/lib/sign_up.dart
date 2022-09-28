@@ -15,9 +15,12 @@ class SignUp extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          const SupaEmailAuth(
+          SupaEmailAuth(
             authAction: AuthAction.signUp,
             redirectUrl: '/home',
+            onSuccess: (_) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
           TextButton(
             child: const Text(

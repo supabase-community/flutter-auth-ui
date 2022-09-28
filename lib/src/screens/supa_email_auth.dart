@@ -7,9 +7,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum AuthAction { signIn, signUp }
 
 class SupaEmailAuth extends StatefulWidget {
+  /// Whether the user is sining in or signin up
   final AuthAction authAction;
+
+  /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
+  ///
+  /// Typically used to pass a DeepLink
   final String? redirectUrl;
+
+  /// Method to be called when the auth action is success
   final void Function(GotrueSessionResponse response)? onSuccess;
+
+  /// Method to be called when the auth action threw an excepction
   final bool Function(GoTrueException error)? onError;
 
   const SupaEmailAuth({

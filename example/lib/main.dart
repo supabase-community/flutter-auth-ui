@@ -15,7 +15,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// TODO: replace with your credentials
-  await SupabaseAuthUi().initSupabase('SUPABASE_URL', 'SUPABASE_ANON_KEY');
+  await SupabaseAuthUi().initSupabase(
+      'https://nlbsnpoablmsxwkdbmer.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyOTE5ODEwMiwiZXhwIjoxOTQ0Nzc0MTAyfQ.XZWLzz95pyU9msumQNsZKNBXfyss-g214iTVAwyQLPA');
   runApp(const MyApp());
 }
 
@@ -29,7 +31,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
