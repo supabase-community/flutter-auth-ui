@@ -16,7 +16,7 @@ class SupaEmailAuth extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function(GotrueSessionResponse response)? onSuccess;
+  final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final bool Function(GoTrueException error)? onError;
@@ -25,7 +25,7 @@ class SupaEmailAuth extends StatefulWidget {
     Key? key,
     required this.authAction,
     this.redirectUrl,
-    this.onSuccess,
+    required this.onSuccess,
     this.onError,
   }) : super(key: key);
 
@@ -124,7 +124,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 // Always call SignIn to support case where the user exists, or no email confirmation are needed
                 final result = await _supaAuth.signInExistingUser(
                     _email.text, _password.text);
-                widget.onSuccess?.call(result);
+                widget.onSuccess.call(result);
                 if (mounted) {
                   context.showSnackBar('Successfully signed in !');
                 }

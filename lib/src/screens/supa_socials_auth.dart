@@ -34,7 +34,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final bool colored;
   final String? redirectUrl;
 
-  final void Function()? onSuccess;
+  final void Function() onSuccess;
   final bool Function(GoTrueException error)? onError;
 
   const SupaSocialsAuth({
@@ -42,7 +42,7 @@ class SupaSocialsAuth extends StatefulWidget {
     required this.socialProviders,
     required this.colored,
     this.redirectUrl,
-    this.onSuccess,
+    required this.onSuccess,
     this.onError,
   }) : super(key: key);
 
@@ -83,7 +83,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               try {
                 await SupabaseAuthUi().socialSignIn(providers[index].name,
                     redirectUrl: widget.redirectUrl);
-                widget.onSuccess?.call();
+                widget.onSuccess.call();
                 if (mounted) {
                   context.showSnackBar('Successfully signed in !');
                 }

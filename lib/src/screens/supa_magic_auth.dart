@@ -6,12 +6,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupaMagicAuth extends StatefulWidget {
   final String? redirectUrl;
-  final void Function(GotrueSessionResponse response)? onSuccess;
+  final void Function(GotrueSessionResponse response) onSuccess;
   final bool Function(GoTrueException error)? onError;
 
-  const SupaMagicAuth(
-      {Key? key, this.redirectUrl, this.onSuccess, this.onError})
-      : super(key: key);
+  const SupaMagicAuth({
+    Key? key,
+    this.redirectUrl,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaMagicAuth> createState() => _SupaMagicAuthState();
@@ -80,7 +83,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 final result = await _supaAuth.createNewPasswordlessUser(
                     _email.text,
                     redirectUrl: widget.redirectUrl);
-                widget.onSuccess?.call(result);
+                widget.onSuccess.call(result);
                 if (mounted) {
                   context.showSnackBar('Created passwordless user !');
                 }

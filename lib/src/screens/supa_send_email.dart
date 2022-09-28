@@ -6,12 +6,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
-  final void Function(GotrueJsonResponse response)? onSuccess;
+  final void Function(GotrueJsonResponse response) onSuccess;
   final bool Function(GoTrueException error)? onError;
 
-  const SupaSendEmail(
-      {Key? key, this.redirectUrl, this.onSuccess, this.onError})
-      : super(key: key);
+  const SupaSendEmail({
+    Key? key,
+    this.redirectUrl,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaSendEmail> createState() => _SupaSendEmailState();
@@ -79,7 +82,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
               try {
                 final result = await _supaAuth.sendResetPasswordEmail(
                     _email.text, widget.redirectUrl);
-                widget.onSuccess?.call(result);
+                widget.onSuccess.call(result);
                 if (mounted) {
                   context.showSnackBar('Email successfully sent !');
                 }

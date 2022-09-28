@@ -9,9 +9,11 @@ class SupaPhoneAuth extends StatefulWidget {
   final PhoneAuthAction phoneAuthAction;
   final String redirectUrl;
 
-  const SupaPhoneAuth(
-      {Key? key, required this.phoneAuthAction, required this.redirectUrl})
-      : super(key: key);
+  const SupaPhoneAuth({
+    Key? key,
+    required this.phoneAuthAction,
+    required this.redirectUrl,
+  }) : super(key: key);
 
   @override
   State<SupaPhoneAuth> createState() => _SupaPhoneAuthState();

@@ -5,12 +5,15 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 class SupaResetPassword extends StatefulWidget {
   final String? accessToken;
-  final void Function(GotrueUserResponse response)? onSuccess;
+  final void Function(GotrueUserResponse response) onSuccess;
   final bool Function(GoTrueException error)? onError;
 
-  const SupaResetPassword(
-      {Key? key, this.accessToken, this.onSuccess, this.onError})
-      : super(key: key);
+  const SupaResetPassword({
+    Key? key,
+    this.accessToken,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaResetPassword> createState() => _SupaResetPasswordState();
@@ -64,7 +67,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               try {
                 final result = await _supaAuth.updateUserPassword(
                     accessToken, _password.text);
-                widget.onSuccess?.call(result);
+                widget.onSuccess.call(result);
                 if (mounted) {
                   context.showSnackBar('Successfully updated password !');
                 }
