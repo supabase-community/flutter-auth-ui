@@ -111,13 +111,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_dotenv:
-    dependency: "direct main"
-    description:
-      name: flutter_dotenv
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -148,14 +141,14 @@ packages:
       name: functions_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.1"
+    version: "1.0.0-dev.4"
   gotrue:
     dependency: transitive
     description:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.2"
+    version: "1.0.0-dev.4"
   hive:
     dependency: transitive
     description:
@@ -309,7 +302,7 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.2"
+    version: "1.0.0-dev.4"
   process:
     dependency: transitive
     description:
@@ -323,7 +316,7 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.15"
+    version: "1.0.0-dev.5"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -349,7 +342,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.3"
+    version: "1.0.0-dev.4"
   stream_channel:
     dependency: transitive
     description:
@@ -370,7 +363,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.3"
+    version: "1.0.0-dev.9"
   supabase_auth_ui:
     dependency: "direct main"
     description:
@@ -384,7 +377,7 @@ packages:
       name: supabase_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-dev.3"
+    version: "1.0.0-dev.9"
   term_glyph:
     dependency: transitive
     description:
