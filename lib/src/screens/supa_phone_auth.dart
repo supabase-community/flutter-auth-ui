@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum PhoneAuthAction { signIn, signUp }
-
 class SupaPhoneAuth extends StatefulWidget {
-  final PhoneAuthAction phoneAuthAction;
+  final AuthAction phoneAuthAction;
   final String redirectUrl;
 
   const SupaPhoneAuth({
@@ -40,7 +39,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final isSigningIn = widget.phoneAuthAction == PhoneAuthAction.signIn;
+    final isSigningIn = widget.phoneAuthAction == AuthAction.signIn;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,

@@ -1,10 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/utils/auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-enum AuthAction { signIn, signUp }
 
 class SupaEmailAuth extends StatefulWidget {
   /// Whether the user is sining in or signin up

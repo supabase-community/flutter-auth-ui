@@ -1,0 +1,1 @@
+enum AuthAction { signIn, signUp }
