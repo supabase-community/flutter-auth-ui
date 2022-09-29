@@ -11,7 +11,7 @@ class SupaMagicAuth extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function(GotrueSessionResponse response) onSuccess;
+  final void Function(Session response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -30,12 +30,25 @@ class SupaMagicAuth extends StatefulWidget {
 class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
+  late final GotrueSubscription _gotrueSubscription;
 
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _gotrueSubscription =
+        Supabase.instance.client.auth.onAuthStateChange((event, session) {
+      if (session != null && mounted) {
+        widget.onSuccess(session);
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _email.dispose();
+    _gotrueSubscription.data?.unsubscribe();
     super.dispose();
   }
 
@@ -85,15 +98,14 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 _isLoading = true;
               });
               try {
-                final response = await supaClient.auth.signIn(
+                await supaClient.auth.signIn(
                   email: _email.text,
                   options: AuthOptions(
                     redirectTo: widget.redirectUrl,
                   ),
                 );
-                widget.onSuccess.call(response);
                 if (mounted) {
-                  context.showSnackBar('Created passwordless user !');
+                  context.showSnackBar('Check your email inbox!');
                 }
               } on GoTrueException catch (error) {
                 context.showErrorSnackBar(error.message);
