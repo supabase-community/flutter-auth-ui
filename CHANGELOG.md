@@ -1,3 +1,7 @@
+## 0.0.1-dev.4
+
+- fix: image URL of Supabase logo in readme.md
+
 ## 0.0.1-dev.3
 
 - BREAKING: update supabase_flutter to v1.0.0-dev.9
