@@ -4,9 +4,10 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// UI component to create a phone + password signin/ signup form
 class SupaPhoneAuth extends StatefulWidget {
-  final AuthAction phoneAuthAction;
-  final String? redirectUrl;
+  /// Whether the user is sining in or signin up
+  final AuthAction authAction;
 
   /// Method to be called when the auth action is success
   final void Function(GotrueSessionResponse response) onSuccess;
@@ -16,8 +17,7 @@ class SupaPhoneAuth extends StatefulWidget {
 
   const SupaPhoneAuth({
     Key? key,
-    required this.phoneAuthAction,
-    this.redirectUrl,
+    required this.authAction,
     required this.onSuccess,
     this.onError,
   }) : super(key: key);
@@ -47,7 +47,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final isSigningIn = widget.phoneAuthAction == AuthAction.signIn;
+    final isSigningIn = widget.authAction == AuthAction.signIn;
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,

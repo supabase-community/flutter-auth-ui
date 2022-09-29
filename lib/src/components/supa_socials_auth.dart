@@ -4,6 +4,7 @@ import '../utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 
+/// Social provider that are supported
 enum SocialProviders {
   apple(iconData: FontAwesomeIcons.apple, btnBgColor: Colors.black),
   azure(iconData: FontAwesomeIcons.microsoft, btnBgColor: Colors.blueAccent),
@@ -19,22 +20,34 @@ enum SocialProviders {
   twitter(iconData: FontAwesomeIcons.twitter, btnBgColor: Colors.lightBlue);
 
   const SocialProviders({
-    required this.iconData,
-    required this.btnBgColor,
-  });
+    required IconData iconData,
+    required Color btnBgColor,
+  })  : _iconData = iconData,
+        _btnBgColor = btnBgColor;
 
-  final IconData iconData;
-  final Color btnBgColor;
+  final IconData _iconData;
+  final Color _btnBgColor;
 
   String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
 
+/// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
+  /// List of social providers to show in the form
   final List<SocialProviders> socialProviders;
+
+  /// Whether or not to color the social buttons in their respecful colors
   final bool colored;
+
+  /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
+  ///
+  /// Typically used to pass a DeepLink
   final String? redirectUrl;
 
+  /// Method to be called when the auth action is success
   final void Function() onSuccess;
+
+  /// Method to be called when the auth action threw an excepction
   final bool Function(GoTrueException error)? onError;
 
   const SupaSocialsAuth({
@@ -68,7 +81,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
           child: OutlinedButton.icon(
             icon: Icon(
-              providers[index].iconData,
+              providers[index]._iconData,
               color: coloredBg ? Colors.white : Colors.black,
             ),
             style: ButtonStyle(
@@ -77,7 +90,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               ),
               padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
               backgroundColor: MaterialStateProperty.all(
-                  coloredBg ? providers[index].btnBgColor : null),
+                  coloredBg ? providers[index]._btnBgColor : null),
             ),
             onPressed: () async {
               try {

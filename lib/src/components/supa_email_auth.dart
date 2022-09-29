@@ -5,6 +5,7 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// UI component to create email and password signup/ signin form
 class SupaEmailAuth extends StatefulWidget {
   /// Whether the user is sining in or signin up
   final AuthAction authAction;
@@ -18,7 +19,7 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(GoTrueException error)? onError;
+  final bool Function(Object error)? onError;
 
   const SupaEmailAuth({
     Key? key,

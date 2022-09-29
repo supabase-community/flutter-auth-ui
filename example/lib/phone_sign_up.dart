@@ -15,7 +15,7 @@ class PhoneSignUp extends StatelessWidget {
         child: Column(
           children: [
             SupaPhoneAuth(
-              phoneAuthAction: AuthAction.signUp,
+              authAction: AuthAction.signUp,
               onSuccess: (response) {
                 Navigator.of(context).pushReplacementNamed('/verify_phone');
               },
@@ -26,7 +26,7 @@ class PhoneSignUp extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.of(context).pushNamed('/sign_in');
               },
             ),
           ],

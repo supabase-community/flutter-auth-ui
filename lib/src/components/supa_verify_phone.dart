@@ -3,10 +3,19 @@ import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// UI component for verifying phone number
 class SupaVerifyPhone extends StatefulWidget {
-  final String? redirectUrl;
+  /// Method to be called when the auth action is success
+  final void Function(GotrueSessionResponse response) onSuccess;
 
-  const SupaVerifyPhone({Key? key, this.redirectUrl}) : super(key: key);
+  /// Method to be called when the auth action threw an excepction
+  final bool Function(Object error)? onError;
+
+  const SupaVerifyPhone({
+    Key? key,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaVerifyPhone> createState() => _SupaVerifyPhoneState();
@@ -64,17 +73,18 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                 return;
               }
               try {
-                await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
+                final res =
+                    await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
                 if (!mounted) return;
                 context.showSnackBar('Successfully verified !');
-                if (mounted) {
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
-                }
+                widget.onSuccess(res);
               } on GoTrueException catch (error) {
                 context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
               } catch (error) {
                 context
                     .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
               setState(() {
                 _code.text = '';

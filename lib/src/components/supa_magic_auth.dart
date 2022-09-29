@@ -4,10 +4,18 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// UI component to create magic link login form
 class SupaMagicAuth extends StatefulWidget {
+  /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
+  ///
+  /// Typically used to pass a DeepLink
   final String? redirectUrl;
+
+  /// Method to be called when the auth action is success
   final void Function(GotrueSessionResponse response) onSuccess;
-  final bool Function(GoTrueException error)? onError;
+
+  /// Method to be called when the auth action threw an excepction
+  final bool Function(Object error)? onError;
 
   const SupaMagicAuth({
     Key? key,
