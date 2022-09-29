@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create magic link login form
@@ -15,7 +14,7 @@ class SupaMagicAuth extends StatefulWidget {
   final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(Object error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaMagicAuth({
     Key? key,
@@ -31,8 +30,6 @@ class SupaMagicAuth extends StatefulWidget {
 class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
-
-  final _supaAuth = SupabaseAuthUi();
 
   bool _isLoading = false;
 
@@ -88,27 +85,27 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 _isLoading = true;
               });
               try {
-                final result = await _supaAuth.createNewPasswordlessUser(
-                    _email.text,
-                    redirectUrl: widget.redirectUrl);
-                widget.onSuccess.call(result);
+                final response = await supaClient.auth.signIn(
+                  email: _email.text,
+                  options: AuthOptions(
+                    redirectTo: widget.redirectUrl,
+                  ),
+                );
+                widget.onSuccess.call(response);
                 if (mounted) {
                   context.showSnackBar('Created passwordless user !');
                 }
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
-                  context.showErrorSnackBar(error.message);
-                }
+                context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
               } catch (error) {
-                // await warningSnackBar(
-                //     context, 'Unexpected error has occurred: $error');
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
-              if (mounted) {
-                setState(() {
-                  _isLoading = false;
-                });
-              }
+              setState(() {
+                _isLoading = false;
+              });
             },
           ),
           spacer(10),

@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create password reset form
@@ -15,7 +14,7 @@ class SupaSendEmail extends StatefulWidget {
   final void Function(GotrueJsonResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(GoTrueException error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaSendEmail({
     Key? key,
@@ -31,8 +30,6 @@ class SupaSendEmail extends StatefulWidget {
 class _SupaSendEmailState extends State<SupaSendEmail> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
-
-  final SupabaseAuthUi _supaAuth = SupabaseAuthUi();
 
   bool _isLoading = false;
 
@@ -88,20 +85,24 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 _isLoading = true;
               });
               try {
-                final result = await _supaAuth.sendResetPasswordEmail(
-                    _email.text, widget.redirectUrl);
-                widget.onSuccess.call(result);
+                final response =
+                    await supaClient.auth.api.resetPasswordForEmail(
+                  _email.text,
+                  options: AuthOptions(
+                    redirectTo: widget.redirectUrl,
+                  ),
+                );
+                widget.onSuccess.call(response);
                 if (mounted) {
                   context.showSnackBar('Email successfully sent !');
                 }
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
-                  context.showErrorSnackBar(error.message);
-                }
+                context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
               } catch (error) {
                 context
                     .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
               if (mounted) {
                 setState(() {

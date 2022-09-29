@@ -1,6 +1,5 @@
 library supabase_auth_ui;
 
-export 'src/utils/supabase_auth_ui.dart';
 export 'src/components/supa_email_auth.dart';
 export 'src/components/supa_magic_auth.dart';
 export 'src/components/supa_reset_password.dart';

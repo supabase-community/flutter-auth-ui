@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -9,7 +8,7 @@ class SupaVerifyPhone extends StatefulWidget {
   final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(Object error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaVerifyPhone({
     Key? key,
@@ -25,8 +24,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
   Map? data;
   final _formKey = GlobalKey<FormState>();
   final _code = TextEditingController();
-
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -73,8 +70,10 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                 return;
               }
               try {
-                final res =
-                    await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
+                final res = await supaClient.auth.verifyOTP(
+                  data!["phone"],
+                  _code.text,
+                );
                 if (!mounted) return;
                 context.showSnackBar('Successfully verified !');
                 widget.onSuccess(res);

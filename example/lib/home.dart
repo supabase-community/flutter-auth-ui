@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                SupabaseAuthUi().signOutActiveUser();
+                Supabase.instance.client.auth.signOut();
                 Navigator.of(context).popUntil(ModalRoute.withName('/'));
               },
               child: const Text(

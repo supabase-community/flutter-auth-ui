@@ -2,7 +2,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create email and password signup/ signin form
@@ -19,7 +18,7 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(Object error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaEmailAuth({
     Key? key,
@@ -37,8 +36,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
-
-  final _supaAuth = SupabaseAuthUi();
 
   bool _isLoading = false;
 
@@ -112,30 +109,34 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 _isLoading = true;
               });
               try {
-                if (isSigningIn == false) {
-                  try {
-                    await _supaAuth.createNewEmailUser(
-                        _email.text, _password.text,
-                        redirectUrl: widget.redirectUrl);
-                  } on GoTrueException catch (error) {
-                    if (error.message != "User already registered") rethrow;
-                  }
+                late final GotrueSessionResponse response;
+                if (isSigningIn) {
+                  response = await supaClient.auth.signIn(
+                    email: _email.text,
+                    password: _password.text,
+                  );
+                } else {
+                  response = await supaClient.auth.signUp(
+                    _email.text,
+                    _password.text,
+                    options: AuthOptions(
+                      redirectTo: widget.redirectUrl,
+                    ),
+                  );
                 }
-                // Always call SignIn to support case where the user exists, or no email confirmation are needed
-                final result = await _supaAuth.signInExistingUser(
-                    _email.text, _password.text);
-                widget.onSuccess.call(result);
+                widget.onSuccess.call(response);
                 if (mounted) {
                   context.showSnackBar('Successfully signed in !');
                 }
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
+                if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
+                  widget.onError?.call(error);
                 }
               } catch (error) {
                 context
                     .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
               if (mounted) {
                 setState(() {

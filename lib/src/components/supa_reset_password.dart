@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 
@@ -12,7 +11,7 @@ class SupaResetPassword extends StatefulWidget {
   final void Function(GotrueUserResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(Object error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaResetPassword({
     Key? key,
@@ -28,8 +27,6 @@ class SupaResetPassword extends StatefulWidget {
 class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
-
-  final _supaAuth = SupabaseAuthUi();
 
   @override
   void dispose() {
@@ -71,20 +68,23 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                final result = await _supaAuth.updateUserPassword(
-                    accessToken, _password.text);
-                widget.onSuccess.call(result);
+                final response = await supaClient.auth.api.updateUser(
+                  accessToken,
+                  UserAttributes(
+                    password: _password.text,
+                  ),
+                );
+                widget.onSuccess.call(response);
                 if (mounted) {
                   context.showSnackBar('Successfully updated password !');
                 }
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
-                  context.showErrorSnackBar(error.message);
-                }
+                context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
               } catch (error) {
                 context
                     .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
             },
           ),

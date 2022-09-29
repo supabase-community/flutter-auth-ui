@@ -1,32 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 /// Social provider that are supported
 enum SocialProviders {
-  apple(iconData: FontAwesomeIcons.apple, btnBgColor: Colors.black),
-  azure(iconData: FontAwesomeIcons.microsoft, btnBgColor: Colors.blueAccent),
-  bitbucket(iconData: FontAwesomeIcons.bitbucket, btnBgColor: Colors.blue),
-  discord(iconData: FontAwesomeIcons.discord, btnBgColor: Colors.purple),
-  facebook(iconData: FontAwesomeIcons.facebook, btnBgColor: Colors.blue),
-  github(iconData: FontAwesomeIcons.github, btnBgColor: Colors.black),
-  gitlab(iconData: FontAwesomeIcons.gitlab, btnBgColor: Colors.deepOrange),
-  google(iconData: FontAwesomeIcons.google, btnBgColor: Colors.red),
-  slack(iconData: FontAwesomeIcons.slack, btnBgColor: Colors.deepPurple),
-  spotify(iconData: FontAwesomeIcons.spotify, btnBgColor: Colors.green),
-  twitch(iconData: FontAwesomeIcons.twitch, btnBgColor: Colors.purpleAccent),
-  twitter(iconData: FontAwesomeIcons.twitter, btnBgColor: Colors.lightBlue);
+  apple(
+    iconData: FontAwesomeIcons.apple,
+    btnBgColor: Colors.black,
+    provider: Provider.apple,
+  ),
+  azure(
+    iconData: FontAwesomeIcons.microsoft,
+    btnBgColor: Colors.blueAccent,
+    provider: Provider.azure,
+  ),
+  bitbucket(
+    iconData: FontAwesomeIcons.bitbucket,
+    btnBgColor: Colors.blue,
+    provider: Provider.bitbucket,
+  ),
+  discord(
+    iconData: FontAwesomeIcons.discord,
+    btnBgColor: Colors.purple,
+    provider: Provider.discord,
+  ),
+  facebook(
+    iconData: FontAwesomeIcons.facebook,
+    btnBgColor: Colors.blue,
+    provider: Provider.facebook,
+  ),
+  github(
+    iconData: FontAwesomeIcons.github,
+    btnBgColor: Colors.black,
+    provider: Provider.github,
+  ),
+  gitlab(
+    iconData: FontAwesomeIcons.gitlab,
+    btnBgColor: Colors.deepOrange,
+    provider: Provider.gitlab,
+  ),
+  google(
+    iconData: FontAwesomeIcons.google,
+    btnBgColor: Colors.red,
+    provider: Provider.google,
+  ),
+  slack(
+    iconData: FontAwesomeIcons.slack,
+    btnBgColor: Colors.deepPurple,
+    provider: Provider.slack,
+  ),
+  spotify(
+    iconData: FontAwesomeIcons.spotify,
+    btnBgColor: Colors.green,
+    provider: Provider.spotify,
+  ),
+  twitch(
+    iconData: FontAwesomeIcons.twitch,
+    btnBgColor: Colors.purpleAccent,
+    provider: Provider.twitch,
+  ),
+  twitter(
+    iconData: FontAwesomeIcons.twitter,
+    btnBgColor: Colors.lightBlue,
+    provider: Provider.twitter,
+  );
 
   const SocialProviders({
     required IconData iconData,
     required Color btnBgColor,
+    required this.provider,
   })  : _iconData = iconData,
         _btnBgColor = btnBgColor;
 
   final IconData _iconData;
   final Color _btnBgColor;
+  final Provider provider;
 
   String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
@@ -48,7 +97,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final void Function() onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(GoTrueException error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaSocialsAuth({
     Key? key,
@@ -94,20 +143,23 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             ),
             onPressed: () async {
               try {
-                await SupabaseAuthUi().socialSignIn(providers[index].name,
-                    redirectUrl: widget.redirectUrl);
+                await supaClient.auth.signInWithProvider(
+                  providers[index].provider,
+                  options: AuthOptions(
+                    redirectTo: widget.redirectUrl,
+                  ),
+                );
                 widget.onSuccess.call();
                 if (mounted) {
                   context.showSnackBar('Successfully signed in !');
                 }
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
-                  context.showErrorSnackBar(error.message);
-                }
+                context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
               } catch (error) {
                 context
                     .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
             },
             label: Text(

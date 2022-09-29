@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create a phone + password signin/ signup form
@@ -13,7 +12,7 @@ class SupaPhoneAuth extends StatefulWidget {
   final void Function(GotrueSessionResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
-  final bool Function(Object error)? onError;
+  final void Function(Object error)? onError;
 
   const SupaPhoneAuth({
     Key? key,
@@ -30,8 +29,6 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   final _formKey = GlobalKey<FormState>();
   final _phone = TextEditingController();
   final _password = TextEditingController();
-
-  final SupabaseAuthUi _supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -92,38 +89,30 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               if (!_formKey.currentState!.validate()) {
                 return;
               }
-              if (isSigningIn) {
-                try {
-                  final response = await _supaAuth.signInUserWithPhone(
-                      _phone.text, _password.text);
+              try {
+                if (isSigningIn) {
+                  final response = await supaClient.auth.signIn(
+                    phone: _phone.text,
+                    password: _password.text,
+                  );
                   if (!mounted) return;
                   context.showSnackBar('Successfully signed in !');
                   widget.onSuccess(response);
-                } on GoTrueException catch (error) {
-                  context.showErrorSnackBar(error.message);
-                  widget.onError?.call(error);
-                } catch (error) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                  widget.onError?.call(error);
-                }
-              } else {
-                try {
-                  final response = await _supaAuth.createNewPhoneUser(
-                      _phone.text, _password.text);
+                } else {
+                  final response = await supaClient.auth
+                      .signUpWithPhone(_phone.text, _password.text);
                   if (!mounted) return;
                   context.showSnackBar('Successfully created !');
                   widget.onSuccess(response);
-                } on GoTrueException catch (error) {
-                  context.showErrorSnackBar(error.message);
-                  widget.onError?.call(error);
-                } catch (error) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                  widget.onError?.call(error);
                 }
+              } on GoTrueException catch (error) {
+                context.showErrorSnackBar(error.message);
+                widget.onError?.call(error);
+              } catch (error) {
+                context
+                    .showErrorSnackBar('Unexpected error has occurred: $error');
+                widget.onError?.call(error);
               }
-
               setState(() {
                 _phone.text = '';
                 _password.text = '';

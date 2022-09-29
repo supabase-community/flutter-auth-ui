@@ -15,9 +15,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   /// TODO: replace with your credentials
-  await SupabaseAuthUi().initSupabase(
-      'https://nlbsnpoablmsxwkdbmer.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyOTE5ODEwMiwiZXhwIjoxOTQ0Nzc0MTAyfQ.XZWLzz95pyU9msumQNsZKNBXfyss-g214iTVAwyQLPA');
+  await Supabase.initialize(
+      url: 'https://nlbsnpoablmsxwkdbmer.supabase.co',
+      anonKey:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyOTE5ODEwMiwiZXhwIjoxOTQ0Nzc0MTAyfQ.XZWLzz95pyU9msumQNsZKNBXfyss-g214iTVAwyQLPA');
   runApp(const MyApp());
 }
 
