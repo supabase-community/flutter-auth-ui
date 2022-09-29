@@ -7,6 +7,7 @@
 - feat: introduce `onSuccess` and `onError` methods on UI components to handle successful and failed auth actions
 - chore: added some docs on public members
 - feat: add phone auth support
+- fix: only validate forms upon submission
 
 ## 0.0.1-dev.2
 

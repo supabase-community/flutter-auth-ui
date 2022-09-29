@@ -46,7 +46,6 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   Widget build(BuildContext context) {
     final isSigningIn = widget.authAction == SupaAuthAction.signIn;
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +59,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.phone),
-              hintText: 'Enter your phone number',
+              label: Text('Enter your phone number'),
             ),
             controller: _phone,
           ),
@@ -74,7 +73,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.lock),
-              hintText: 'Enter your password',
+              label: Text('Enter your password'),
             ),
             obscureText: true,
             controller: _password,

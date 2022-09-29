@@ -16,8 +16,11 @@ void main() async {
 
   /// TODO: replace with your credentials
   await Supabase.initialize(
-    url: 'https://yoursupabaseurl.supabase.co',
-    anonKey: 'your_anon_key',
+    // url: 'https://yoursupabaseurl.supabase.co',
+    // anonKey: 'your_anon_key',
+    url: 'https://nlbsnpoablmsxwkdbmer.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyOTE5ODEwMiwiZXhwIjoxOTQ0Nzc0MTAyfQ.XZWLzz95pyU9msumQNsZKNBXfyss-g214iTVAwyQLPA',
   );
   runApp(const MyApp());
 }

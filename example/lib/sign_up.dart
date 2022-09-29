@@ -21,6 +21,19 @@ class SignUp extends StatelessWidget {
             onSuccess: (_) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
+            metadataFields: [
+              MetaDataField(
+                prefixIcon: const Icon(Icons.person),
+                label: 'Username',
+                key: 'username',
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return 'Please enter something';
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
           TextButton(
             child: const Text(

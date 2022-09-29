@@ -39,7 +39,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
     final accessToken =
         widget.accessToken ?? supaClient.auth.currentSession!.accessToken;
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -53,7 +52,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.lock),
-              hintText: 'Enter your password',
+              label: Text('Enter your password'),
             ),
             controller: _password,
           ),

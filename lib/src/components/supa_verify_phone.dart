@@ -41,7 +41,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
     var args = ModalRoute.of(context)?.settings.arguments;
     if (args != null) data = args as Map;
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,7 +54,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.code),
-              hintText: 'Enter the code sent',
+              label: Text('Enter the code sent'),
             ),
             controller: _code,
           ),

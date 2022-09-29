@@ -55,7 +55,6 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -71,7 +70,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.email),
-              hintText: 'Enter your email',
+              label: Text('Enter your email'),
             ),
             controller: _email,
           ),

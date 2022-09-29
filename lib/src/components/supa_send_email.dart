@@ -42,7 +42,6 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,7 +57,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.email),
-              hintText: 'Enter your email',
+              label: Text('Enter your email'),
             ),
             controller: _email,
           ),
