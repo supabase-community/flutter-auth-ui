@@ -193,18 +193,19 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   );
                 }
                 widget.onSuccess.call(response);
-                if (mounted) {
-                  context.showSnackBar('Successfully signed in!');
-                }
               } on GoTrueException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
+                } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                context
-                    .showErrorSnackBar('Unexpected error has occurred: $error');
-                widget.onError?.call(error);
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
+                } else {
+                  widget.onError?.call(error);
+                }
               }
               if (mounted) {
                 setState(() {

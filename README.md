@@ -116,30 +116,3 @@ SupaSocialsAuth(
 )
 ```
 
-## onSuccess / onError callbacks
-
-For `SupaSocialsAuth`, `SupaEmailAuth`, `SupaResetPassword` and `SupaMagicAuth` it is possible to specify a ```onSuccess``` and a ```onError``` callback.
-
-Note: Defining ```onSuccess``` disable the default success alert message.
-
-```onSuccess``` will be called when the *Supabase* operation succeeds with the object returned from *GoTrue*.
-```onError``` will be called when the *Supabase* operation fails because of *GoTrue* with a *GoTrueException* as a parameter.
-
-```dart
-SupaEmailAuth(
-    authAction: AuthAction.signIn,
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (response) { 
-        if (response.user != null) {
-            // do something, for example: navigate('home');
-        }
-    },
-    onError: (error) {
-        if (error.message == "Email not confirmed") {
-            // do something, for example: navigate("wait_for_email");
-        }
-    },
-);
-```

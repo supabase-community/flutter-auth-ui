@@ -71,7 +71,7 @@ class SignUp extends StatelessWidget {
               SocialProviders.twitch,
               SocialProviders.twitter,
             ],
-            onSuccess: () {
+            onSuccess: (session) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
           ),

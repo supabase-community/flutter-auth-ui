@@ -94,23 +94,26 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                     phone: _phone.text,
                     password: _password.text,
                   );
-                  if (!mounted) return;
-                  context.showSnackBar('Successfully signed in !');
                   widget.onSuccess(response);
                 } else {
                   final response = await supaClient.auth
                       .signUpWithPhone(_phone.text, _password.text);
                   if (!mounted) return;
-                  context.showSnackBar('Successfully created !');
                   widget.onSuccess(response);
                 }
               } on GoTrueException catch (error) {
-                context.showErrorSnackBar(error.message);
-                widget.onError?.call(error);
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(error.message);
+                } else {
+                  widget.onError?.call(error);
+                }
               } catch (error) {
-                context
-                    .showErrorSnackBar('Unexpected error has occurred: $error');
-                widget.onError?.call(error);
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
+                } else {
+                  widget.onError?.call(error);
+                }
               }
               setState(() {
                 _phone.text = '';
