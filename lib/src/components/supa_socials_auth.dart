@@ -113,6 +113,26 @@ class SupaSocialsAuth extends StatefulWidget {
 }
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
+  late final GotrueSubscription _gotrueSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _gotrueSubscription =
+        Supabase.instance.client.auth.onAuthStateChange((event, session) {
+      if (session != null && mounted) {
+        widget.onSuccess.call();
+        context.showSnackBar('Successfully signed in !');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _gotrueSubscription.data?.unsubscribe();
+  }
+
   @override
   Widget build(BuildContext context) {
     final providers = widget.socialProviders;
@@ -149,10 +169,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                     redirectTo: widget.redirectUrl,
                   ),
                 );
-                widget.onSuccess.call();
-                if (mounted) {
-                  context.showSnackBar('Successfully signed in !');
-                }
               } on GoTrueException catch (error) {
                 context.showErrorSnackBar(error.message);
                 widget.onError?.call(error);
