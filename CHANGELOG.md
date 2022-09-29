@@ -1,11 +1,12 @@
-## 0.0.1-dev.4
-
-- BREAKING: 
-
 ## 0.0.1-dev.3
 
+- BREAKING: update supabase_flutter to v1.0.0-dev.9
+- BREAKING: `AuthAction` and `PhoneAuthAction` are now `SupaAuthAction`
+- BREAKING: `SupabaseAuthUi` class is now removed to let users use `Supabase.instance` directly
+- feat: export supabase_flutter package
+- feat: introduce `onSuccess` and `onError` methods on UI components to handle successful and failed auth actions
+- chore: added some docs on public members
 - feat: add phone auth support
-- chore: cleaned up the code
 
 ## 0.0.1-dev.2
 

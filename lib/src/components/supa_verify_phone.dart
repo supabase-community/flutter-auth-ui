@@ -70,13 +70,13 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                 return;
               }
               try {
-                final res = await supaClient.auth.verifyOTP(
+                final response = await supaClient.auth.verifyOTP(
                   data!["phone"],
                   _code.text,
                 );
                 if (!mounted) return;
                 context.showSnackBar('Successfully verified !');
-                widget.onSuccess(res);
+                widget.onSuccess(response);
               } on GoTrueException catch (error) {
                 context.showErrorSnackBar(error.message);
                 widget.onError?.call(error);
