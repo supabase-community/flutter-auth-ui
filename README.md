@@ -4,13 +4,15 @@
 </p>
 A simple library of predefined widgets to easily and quickly create auth components using Flutter and Supabase.
 
-> :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v0.0.1.
+> :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v1.0.0.
 
 ![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
 
 ## Email Auth
 
 Use a `SupaEmailAuth` widget to create an email and password signin/ signup form.
+
+You can pass `metadataFields` to add additional fields to the signup form to pass as metadata to Supabase.
 
 ```dart
 // Create a Signup form
@@ -19,13 +21,38 @@ SupaEmailAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/'
+    onSuccess: (GotrueSessionResponse response) { 
+        // do something, for example: navigate('home');
+    },
+    onError: (error) {
+        // do something, for example: navigate("wait_for_email");
+    },
+    metadataFields: [
+        MetaDataField(
+            prefixIcon: const Icon(Icons.person),
+            label: 'Username',
+            key: 'username',
+            validator: (val) {
+                if (val == null || val.isEmpty) {
+                return 'Please enter something';
+                }
+                return null;
+            },
+        ),
+    ],
 )
 // Create a Signin form
 SupaEmailAuth(
     authAction: AuthAction.signIn,
     redirectUrl: kIsWeb
           ? null
-          : 'io.supabase.flutter://reset-callback/'
+          : 'io.supabase.flutter://reset-callback/',
+    onSuccess: (GotrueSessionResponse response) { 
+        // do something, for example: navigate('home');
+    },
+    onError: (error) {
+        // do something, for example: navigate("wait_for_email");
+    },
 )
 ```
 
@@ -34,9 +61,17 @@ SupaEmailAuth(
 Use `SupaMagicAuth` widget to create a magic link signIn form.
 
 ```dart
-SupaMagicAuth(redirectUrl: kIsWeb
+SupaMagicAuth(
+    redirectUrl: kIsWeb
           ? null
-          : 'io.supabase.flutter://reset-callback/')
+          : 'io.supabase.flutter://reset-callback/',
+    onSuccess: (Session response) { 
+        // do something, for example: navigate('home');
+    },
+    onError: (error) {
+        // do something, for example: navigate("wait_for_email");
+    },
+)
 ```
 
 ## Reset password
@@ -44,9 +79,18 @@ SupaMagicAuth(redirectUrl: kIsWeb
 Use `SupaResetPassword` to create a password reset form.
 
 ```dart
-SupaResetPassword(accessToken: session.accessToken, redirectUrl: kIsWeb
+SupaResetPassword(
+    accessToken: session.accessToken,
+    redirectUrl: kIsWeb
           ? null
-          : 'io.supabase.flutter://reset-callback/')
+          : 'io.supabase.flutter://reset-callback/',
+    onSuccess: (GotrueUserResponse response) { 
+        // do something, for example: navigate('home');
+    },
+    onError: (error) {
+        // do something, for example: navigate("wait_for_email");
+    },
+)
 ```
 
 ## Social Auth
@@ -56,42 +100,19 @@ Use `SupaSocialsAuth` to create list of social login buttons.
 ```dart
 SupaSocialsAuth(
     socialProviders: [
-    SocialProviders.apple,
-    SocialProviders.google,
+        SocialProviders.apple,
+        SocialProviders.google,
     ],
     colored: true,
     redirectUrl: kIsWeb
           ? null
-          : 'io.supabase.flutter://reset-callback/'
+          : 'io.supabase.flutter://reset-callback/',
+    onSuccess: (Session response) { 
+        // do something, for example: navigate('home');
+    },
+    onError: (error) {
+        // do something, for example: navigate("wait_for_email");
+    },
 )
 ```
 
-## onSuccess / onError callbacks
-
-For `SupaSocialsAuth`, `SupaEmailAuth`, `SupaResetPassword` and `SupaMagicAuth` it is possible to specify a ```onSuccess``` and a ```onError``` callback.
-
-Note: Defining ```onSuccess``` disable the default success alert message.
-
-```onSuccess``` will be called when the *Supabase* operation succeeds with the object returned from *GoTrue*.
-```onError``` will be called when the *Supabase* operation fails because of *GoTrue* with a *GoTrueException* as a parameter.
-
-```dart
-SupaEmailAuth(
-    authAction: AuthAction.signIn,
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (response) { // default success alert is disabled because we specified a ```onSuccess``` callback
-        if (response.user != null) {
-            // do something, for example: navigate('home');
-        }
-    },
-    onError: (error) {
-        if (error.message == "Email not confirmed") {
-            // do something, for example: navigate("wait_for_email");
-            return true; // we handled the error
-        }
-        return false; // false to let the library display an error message.
-    },
-);
-```

@@ -14,9 +14,11 @@ class PhoneSignUp extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaPhoneAuth(
-              phoneAuthAction: PhoneAuthAction.signUp,
-              redirectUrl: '/verify_phone',
+            SupaPhoneAuth(
+              authAction: SupaAuthAction.signUp,
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/verify_phone');
+              },
             ),
             TextButton(
               child: const Text(
@@ -24,7 +26,7 @@ class PhoneSignUp extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.of(context).pushNamed('/sign_in');
               },
             ),
           ],

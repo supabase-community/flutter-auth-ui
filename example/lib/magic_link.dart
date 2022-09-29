@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -14,7 +15,14 @@ class MagicLink extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const SupaMagicAuth(),
+            SupaMagicAuth(
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              redirectUrl: kIsWeb
+                  ? null
+                  : 'io.supabase.flutterquickstart://login-callback',
+            ),
             TextButton(
               child: const Text(
                 'Already have an account? Sign In',

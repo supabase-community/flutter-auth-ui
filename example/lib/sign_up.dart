@@ -15,9 +15,25 @@ class SignUp extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-          const SupaEmailAuth(
-            authAction: AuthAction.signUp,
+          SupaEmailAuth(
+            authAction: SupaAuthAction.signUp,
             redirectUrl: '/home',
+            onSuccess: (_) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
+            metadataFields: [
+              MetaDataField(
+                prefixIcon: const Icon(Icons.person),
+                label: 'Username',
+                key: 'username',
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return 'Please enter something';
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
           TextButton(
             child: const Text(
@@ -39,9 +55,9 @@ class SignUp extends StatelessWidget {
             Navigator.popAndPushNamed(context, '/phone_sign_up');
           }),
           spacer,
-          const SupaSocialsAuth(
+          SupaSocialsAuth(
             colored: true,
-            socialProviders: [
+            socialProviders: const [
               SocialProviders.apple,
               SocialProviders.azure,
               SocialProviders.bitbucket,
@@ -55,6 +71,9 @@ class SignUp extends StatelessWidget {
               SocialProviders.twitch,
               SocialProviders.twitter,
             ],
+            onSuccess: (session) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
         ],
       ),

@@ -19,7 +19,11 @@ const spacer = SizedBox(
 );
 
 ElevatedButton signInBtn(
-    BuildContext context, IconData icon, String labelText, void Function() onPressed) {
+  BuildContext context,
+  IconData icon,
+  String labelText,
+  void Function() onPressed,
+) {
   return ElevatedButton.icon(
     icon: Icon(icon),
     style: ButtonStyle(

@@ -1,6 +1,5 @@
 import 'package:example/phone_sign_up.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import './home.dart';
@@ -14,10 +13,14 @@ import './verify_phone.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  await SupabaseAuthUi().initSupabase(
-    dotenv.env['SUPABASE_URL']!,
-    dotenv.env['SUPABASE_ANON_KEY']!,
+
+  /// TODO: replace with your credentials
+  await Supabase.initialize(
+    // url: 'https://yoursupabaseurl.supabase.co',
+    // anonKey: 'your_anon_key',
+    url: 'https://nlbsnpoablmsxwkdbmer.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyOTE5ODEwMiwiZXhwIjoxOTQ0Nzc0MTAyfQ.XZWLzz95pyU9msumQNsZKNBXfyss-g214iTVAwyQLPA',
   );
   runApp(const MyApp());
 }
@@ -32,7 +35,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),

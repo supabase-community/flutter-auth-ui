@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// UI component for verifying phone number
 class SupaVerifyPhone extends StatefulWidget {
-  final String? redirectUrl;
+  /// Method to be called when the auth action is success
+  final void Function(GotrueSessionResponse response) onSuccess;
 
-  const SupaVerifyPhone({Key? key, this.redirectUrl}) : super(key: key);
+  /// Method to be called when the auth action threw an excepction
+  final void Function(Object error)? onError;
+
+  const SupaVerifyPhone({
+    Key? key,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaVerifyPhone> createState() => _SupaVerifyPhoneState();
@@ -16,8 +24,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
   Map? data;
   final _formKey = GlobalKey<FormState>();
   final _code = TextEditingController();
-
-  SupabaseAuthUi supaAuth = SupabaseAuthUi();
 
   @override
   void initState() {
@@ -35,7 +41,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
     var args = ModalRoute.of(context)?.settings.arguments;
     if (args != null) data = args as Map;
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,7 +54,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.code),
-              hintText: 'Enter the code sent',
+              label: Text('Enter the code sent'),
             ),
             controller: _code,
           ),
@@ -64,21 +69,30 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                 return;
               }
               try {
-                await supaAuth.verifyPhoneUser(data!["phone"], _code.text);
-                if (!mounted) return;
-                await successSnackBar(context, 'Successfully verified !');
-                if (mounted) {
-                  Navigator.popAndPushNamed(context, widget.redirectUrl ?? '/');
-                }
+                final response = await supaClient.auth.verifyOTP(
+                  data!["phone"],
+                  _code.text,
+                );
+                widget.onSuccess(response);
               } on GoTrueException catch (error) {
-                await warningSnackBar(context, error.message);
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(error.message);
+                } else {
+                  widget.onError?.call(error);
+                }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
+                } else {
+                  widget.onError?.call(error);
+                }
               }
-              setState(() {
-                _code.text = '';
-              });
+              if (mounted) {
+                setState(() {
+                  _code.text = '';
+                });
+              }
             },
           ),
           spacer(10),

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supabase_auth_ui.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 
+/// UI component to create password reset form
 class SupaResetPassword extends StatefulWidget {
+  /// accessToken of the user
   final String? accessToken;
-  final void Function(GotrueUserResponse response)? onSuccess;
-  final bool Function(GoTrueException error)? onError;
 
-  const SupaResetPassword(
-      {Key? key, this.accessToken, this.onSuccess, this.onError})
-      : super(key: key);
+  /// Method to be called when the auth action is success
+  final void Function(GotrueUserResponse response) onSuccess;
+
+  /// Method to be called when the auth action threw an excepction
+  final void Function(Object error)? onError;
+
+  const SupaResetPassword({
+    Key? key,
+    this.accessToken,
+    required this.onSuccess,
+    this.onError,
+  }) : super(key: key);
 
   @override
   State<SupaResetPassword> createState() => _SupaResetPasswordState();
@@ -19,8 +27,6 @@ class SupaResetPassword extends StatefulWidget {
 class _SupaResetPasswordState extends State<SupaResetPassword> {
   final _formKey = GlobalKey<FormState>();
   final _password = TextEditingController();
-
-  final _supaAuth = SupabaseAuthUi();
 
   @override
   void dispose() {
@@ -33,7 +39,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
     final accessToken =
         widget.accessToken ?? supaClient.auth.currentSession!.accessToken;
     return Form(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -47,7 +52,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
             },
             decoration: const InputDecoration(
               prefixIcon: Icon(Icons.lock),
-              hintText: 'Enter your password',
+              label: Text('Enter your password'),
             ),
             controller: _password,
           ),
@@ -62,20 +67,26 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                final result = await _supaAuth.updateUserPassword(
-                    accessToken, _password.text);
-                widget.onSuccess?.call(result);
-                if (mounted) {
-                  successSnackBar(context, 'Successfully updated password !');
-                }
+                final response = await supaClient.auth.api.updateUser(
+                  accessToken,
+                  UserAttributes(
+                    password: _password.text,
+                  ),
+                );
+                widget.onSuccess.call(response);
               } on GoTrueException catch (error) {
-                if (widget.onError == null ||
-                    widget.onError?.call(error) == false) {
-                  await warningSnackBar(context, error.message);
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(error.message);
+                } else {
+                  widget.onError?.call(error);
                 }
               } catch (error) {
-                await warningSnackBar(
-                    context, 'Unexpected error has occurred: $error');
+                if (widget.onError == null) {
+                  context.showErrorSnackBar(
+                      'Unexpected error has occurred: $error');
+                } else {
+                  widget.onError?.call(error);
+                }
               }
             },
           ),
