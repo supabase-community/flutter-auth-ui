@@ -94,7 +94,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function() onSuccess;
+  final void Function(Session) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -121,7 +121,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     _gotrueSubscription =
         Supabase.instance.client.auth.onAuthStateChange((event, session) {
       if (session != null && mounted) {
-        widget.onSuccess.call();
+        widget.onSuccess.call(session);
         context.showSnackBar('Successfully signed in !');
       }
     });

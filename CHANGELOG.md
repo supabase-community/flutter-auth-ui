@@ -8,6 +8,25 @@
 - chore: added some docs on public members
 - feat: add phone auth support
 - fix: only validate forms upon submission
+- feat: `metadataFields` has been added to add additional fields to the signup form to pass data as metadata in Supabase
+    ```dart
+    SupaEmailAuth(
+        authAction: AuthAction.signUp,
+        metadataFields: [
+            MetaDataField(
+                prefixIcon: const Icon(Icons.person),
+                label: 'Username',
+                key: 'username',
+                validator: (val) {
+                    if (val == null || val.isEmpty) {
+                    return 'Please enter something';
+                    }
+                    return null;
+                },
+            ),
+        ],
+    )
+    ```
 
 ## 0.0.1-dev.2
 
