@@ -15,7 +15,7 @@ class PhoneSignIn extends StatelessWidget {
         child: Column(
           children: [
             SupaPhoneAuth(
-              authAction: AuthAction.signIn,
+              authAction: SupaAuthAction.signIn,
               onSuccess: (response) {
                 Navigator.of(context).pushReplacementNamed('/home');
               },
