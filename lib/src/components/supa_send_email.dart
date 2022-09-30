@@ -91,7 +91,10 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                     redirectTo: widget.redirectUrl,
                   ),
                 );
-                widget.onSuccess.call(response);
+                if (mounted) {
+                  context.showSnackBar('Check your email inbox!');
+                  widget.onSuccess.call(response);
+                }
               } catch (error) {
                 handleError(context, error, widget.onError);
               }
