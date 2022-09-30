@@ -21,7 +21,7 @@ SupaEmailAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/'
-    onSuccess: (GotrueSessionResponse response) { 
+    onSuccess: (GotrueSessionResponse response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {
@@ -47,7 +47,7 @@ SupaEmailAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (GotrueSessionResponse response) { 
+    onSuccess: (GotrueSessionResponse response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {
@@ -65,7 +65,7 @@ SupaMagicAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (Session response) { 
+    onSuccess: (Session response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {
@@ -80,11 +80,10 @@ Use `SupaResetPassword` to create a password reset form.
 
 ```dart
 SupaResetPassword(
-    accessToken: session.accessToken,
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (GotrueUserResponse response) { 
+    onSuccess: (GotrueUserResponse response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {
@@ -107,7 +106,7 @@ SupaSocialsAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (Session response) { 
+    onSuccess: (Session response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {

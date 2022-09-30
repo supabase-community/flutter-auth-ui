@@ -4,9 +4,6 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 
 /// UI component to create password reset form
 class SupaResetPassword extends StatefulWidget {
-  /// accessToken of the user
-  final String? accessToken;
-
   /// Method to be called when the auth action is success
   final void Function(GotrueUserResponse response) onSuccess;
 
@@ -15,7 +12,6 @@ class SupaResetPassword extends StatefulWidget {
 
   const SupaResetPassword({
     Key? key,
-    this.accessToken,
     required this.onSuccess,
     this.onError,
   }) : super(key: key);
@@ -36,8 +32,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final accessToken =
-        widget.accessToken ?? supaClient.auth.currentSession!.accessToken;
+    final accessToken = supaClient.auth.currentSession!.accessToken;
     return Form(
       key: _formKey,
       child: Column(
