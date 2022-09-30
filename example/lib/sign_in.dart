@@ -14,11 +14,16 @@ class SignIn extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         children: [
           SupaEmailAuth(
-            authAction: SupaAuthAction.signIn,
-            onSuccess: (response) {
-              Navigator.of(context).pushReplacementNamed('/home');
-            },
-          ),
+              authAction: SupaAuthAction.signIn,
+              onSuccess: (response) {
+                Navigator.of(context).pushReplacementNamed('/home');
+              },
+              onError: (error) {
+                if (error is GoTrueException &&
+                    error.message == "Email not confirmed") {
+                  Navigator.of(context).pushReplacementNamed("wait_for_email");
+                }
+              }),
           TextButton(
             child: const Text(
               'Forgot Password? Click here',
