@@ -17,7 +17,7 @@ class MagicLink extends StatelessWidget {
           children: [
             SupaMagicAuth(
               onSuccess: (response) {
-                Navigator.of(context).pushReplacementNamed('/home');
+                Navigator.of(context).pushReplacementNamed('/wait_for_email');
               },
               redirectUrl: kIsWeb
                   ? null

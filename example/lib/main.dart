@@ -1,4 +1,5 @@
 import 'package:example/phone_sign_up.dart';
+import 'package:example/wait_for_email.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/phone_sign_in': (context) => const PhoneSignIn(),
         '/phone_sign_up': (context) => const PhoneSignUp(),
         '/verify_phone': (context) => const VerifyPhone(),
+        '/wait_for_email': (context) => const WaitForEmail(),
         '/home': (context) => const Home(),
       },
       onUnknownRoute: (RouteSettings settings) {
