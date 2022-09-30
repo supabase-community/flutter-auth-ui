@@ -5,13 +5,13 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create a phone + password signin/ signup form
 class SupaPhoneAuth extends StatefulWidget {
-  /// Whether the user is sining in or signin up
+  /// Whether the user is signing in or signing up
   final SupaAuthAction authAction;
 
   /// Method to be called when the auth action is success
   final void Function(GotrueSessionResponse response) onSuccess;
 
-  /// Method to be called when the auth action threw an excepction
+  /// Method to be called when the auth action threw an exception
   final void Function(Object error)? onError;
 
   const SupaPhoneAuth({
@@ -101,19 +101,8 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   if (!mounted) return;
                   widget.onSuccess(response);
                 }
-              } on GoTrueException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
               } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
+                handleError(context, error, widget.onError);
               }
               setState(() {
                 _phone.text = '';

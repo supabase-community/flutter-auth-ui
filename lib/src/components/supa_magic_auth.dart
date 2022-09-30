@@ -97,7 +97,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 _isLoading = true;
               });
               try {
-                await supaClient.auth.signIn(
+                final result = await supaClient.auth.signIn(
                   email: _email.text,
                   options: AuthOptions(
                     redirectTo: widget.redirectUrl,
@@ -106,19 +106,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 if (mounted) {
                   context.showSnackBar('Check your email inbox!');
                 }
-              } on GoTrueException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
               } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
+                handleError(context, error, widget.onError);
               }
               setState(() {
                 _isLoading = false;

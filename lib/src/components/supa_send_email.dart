@@ -92,19 +92,8 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                   ),
                 );
                 widget.onSuccess.call(response);
-              } on GoTrueException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
               } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
+                handleError(context, error, widget.onError);
               }
               if (mounted) {
                 setState(() {

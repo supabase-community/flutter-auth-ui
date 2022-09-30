@@ -39,3 +39,16 @@ extension ShowSnackBar on BuildContext {
     );
   }
 }
+
+void handleError(
+    BuildContext context, Object error, void Function(Object error)? onError) {
+  if (onError != null) {
+    onError.call(error);
+    return;
+  }
+  if (error is GoTrueException) {
+    context.showErrorSnackBar(error.message);
+  } else {
+    context.showErrorSnackBar('Unexpected error has occurred: $error');
+  }
+}
