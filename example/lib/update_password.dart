@@ -15,8 +15,6 @@ class UpdatePassword extends StatelessWidget {
         child: Column(
           children: [
             SupaResetPassword(
-              accessToken:
-                  Supabase.instance.client.auth.currentSession!.accessToken,
               onSuccess: (response) {
                 Navigator.of(context).pushReplacementNamed('/home');
               },
