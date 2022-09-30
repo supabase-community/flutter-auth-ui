@@ -21,20 +21,11 @@ class ForgotPassword extends StatelessWidget {
             ),
             TextButton(
               child: const Text(
-                'Forgot Password? Click here',
+                'Take me back to Sign In',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/forgot_password');
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Take me back to Sign Up',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
+                Navigator.pushNamed(context, '/sign_in');
               },
             ),
           ],
