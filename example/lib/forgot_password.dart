@@ -15,7 +15,7 @@ class ForgotPassword extends StatelessWidget {
         child: Column(
           children: [
             SupaSendEmail(
-              onSuccess: (response) {
+              onSuccess: () {
                 Navigator.of(context).pushReplacementNamed('/home');
               },
             ),

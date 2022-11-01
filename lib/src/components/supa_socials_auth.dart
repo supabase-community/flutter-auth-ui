@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -113,13 +115,14 @@ class SupaSocialsAuth extends StatefulWidget {
 }
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
-  late final GotrueSubscription _gotrueSubscription;
+  late final StreamSubscription<AuthState> _gotrueSubscription;
 
   @override
   void initState() {
     super.initState();
     _gotrueSubscription =
-        Supabase.instance.client.auth.onAuthStateChange((event, session) {
+        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
         context.showSnackBar('Successfully signed in !');
@@ -130,7 +133,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   void dispose() {
     super.dispose();
-    _gotrueSubscription.data?.unsubscribe();
+    _gotrueSubscription.cancel();
   }
 
   @override
@@ -163,13 +166,11 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             ),
             onPressed: () async {
               try {
-                await supaClient.auth.signInWithProvider(
+                await supaClient.auth.signInWithOAuth(
                   providers[index].provider,
-                  options: AuthOptions(
-                    redirectTo: widget.redirectUrl,
-                  ),
+                  redirectTo: widget.redirectUrl,
                 );
-              } on GoTrueException catch (error) {
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {

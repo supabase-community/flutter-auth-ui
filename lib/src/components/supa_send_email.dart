@@ -11,7 +11,7 @@ class SupaSendEmail extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function(GotrueJsonResponse response) onSuccess;
+  final void Function() onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -84,15 +84,12 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 _isLoading = true;
               });
               try {
-                final response =
-                    await supaClient.auth.api.resetPasswordForEmail(
+                await supaClient.auth.resetPasswordForEmail(
                   _email.text,
-                  options: AuthOptions(
-                    redirectTo: widget.redirectUrl,
-                  ),
+                  redirectTo: widget.redirectUrl,
                 );
-                widget.onSuccess.call(response);
-              } on GoTrueException catch (error) {
+                widget.onSuccess.call();
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {
