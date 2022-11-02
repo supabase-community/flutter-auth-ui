@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// UI component for verifying phone number
 class SupaVerifyPhone extends StatefulWidget {
   /// Method to be called when the auth action is success
-  final void Function(GotrueSessionResponse response) onSuccess;
+  final void Function(AuthResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -70,11 +70,12 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               }
               try {
                 final response = await supaClient.auth.verifyOTP(
-                  data!["phone"],
-                  _code.text,
+                  phone: data!["phone"],
+                  token: _code.text,
+                  type: OtpType.sms,
                 );
                 widget.onSuccess(response);
-              } on GoTrueException catch (error) {
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {

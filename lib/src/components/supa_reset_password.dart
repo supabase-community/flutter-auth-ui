@@ -8,7 +8,7 @@ class SupaResetPassword extends StatefulWidget {
   final String? accessToken;
 
   /// Method to be called when the auth action is success
-  final void Function(GotrueUserResponse response) onSuccess;
+  final void Function(UserResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -36,8 +36,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final accessToken =
-        widget.accessToken ?? supaClient.auth.currentSession!.accessToken;
     return Form(
       key: _formKey,
       child: Column(
@@ -67,14 +65,13 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                final response = await supaClient.auth.api.updateUser(
-                  accessToken,
+                final response = await supaClient.auth.updateUser(
                   UserAttributes(
                     password: _password.text,
                   ),
                 );
                 widget.onSuccess.call(response);
-              } on GoTrueException catch (error) {
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supa_auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 /// UI component to create a phone + password signin/ signup form
 class SupaPhoneAuth extends StatefulWidget {
@@ -9,7 +8,7 @@ class SupaPhoneAuth extends StatefulWidget {
   final SupaAuthAction authAction;
 
   /// Method to be called when the auth action is success
-  final void Function(GotrueSessionResponse response) onSuccess;
+  final void Function(AuthResponse response) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -90,18 +89,18 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               }
               try {
                 if (isSigningIn) {
-                  final response = await supaClient.auth.signIn(
+                  final response = await supaClient.auth.signInWithPassword(
                     phone: _phone.text,
                     password: _password.text,
                   );
                   widget.onSuccess(response);
                 } else {
                   final response = await supaClient.auth
-                      .signUpWithPhone(_phone.text, _password.text);
+                      .signUp(phone: _phone.text, password: _password.text);
                   if (!mounted) return;
                   widget.onSuccess(response);
                 }
-              } on GoTrueException catch (error) {
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {

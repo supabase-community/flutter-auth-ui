@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
@@ -30,7 +32,7 @@ class SupaMagicAuth extends StatefulWidget {
 class _SupaMagicAuthState extends State<SupaMagicAuth> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
-  late final GotrueSubscription _gotrueSubscription;
+  late final StreamSubscription<AuthState> _gotrueSubscription;
 
   bool _isLoading = false;
 
@@ -38,7 +40,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   void initState() {
     super.initState();
     _gotrueSubscription =
-        Supabase.instance.client.auth.onAuthStateChange((event, session) {
+        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess(session);
       }
@@ -48,7 +51,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   @override
   void dispose() {
     _email.dispose();
-    _gotrueSubscription.data?.unsubscribe();
+    _gotrueSubscription.cancel();
     super.dispose();
   }
 
@@ -97,16 +100,14 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 _isLoading = true;
               });
               try {
-                await supaClient.auth.signIn(
+                await supaClient.auth.signInWithOtp(
                   email: _email.text,
-                  options: AuthOptions(
-                    redirectTo: widget.redirectUrl,
-                  ),
+                  emailRedirectTo: widget.redirectUrl,
                 );
                 if (mounted) {
                   context.showSnackBar('Check your email inbox!');
                 }
-              } on GoTrueException catch (error) {
+              } on AuthException catch (error) {
                 if (widget.onError == null) {
                   context.showErrorSnackBar(error.message);
                 } else {
