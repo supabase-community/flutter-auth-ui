@@ -9,7 +9,7 @@ class VerifyPhone extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: appBar('Verify Phone'),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(

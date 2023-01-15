@@ -10,7 +10,7 @@ class SignUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('auth ui example'),
+        title: const Text('Sign Up'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
