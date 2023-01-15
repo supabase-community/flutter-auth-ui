@@ -9,7 +9,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: appBar('Home'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
