@@ -9,9 +9,7 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('auth ui example'),
-      ),
+      appBar: appBar('Sign Up'),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [

@@ -9,7 +9,7 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: appBar('Sign In'),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [

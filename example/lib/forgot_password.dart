@@ -9,7 +9,7 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      appBar: appBar('Forgot Password'),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -17,15 +17,6 @@ class ForgotPassword extends StatelessWidget {
             SupaSendEmail(
               onSuccess: () {
                 Navigator.of(context).pushReplacementNamed('/home');
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Forgot Password? Click here',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/forgot_password');
               },
             ),
             TextButton(

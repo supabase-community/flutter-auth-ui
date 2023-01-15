@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-final appBar = AppBar(
-  title: const Text('auth ui example'),
-  automaticallyImplyLeading: false,
-);
+AppBar appBar(String title) => AppBar(
+      title: Text(title),
+      automaticallyImplyLeading: false,
+    );
 
 const optionText = Text(
   'Or',
