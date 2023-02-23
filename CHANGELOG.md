@@ -1,3 +1,7 @@
+## 0.1.0+1
+
+- fix: make image URL on readme.md absolute so that it will be displayed properly on pub.dev
+
 ## 0.1.0
 
 - BREAKING: remove unnecessary button styles
