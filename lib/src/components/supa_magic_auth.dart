@@ -80,11 +80,11 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
           spacer(16),
           ElevatedButton(
             child: (_isLoading)
-                ? const SizedBox(
+                ? SizedBox(
                     height: 16,
                     width: 16,
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       strokeWidth: 1.5,
                     ),
                   )

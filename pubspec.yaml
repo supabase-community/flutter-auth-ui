@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^1.0.0
+  supabase_flutter: ^1.4.0
   email_validator: ^2.0.1
   font_awesome_flutter: ^10.0.0
   

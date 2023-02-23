@@ -34,7 +34,7 @@ extension ShowSnackBar on BuildContext {
   }) {
     showSnackBar(
       message,
-      backgroundColor: Theme.of(this).errorColor,
+      backgroundColor: Theme.of(this).colorScheme.error,
       actionLabel: actionLabel,
     );
   }

@@ -45,13 +45,21 @@ class SignUp extends StatelessWidget {
           const Divider(),
           optionText,
           spacer,
-          signInBtn(context, Icons.email, 'Sign in with Magic Link', () {
-            Navigator.popAndPushNamed(context, '/magic_link');
-          }),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.popAndPushNamed(context, '/magic_link');
+            },
+            icon: const Icon(Icons.email),
+            label: const Text('Sign in with Magic Link'),
+          ),
           spacer,
-          signInBtn(context, Icons.phone, 'Sign up with Phone', () {
-            Navigator.popAndPushNamed(context, '/phone_sign_up');
-          }),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.popAndPushNamed(context, '/phone_sign_up');
+            },
+            icon: const Icon(Icons.phone),
+            label: const Text('Sign up with Phone'),
+          ),
           spacer,
           SupaSocialsAuth(
             colored: true,
