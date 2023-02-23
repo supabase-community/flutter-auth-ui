@@ -152,18 +152,15 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 .expand((element) => element),
           ElevatedButton(
             child: (_isLoading)
-                ? const SizedBox(
+                ? SizedBox(
                     height: 16,
                     width: 16,
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       strokeWidth: 1.5,
                     ),
                   )
-                : Text(
-                    isSigningIn ? 'Sign In' : 'Sign Up',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                : Text(isSigningIn ? 'Sign In' : 'Sign Up'),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
                 return;

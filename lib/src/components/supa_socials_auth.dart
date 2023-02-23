@@ -29,7 +29,7 @@ enum SocialProviders {
   ),
   facebook(
     iconData: FontAwesomeIcons.facebook,
-    btnBgColor: Colors.blue,
+    btnBgColor: Color(0xFF3b5998),
     provider: Provider.facebook,
   ),
   github(
@@ -44,7 +44,7 @@ enum SocialProviders {
   ),
   google(
     iconData: FontAwesomeIcons.google,
-    btnBgColor: Colors.red,
+    btnBgColor: Colors.white,
     provider: Provider.google,
   ),
   slack(
@@ -64,7 +64,7 @@ enum SocialProviders {
   ),
   twitter(
     iconData: FontAwesomeIcons.twitter,
-    btnBgColor: Colors.lightBlue,
+    btnBgColor: Color(0xFF1DA1F2),
     provider: Provider.twitter,
   );
 
@@ -88,6 +88,8 @@ class SupaSocialsAuth extends StatefulWidget {
   final List<SocialProviders> socialProviders;
 
   /// Whether or not to color the social buttons in their respecful colors
+  ///
+  /// You can control the appearance through `ElevatedButtonTheme` when set to false.
   final bool colored;
 
   /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
@@ -104,7 +106,7 @@ class SupaSocialsAuth extends StatefulWidget {
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
-    required this.colored,
+    this.colored = true,
     this.redirectUrl,
     required this.onSuccess,
     this.onError,
@@ -149,51 +151,89 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(
         providers.length,
-        (index) => Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          child: OutlinedButton.icon(
-            icon: Icon(
-              providers[index]._iconData,
-              color: coloredBg ? Colors.white : Colors.black,
-            ),
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all(
-                const Size(double.infinity, 0),
+        (index) {
+          final socialProvider = providers[index];
+          if (socialProvider == SocialProviders.google && coloredBg) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton.icon(
+                icon: Image.asset(
+                  'assets/logos/google_light.png',
+                  package: 'supabase_auth_ui',
+                  width: 48,
+                  height: 48,
+                ),
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(Colors.black),
+                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                ),
+                onPressed: () async {
+                  try {
+                    await supaClient.auth.signInWithOAuth(
+                      socialProvider.provider,
+                      redirectTo: widget.redirectUrl,
+                    );
+                  } on AuthException catch (error) {
+                    if (widget.onError == null) {
+                      context.showErrorSnackBar(error.message);
+                    } else {
+                      widget.onError?.call(error);
+                    }
+                  } catch (error) {
+                    if (widget.onError == null) {
+                      context.showErrorSnackBar(
+                          'Unexpected error has occurred: $error');
+                    } else {
+                      widget.onError?.call(error);
+                    }
+                  }
+                },
+                label: Text('Continue with ${socialProvider.capitalizedName}'),
               ),
-              padding: MaterialStateProperty.all(const EdgeInsets.all(15)),
-              backgroundColor: MaterialStateProperty.all(
-                  coloredBg ? providers[index]._btnBgColor : null),
-            ),
-            onPressed: () async {
-              try {
-                await supaClient.auth.signInWithOAuth(
-                  providers[index].provider,
-                  redirectTo: widget.redirectUrl,
-                );
-              } on AuthException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
-              } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
-              }
-            },
-            label: Text(
-              'Continue with ${providers[index].capitalizedName}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: coloredBg ? Colors.white : Colors.black,
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: ElevatedButton.icon(
+              icon: SizedBox(
+                height: 48,
+                width: 48,
+                child: Icon(socialProvider._iconData),
               ),
+              style: ButtonStyle(
+                  foregroundColor: coloredBg
+                      ? MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.onBackground)
+                      : null,
+                  backgroundColor: coloredBg
+                      ? MaterialStateProperty.all(socialProvider._btnBgColor)
+                      : null),
+              onPressed: () async {
+                try {
+                  await supaClient.auth.signInWithOAuth(
+                    socialProvider.provider,
+                    redirectTo: widget.redirectUrl,
+                  );
+                } on AuthException catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(error.message);
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                } catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(
+                        'Unexpected error has occurred: $error');
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                }
+              },
+              label: Text('Continue with ${socialProvider.capitalizedName}'),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

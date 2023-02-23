@@ -6,7 +6,7 @@ A simple library of predefined widgets to easily and quickly create auth compone
 
 > :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v1.0.0.
 
-![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
+![Supabase Auth UI](/assets/supabase_auth_ui.png "UI Sample")
 
 ## Email Auth
 
@@ -17,43 +17,39 @@ You can pass `metadataFields` to add additional fields to the signup form to pas
 ```dart
 // Create a Signup form
 SupaEmailAuth(
-    authAction: AuthAction.signUp,
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/'
-    onSuccess: (GotrueSessionResponse response) { 
-        // do something, for example: navigate('home');
-    },
-    onError: (error) {
-        // do something, for example: navigate("wait_for_email");
-    },
-    metadataFields: [
-        MetaDataField(
-            prefixIcon: const Icon(Icons.person),
-            label: 'Username',
-            key: 'username',
-            validator: (val) {
-                if (val == null || val.isEmpty) {
-                return 'Please enter something';
-                }
-                return null;
-            },
-        ),
-    ],
-)
+  authAction: SupaAuthAction.signUp,
+  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+  onError: (error) {
+    // do something, for example: navigate("wait_for_email");
+  },
+  metadataFields: [
+    MetaDataField(
+      prefixIcon: const Icon(Icons.person),
+      label: 'Username',
+      key: 'username',
+      validator: (val) {
+        if (val == null || val.isEmpty) {
+          return 'Please enter something';
+        }
+        return null;
+      },
+    ),
+  ],
+),
 // Create a Signin form
 SupaEmailAuth(
-    authAction: AuthAction.signIn,
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (GotrueSessionResponse response) { 
-        // do something, for example: navigate('home');
-    },
-    onError: (error) {
-        // do something, for example: navigate("wait_for_email");
-    },
-)
+  authAction: SupaAuthAction.signIn,
+  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+  onError: (error) {
+    // do something, for example: navigate("wait_for_email");
+  },
+),
 ```
 
 ## Magic Link Auth
@@ -62,16 +58,14 @@ Use `SupaMagicAuth` widget to create a magic link signIn form.
 
 ```dart
 SupaMagicAuth(
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (Session response) { 
-        // do something, for example: navigate('home');
-    },
-    onError: (error) {
-        // do something, for example: navigate("wait_for_email");
-    },
-)
+  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
+  onSuccess: (Session response) {
+    // do something, for example: navigate('home');
+  },
+  onError: (error) {
+    // do something, for example: navigate("wait_for_email");
+  },
+),
 ```
 
 ## Reset password
@@ -80,17 +74,14 @@ Use `SupaResetPassword` to create a password reset form.
 
 ```dart
 SupaResetPassword(
-    accessToken: session.accessToken,
-    redirectUrl: kIsWeb
-          ? null
-          : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (GotrueUserResponse response) { 
-        // do something, for example: navigate('home');
-    },
-    onError: (error) {
-        // do something, for example: navigate("wait_for_email");
-    },
-)
+  accessToken: supabase.auth.currentSession?.accessToken,
+  onSuccess: (UserResponse response) {
+    // do something, for example: navigate('home');
+  },
+  onError: (error) {
+    // do something, for example: navigate("wait_for_email");
+  },
+),
 ```
 
 ## Social Auth
@@ -113,6 +104,9 @@ SupaSocialsAuth(
     onError: (error) {
         // do something, for example: navigate("wait_for_email");
     },
-)
+),
 ```
 
+## Theming
+
+This library uses bare Flutter components so that you can control the appearance of the components using your own theme.

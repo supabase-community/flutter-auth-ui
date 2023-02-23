@@ -1,3 +1,10 @@
+## 0.1.0
+
+- BREAKING: remove unnecessary button styles
+- BREAKING: properly style google login button
+- feat: update minimum supabase_flutter version to 1.4.0
+- fix: updated some of the brand colors for social auth buttons
+
 ## 0.0.1
 
 - BREAKING: update supabase_flutter to v1.0.0

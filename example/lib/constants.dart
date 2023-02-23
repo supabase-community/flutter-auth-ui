@@ -17,24 +17,3 @@ const optionText = Text(
 const spacer = SizedBox(
   height: 12,
 );
-
-ElevatedButton signInBtn(
-  BuildContext context,
-  IconData icon,
-  String labelText,
-  void Function() onPressed,
-) {
-  return ElevatedButton.icon(
-    icon: Icon(icon),
-    style: ButtonStyle(
-      padding: MaterialStateProperty.all(
-        const EdgeInsets.all(18),
-      ),
-    ),
-    onPressed: onPressed,
-    label: Text(
-      labelText,
-      style: const TextStyle(fontWeight: FontWeight.bold),
-    ),
-  );
-}
