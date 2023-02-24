@@ -160,14 +160,12 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             child: Icon(socialProvider._iconData),
           );
 
-          Color? foregroundColor =
-              coloredBg ? Theme.of(context).colorScheme.onBackground : null;
+          Color? foregroundColor = coloredBg ? Colors.white : null;
           Color? backgroundColor =
               coloredBg ? socialProvider._btnBgColor : null;
           Color? overlayColor = coloredBg ? Colors.white10 : null;
 
-          Color? iconColor =
-              coloredBg ? Theme.of(context).colorScheme.onBackground : null;
+          Color? iconColor = coloredBg ? Colors.white : null;
 
           if (socialProvider == SocialProviders.google && coloredBg) {
             iconWidget = Image.asset(
