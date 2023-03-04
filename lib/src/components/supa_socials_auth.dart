@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Social provider that are supported
 enum SocialProviders {
@@ -82,6 +82,14 @@ enum SocialProviders {
   String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
 
+enum SocialButtonVariant {
+  /// Displays the social login buttons horizontally with icons.
+  icon,
+
+  /// Displays the social login buttons vertically with icons and text labels.
+  iconAndText,
+}
+
 /// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
   /// List of social providers to show in the form
@@ -91,6 +99,9 @@ class SupaSocialsAuth extends StatefulWidget {
   ///
   /// You can control the appearance through `ElevatedButtonTheme` when set to false.
   final bool colored;
+
+  /// Whether or not to show the icon only or icon and text
+  final SocialButtonVariant socialButtonVariant;
 
   /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
   ///
@@ -110,6 +121,7 @@ class SupaSocialsAuth extends StatefulWidget {
     this.redirectUrl,
     required this.onSuccess,
     this.onError,
+    this.socialButtonVariant = SocialButtonVariant.iconAndText,
   }) : super(key: key);
 
   @override
@@ -122,8 +134,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   void initState() {
     super.initState();
-    _gotrueSubscription =
-        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
@@ -147,75 +158,93 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       return ErrorWidget(Exception('Social provider list cannot be empty'));
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: List.generate(
-        providers.length,
-        (index) {
-          final socialProvider = providers[index];
+    final authButtons = List.generate(
+      providers.length,
+      (index) {
+        final socialProvider = providers[index];
 
-          Widget iconWidget = SizedBox(
-            height: 48,
+        Widget iconWidget = SizedBox(
+          height: 48,
+          width: 48,
+          child: Icon(socialProvider._iconData),
+        );
+
+        Color? foregroundColor = coloredBg ? Colors.white : null;
+        Color? backgroundColor = coloredBg ? socialProvider._btnBgColor : null;
+        Color? overlayColor = coloredBg ? Colors.white10 : null;
+
+        Color? iconColor = coloredBg ? Colors.white : null;
+
+        if (socialProvider == SocialProviders.google && coloredBg) {
+          iconWidget = Image.asset(
+            'assets/logos/google_light.png',
+            package: 'supabase_auth_ui',
             width: 48,
-            child: Icon(socialProvider._iconData),
+            height: 48,
           );
 
-          Color? foregroundColor = coloredBg ? Colors.white : null;
-          Color? backgroundColor =
-              coloredBg ? socialProvider._btnBgColor : null;
-          Color? overlayColor = coloredBg ? Colors.white10 : null;
+          foregroundColor = Colors.black;
+          backgroundColor = Colors.white;
+          overlayColor = Colors.white;
+        }
 
-          Color? iconColor = coloredBg ? Colors.white : null;
-
-          if (socialProvider == SocialProviders.google && coloredBg) {
-            iconWidget = Image.asset(
-              'assets/logos/google_light.png',
-              package: 'supabase_auth_ui',
-              width: 48,
-              height: 48,
+        onAuthButtonPressed() async {
+          try {
+            await supaClient.auth.signInWithOAuth(
+              socialProvider.provider,
+              redirectTo: widget.redirectUrl,
             );
-
-            foregroundColor = Colors.black;
-            backgroundColor = Colors.white;
-            overlayColor = Colors.white;
+          } on AuthException catch (error) {
+            if (widget.onError == null) {
+              context.showErrorSnackBar(error.message);
+            } else {
+              widget.onError?.call(error);
+            }
+          } catch (error) {
+            if (widget.onError == null) {
+              context.showErrorSnackBar('Unexpected error has occurred: $error');
+            } else {
+              widget.onError?.call(error);
+            }
           }
+        }
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: ElevatedButton.icon(
-              icon: iconWidget,
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(foregroundColor),
-                backgroundColor: MaterialStateProperty.all(backgroundColor),
-                overlayColor: MaterialStatePropertyAll(overlayColor),
-                iconColor: MaterialStatePropertyAll(iconColor),
-              ),
-              onPressed: () async {
-                try {
-                  await supaClient.auth.signInWithOAuth(
-                    socialProvider.provider,
-                    redirectTo: widget.redirectUrl,
-                  );
-                } on AuthException catch (error) {
-                  if (widget.onError == null) {
-                    context.showErrorSnackBar(error.message);
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                } catch (error) {
-                  if (widget.onError == null) {
-                    context.showErrorSnackBar(
-                        'Unexpected error has occurred: $error');
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                }
-              },
-              label: Text('Continue with ${socialProvider.capitalizedName}'),
-            ),
-          );
-        },
-      ),
+        final authButtonStyle = ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(foregroundColor),
+          backgroundColor: MaterialStateProperty.all(backgroundColor),
+          overlayColor: MaterialStateProperty.all(overlayColor),
+          iconColor: MaterialStateProperty.all(iconColor),
+        );
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: widget.socialButtonVariant == SocialButtonVariant.icon
+              ? CircleAvatar(
+                  backgroundColor: backgroundColor,
+                  foregroundColor: iconColor,
+                  child: IconButton(
+                    onPressed: onAuthButtonPressed,
+                    icon: iconWidget,
+                  ),
+                )
+              : ElevatedButton.icon(
+                  icon: iconWidget,
+                  style: authButtonStyle,
+                  onPressed: onAuthButtonPressed,
+                  label: Text('Continue with ${socialProvider.capitalizedName}'),
+                ),
+        );
+      },
     );
+
+    return widget.socialButtonVariant == SocialButtonVariant.icon
+        ? Wrap(
+            alignment: WrapAlignment.spaceEvenly,
+            children: authButtons,
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: authButtons,
+          );
   }
 }
