@@ -1,3 +1,8 @@
+## 0.1.0+2
+
+- fix: set splash color on colored social button to provide better UX for google auth button
+- fix: use white instead of `onBackground` color for colored social button's foreground color to provide persistent design
+
 ## 0.1.0+1
 
 - fix: make image URL on readme.md absolute so that it will be displayed properly on pub.dev
