@@ -39,8 +39,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   @override
   void initState() {
     super.initState();
-    _gotrueSubscription =
-        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess(session);
@@ -63,10 +62,10 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             validator: (value) {
-              if (value == null ||
-                  value.isEmpty ||
-                  !EmailValidator.validate(_email.text)) {
+              if (value == null || value.isEmpty || !EmailValidator.validate(_email.text)) {
                 return 'Please enter a valid email address';
               }
               return null;
@@ -115,8 +114,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 }
               } catch (error) {
                 if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
+                  context.showErrorSnackBar('Unexpected error has occurred: $error');
                 } else {
                   widget.onError?.call(error);
                 }

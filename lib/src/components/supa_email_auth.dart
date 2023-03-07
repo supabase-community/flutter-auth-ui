@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/utils/supa_auth_action.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:supabase_auth_ui/src/utils/supa_auth_action.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Information about the metadata to pass to the signup form
@@ -106,6 +106,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             validator: (value) {
               if (value == null ||
                   value.isEmpty ||
