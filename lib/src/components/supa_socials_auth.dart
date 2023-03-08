@@ -134,7 +134,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   void initState() {
     super.initState();
-    _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _gotrueSubscription =
+        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
@@ -163,17 +164,20 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       (index) {
         final socialProvider = providers[index];
 
-        Widget iconWidget = SizedBox(
-          height: 48,
-          width: 48,
-          child: Icon(socialProvider._iconData),
-        );
-
         Color? foregroundColor = coloredBg ? Colors.white : null;
         Color? backgroundColor = coloredBg ? socialProvider._btnBgColor : null;
         Color? overlayColor = coloredBg ? Colors.white10 : null;
 
         Color? iconColor = coloredBg ? Colors.white : null;
+
+        Widget iconWidget = SizedBox(
+          height: 48,
+          width: 48,
+          child: Icon(
+            socialProvider._iconData,
+            color: iconColor,
+          ),
+        );
 
         if (socialProvider == SocialProviders.google && coloredBg) {
           iconWidget = Image.asset(
@@ -202,7 +206,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             }
           } catch (error) {
             if (widget.onError == null) {
-              context.showErrorSnackBar('Unexpected error has occurred: $error');
+              context
+                  .showErrorSnackBar('Unexpected error has occurred: $error');
             } else {
               widget.onError?.call(error);
             }
@@ -217,21 +222,23 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         );
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
           child: widget.socialButtonVariant == SocialButtonVariant.icon
-              ? CircleAvatar(
-                  backgroundColor: backgroundColor,
-                  foregroundColor: iconColor,
-                  child: IconButton(
-                    onPressed: onAuthButtonPressed,
-                    icon: iconWidget,
+              ? ClipOval(
+                  child: Material(
+                    color: backgroundColor,
+                    child: InkWell(
+                      onTap: onAuthButtonPressed,
+                      child: iconWidget,
+                    ),
                   ),
                 )
               : ElevatedButton.icon(
                   icon: iconWidget,
                   style: authButtonStyle,
                   onPressed: onAuthButtonPressed,
-                  label: Text('Continue with ${socialProvider.capitalizedName}'),
+                  label:
+                      Text('Continue with ${socialProvider.capitalizedName}'),
                 ),
         );
       },
