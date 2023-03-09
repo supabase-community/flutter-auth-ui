@@ -1,3 +1,8 @@
+## 0.1.1
+
+- feat: social aith buttons icon only option [#43](https://github.com/supabase-community/flutter-auth-ui/pull/43)
+- feat: email suggestion on email form fields [#44](https://github.com/supabase-community/flutter-auth-ui/pull/44)
+
 ## 0.1.0+2
 
 - fix: set splash color on colored social button to provide better UX for google auth button
