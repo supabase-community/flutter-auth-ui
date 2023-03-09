@@ -63,6 +63,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             validator: (value) {
               if (value == null ||
                   value.isEmpty ||
