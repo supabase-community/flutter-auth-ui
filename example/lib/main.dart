@@ -5,7 +5,6 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import './home.dart';
 import './sign_in.dart';
 import './magic_link.dart';
-import './forgot_password.dart';
 import './update_password.dart';
 import 'phone_sign_in.dart';
 import './verify_phone.dart';
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const Home(),
         '/sign_in': (context) => const SignIn(),
         '/magic_link': (context) => const MagicLink(),
-        '/forgot_password': (context) => const ForgotPassword(),
         '/update_password': (context) => const UpdatePassword(),
         '/phone_sign_in': (context) => const PhoneSignIn(),
         '/phone_sign_up': (context) => const PhoneSignUp(),
