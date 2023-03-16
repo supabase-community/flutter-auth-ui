@@ -102,7 +102,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                 _isLoading = true;
               });
               try {
-                await supaClient.auth.signInWithOtp(
+                await supabase.auth.signInWithOtp(
                   email: _email.text,
                   emailRedirectTo: widget.redirectUrl,
                 );

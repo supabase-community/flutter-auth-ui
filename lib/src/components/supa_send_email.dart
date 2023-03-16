@@ -84,7 +84,7 @@ class _SupaSendEmailState extends State<SupaSendEmail> {
                 _isLoading = true;
               });
               try {
-                await supaClient.auth.resetPasswordForEmail(
+                await supabase.auth.resetPasswordForEmail(
                   _email.text,
                   redirectTo: widget.redirectUrl,
                 );

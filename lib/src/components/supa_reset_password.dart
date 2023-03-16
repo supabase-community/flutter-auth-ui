@@ -65,7 +65,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 return;
               }
               try {
-                final response = await supaClient.auth.updateUser(
+                final response = await supabase.auth.updateUser(
                   UserAttributes(
                     password: _password.text,
                   ),

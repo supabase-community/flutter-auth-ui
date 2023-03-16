@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supa_auth_action.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Information about the metadata to pass to the signup form
@@ -40,32 +39,36 @@ class MetaDataField {
 
 /// UI component to create email and password signup/ signin form
 class SupaEmailAuth extends StatefulWidget {
-  /// Whether the user is sining in or signin up
-  final SupaAuthAction authAction;
-
-  /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
+  /// URL to be passed to `emailRedirectTo` for `signUp()`
   ///
-  /// Typically used to pass a DeepLink
-  final String? redirectUrl;
+  /// The user will be redirected to this URL after clicking the link in the confirmation email.
+  final String? redirectTo;
 
-  /// Method to be called when the auth action is success
-  final void Function(AuthResponse response) onSuccess;
+  /// Callback for the user to complete a sign in.
+  final void Function(AuthResponse response)? onSignInComplete;
 
-  /// Method to be called when the auth action threw an excepction
+  /// Callback for the user to complete a signUp.
+  final void Function(AuthResponse response)? onSignUpComplete;
+
+  /// Callback for sending the password reset email
+  final void Function()? onPasswordResetEmailSent;
+
+  /// Callback for when the auth action threw an excepction
+  ///
+  /// If set to `null`, a snack bar with error color will show up.
   final void Function(Object error)? onError;
 
   final List<MetaDataField>? metadataFields;
 
   const SupaEmailAuth({
     Key? key,
-    required this.authAction,
-    this.redirectUrl,
-    required this.onSuccess,
+    this.redirectTo,
+    this.onSignInComplete,
+    this.onSignUpComplete,
+    this.onPasswordResetEmailSent,
     this.onError,
     this.metadataFields,
-  })  : assert(metadataFields == null || authAction == SupaAuthAction.signUp,
-            'metadataFields can only be used for signUp'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<SupaEmailAuth> createState() => _SupaEmailAuthState();
@@ -81,6 +84,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   /// The user has pressed forgot password button
   bool _forgotPassword = false;
+
+  bool _isSigningIn = true;
 
   @override
   void initState() {
@@ -100,19 +105,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   }
 
   @override
-  void didUpdateWidget(covariant SupaEmailAuth oldWidget) {
-    if (oldWidget.authAction != widget.authAction) {
-      setState(() {
-        _forgotPassword = false;
-      });
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isSigningIn = widget.authAction == SupaAuthAction.signIn;
-
     return Form(
       key: _formKey,
       child: Column(
@@ -152,7 +145,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               controller: _passwordController,
             ),
             spacer(16),
-            if (widget.metadataFields != null && !isSigningIn)
+            if (widget.metadataFields != null && !_isSigningIn)
               ...widget.metadataFields!
                   .map((metadataField) => [
                         TextFormField(
@@ -176,7 +169,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                         strokeWidth: 1.5,
                       ),
                     )
-                  : Text(isSigningIn ? 'Sign In' : 'Sign Up'),
+                  : Text(_isSigningIn ? 'Sign In' : 'Sign Up'),
               onPressed: () async {
                 if (!_formKey.currentState!.validate()) {
                   return;
@@ -185,25 +178,25 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   _isLoading = true;
                 });
                 try {
-                  late final AuthResponse response;
-                  if (isSigningIn) {
-                    response = await supaClient.auth.signInWithPassword(
+                  if (_isSigningIn) {
+                    final response = await supabase.auth.signInWithPassword(
                       email: _emailController.text,
                       password: _passwordController.text,
                     );
+                    widget.onSignInComplete?.call(response);
                   } else {
-                    response = await supaClient.auth.signUp(
+                    final response = await supabase.auth.signUp(
                       email: _emailController.text,
                       password: _passwordController.text,
-                      emailRedirectTo: widget.redirectUrl,
+                      emailRedirectTo: widget.redirectTo,
                       data: widget.metadataFields == null
                           ? null
                           : _metadataControllers.map<String, dynamic>(
                               (metaDataField, controller) =>
                                   MapEntry(metaDataField.key, controller.text)),
                     );
+                    widget.onSignUpComplete?.call(response);
                   }
-                  widget.onSuccess.call(response);
                 } on AuthException catch (error) {
                   if (widget.onError == null) {
                     context.showErrorSnackBar(error.message);
@@ -225,8 +218,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 }
               },
             ),
-            if (isSigningIn) ...[
-              spacer(16),
+            spacer(16),
+            if (_isSigningIn) ...[
               TextButton(
                 onPressed: () {
                   setState(() {
@@ -236,11 +229,23 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 child: const Text('Forgot your password?'),
               ),
             ],
+            TextButton(
+              key: const ValueKey('toggleSignInButton'),
+              onPressed: () {
+                setState(() {
+                  _forgotPassword = false;
+                  _isSigningIn = !_isSigningIn;
+                });
+              },
+              child: Text(_isSigningIn
+                  ? 'Don\'t have an account? Sign up'
+                  : 'Already have an account? Sign in'),
+            ),
           ],
-          if (isSigningIn && _forgotPassword) ...[
+          if (_isSigningIn && _forgotPassword) ...[
             spacer(16),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 try {
                   if (!_formKey.currentState!.validate()) {
                     return;
@@ -250,7 +255,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   });
 
                   final email = _emailController.text;
-                  Supabase.instance.client.auth.resetPasswordForEmail(email);
+                  await supabase.auth.resetPasswordForEmail(email);
+                  widget.onPasswordResetEmailSent?.call();
                 } on AuthException catch (error) {
                   widget.onError?.call(error);
                 } catch (error) {
@@ -266,7 +272,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   _forgotPassword = false;
                 });
               },
-              child: const Text('Sign in instead'),
+              child: const Text('Back to sign in'),
             ),
           ],
           spacer(16),

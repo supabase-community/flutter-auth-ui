@@ -15,8 +15,8 @@ class SignUp extends StatelessWidget {
         children: [
           SupaEmailAuth(
             authAction: SupaAuthAction.signUp,
-            redirectUrl: '/home',
-            onSuccess: (_) {
+            redirectTo: '/home',
+            onSignInComplete: (_) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
             metadataFields: [
