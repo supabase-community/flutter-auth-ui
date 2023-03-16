@@ -73,11 +73,14 @@ class SupaEmailAuth extends StatefulWidget {
 
 class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   late final Map<MetaDataField, TextEditingController> _metadataControllers;
 
   bool _isLoading = false;
+
+  /// The user has pressed forgot password button
+  bool _forgotPassword = false;
 
   @override
   void initState() {
@@ -88,12 +91,22 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     for (final controller in _metadataControllers.values) {
       controller.dispose();
     }
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant SupaEmailAuth oldWidget) {
+    if (oldWidget.authAction != widget.authAction) {
+      setState(() {
+        _forgotPassword = false;
+      });
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -111,7 +124,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             validator: (value) {
               if (value == null ||
                   value.isEmpty ||
-                  !EmailValidator.validate(_email.text)) {
+                  !EmailValidator.validate(_emailController.text)) {
                 return 'Please enter a valid email address';
               }
               return null;
@@ -120,98 +133,143 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               prefixIcon: Icon(Icons.email),
               label: Text('Enter your email'),
             ),
-            controller: _email,
+            controller: _emailController,
           ),
-          spacer(16),
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty || value.length < 6) {
-                return 'Please enter a password that is at least 6 characters long';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              label: Text('Enter your password'),
+          if (!_forgotPassword) ...[
+            spacer(16),
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty || value.length < 6) {
+                  return 'Please enter a password that is at least 6 characters long';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.lock),
+                label: Text('Enter your password'),
+              ),
+              obscureText: true,
+              controller: _passwordController,
             ),
-            obscureText: true,
-            controller: _password,
-          ),
-          spacer(16),
-          if (widget.metadataFields != null)
-            ...widget.metadataFields!
-                .map((metadataField) => [
-                      TextFormField(
-                        controller: _metadataControllers[metadataField],
-                        decoration: InputDecoration(
-                          label: Text(metadataField.label),
-                          prefixIcon: metadataField.prefixIcon,
+            spacer(16),
+            if (widget.metadataFields != null && !isSigningIn)
+              ...widget.metadataFields!
+                  .map((metadataField) => [
+                        TextFormField(
+                          controller: _metadataControllers[metadataField],
+                          decoration: InputDecoration(
+                            label: Text(metadataField.label),
+                            prefixIcon: metadataField.prefixIcon,
+                          ),
+                          validator: metadataField.validator,
                         ),
-                        validator: metadataField.validator,
+                        spacer(16),
+                      ])
+                  .expand((element) => element),
+            ElevatedButton(
+              child: (_isLoading)
+                  ? SizedBox(
+                      height: 16,
+                      width: 16,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        strokeWidth: 1.5,
                       ),
-                      spacer(16),
-                    ])
-                .expand((element) => element),
-          ElevatedButton(
-            child: (_isLoading)
-                ? SizedBox(
-                    height: 16,
-                    width: 16,
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      strokeWidth: 1.5,
-                    ),
-                  )
-                : Text(isSigningIn ? 'Sign In' : 'Sign Up'),
-            onPressed: () async {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              setState(() {
-                _isLoading = true;
-              });
-              try {
-                late final AuthResponse response;
-                if (isSigningIn) {
-                  response = await supaClient.auth.signInWithPassword(
-                    email: _email.text,
-                    password: _password.text,
-                  );
-                } else {
-                  response = await supaClient.auth.signUp(
-                    email: _email.text,
-                    password: _password.text,
-                    emailRedirectTo: widget.redirectUrl,
-                    data: widget.metadataFields == null
-                        ? null
-                        : _metadataControllers.map<String, dynamic>(
-                            (metaDataField, controller) =>
-                                MapEntry(metaDataField.key, controller.text)),
-                  );
+                    )
+                  : Text(isSigningIn ? 'Sign In' : 'Sign Up'),
+              onPressed: () async {
+                if (!_formKey.currentState!.validate()) {
+                  return;
                 }
-                widget.onSuccess.call(response);
-              } on AuthException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
-              } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
-              }
-              if (mounted) {
                 setState(() {
-                  _isLoading = false;
+                  _isLoading = true;
                 });
-              }
-            },
-          ),
-          spacer(10),
+                try {
+                  late final AuthResponse response;
+                  if (isSigningIn) {
+                    response = await supaClient.auth.signInWithPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                  } else {
+                    response = await supaClient.auth.signUp(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      emailRedirectTo: widget.redirectUrl,
+                      data: widget.metadataFields == null
+                          ? null
+                          : _metadataControllers.map<String, dynamic>(
+                              (metaDataField, controller) =>
+                                  MapEntry(metaDataField.key, controller.text)),
+                    );
+                  }
+                  widget.onSuccess.call(response);
+                } on AuthException catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(error.message);
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                } catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(
+                        'Unexpected error has occurred: $error');
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                }
+                if (mounted) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }
+              },
+            ),
+            if (isSigningIn) ...[
+              spacer(16),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _forgotPassword = true;
+                  });
+                },
+                child: const Text('Forgot your password?'),
+              ),
+            ],
+          ],
+          if (isSigningIn && _forgotPassword) ...[
+            spacer(16),
+            ElevatedButton(
+              onPressed: () {
+                try {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  final email = _emailController.text;
+                  Supabase.instance.client.auth.resetPasswordForEmail(email);
+                } on AuthException catch (error) {
+                  widget.onError?.call(error);
+                } catch (error) {
+                  widget.onError?.call(error);
+                }
+              },
+              child: const Text('Send password reset email'),
+            ),
+            spacer(16),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _forgotPassword = false;
+                });
+              },
+              child: const Text('Sign in instead'),
+            ),
+          ],
+          spacer(16),
         ],
       ),
     );
