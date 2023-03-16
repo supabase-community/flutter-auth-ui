@@ -39,16 +39,17 @@ class MetaDataField {
 
 /// UI component to create email and password signup/ signin form
 class SupaEmailAuth extends StatefulWidget {
-  /// URL to be passed to `emailRedirectTo` for `signUp()`
-  ///
-  /// The user will be redirected to this URL after clicking the link in the confirmation email.
+  /// The URL to redirect the user to when clicking on the link on the
+  /// confirmation link after signing up.
   final String? redirectTo;
 
   /// Callback for the user to complete a sign in.
-  final void Function(AuthResponse response)? onSignInComplete;
+  final void Function(AuthResponse response) onSignInComplete;
 
   /// Callback for the user to complete a signUp.
-  final void Function(AuthResponse response)? onSignUpComplete;
+  ///
+  /// If email confirmation is turned on, the user is
+  final void Function(AuthResponse response) onSignUpComplete;
 
   /// Callback for sending the password reset email
   final void Function()? onPasswordResetEmailSent;
@@ -63,8 +64,8 @@ class SupaEmailAuth extends StatefulWidget {
   const SupaEmailAuth({
     Key? key,
     this.redirectTo,
-    this.onSignInComplete,
-    this.onSignUpComplete,
+    required this.onSignInComplete,
+    required this.onSignUpComplete,
     this.onPasswordResetEmailSent,
     this.onError,
     this.metadataFields,
@@ -183,7 +184,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       email: _emailController.text,
                       password: _passwordController.text,
                     );
-                    widget.onSignInComplete?.call(response);
+                    widget.onSignInComplete.call(response);
                   } else {
                     final response = await supabase.auth.signUp(
                       email: _emailController.text,
@@ -195,7 +196,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                               (metaDataField, controller) =>
                                   MapEntry(metaDataField.key, controller.text)),
                     );
-                    widget.onSignUpComplete?.call(response);
+                    widget.onSignUpComplete.call(response);
                   }
                 } on AuthException catch (error) {
                   if (widget.onError == null) {

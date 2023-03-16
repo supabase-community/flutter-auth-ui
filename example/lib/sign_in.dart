@@ -14,8 +14,10 @@ class SignIn extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         children: [
           SupaEmailAuth(
-            authAction: SupaAuthAction.signIn,
             onSignInComplete: (response) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
+            onSignUpComplete: (response) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
           ),
