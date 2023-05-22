@@ -1,3 +1,7 @@
+## 0.2.0
+
+- BREAKING: `SupaEmailAuth` now contains sign-up, sign-in, and forget email in a single instance [#46](https://github.com/supabase-community/flutter-auth-ui/pull/46)
+
 ## 0.1.1
 
 - feat: social aith buttons icon only option [#43](https://github.com/supabase-community/flutter-auth-ui/pull/43)
