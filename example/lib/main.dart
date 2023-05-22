@@ -36,13 +36,13 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const Home(),
-        '/sign_in': (context) => const SignIn(),
+        '/': (context) => const SignUp(),
         '/magic_link': (context) => const MagicLink(),
         '/update_password': (context) => const UpdatePassword(),
         '/phone_sign_in': (context) => const PhoneSignIn(),
         '/phone_sign_up': (context) => const PhoneSignUp(),
         '/verify_phone': (context) => const VerifyPhone(),
+        '/home': (context) => const Home(),
       },
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute<void>(

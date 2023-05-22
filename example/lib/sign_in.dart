@@ -3,8 +3,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import 'constants.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatelessWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,19 @@ class SignIn extends StatelessWidget {
             onSignUpComplete: (response) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
+            metadataFields: [
+              MetaDataField(
+                prefixIcon: const Icon(Icons.person),
+                label: 'Username',
+                key: 'username',
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return 'Please enter something';
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
           const Divider(),
           optionText,
@@ -38,6 +51,14 @@ class SignIn extends StatelessWidget {
             },
             icon: const Icon(Icons.phone),
             label: const Text('Sign in with Phone'),
+          ),
+          spacer,
+          SupaSocialsAuth(
+            colored: true,
+            socialProviders: SocialProviders.values,
+            onSuccess: (session) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
         ],
       ),
