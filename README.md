@@ -11,18 +11,18 @@ A simple library of predefined widgets to easily and quickly create auth compone
 ## Email Auth
 
 Use a `SupaEmailAuth` widget to create an email and password signin/ signup form.
+It also contains a button to toggle to display a forgot password form.
 
 You can pass `metadataFields` to add additional fields to the signup form to pass as metadata to Supabase.
 
 ```dart
-// Create a Signup form
+// Create a Email sign-in/sign-up form
 SupaEmailAuth(
-  authAction: SupaAuthAction.signUp,
-  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
-  onSuccess: (AuthResponse response) {
+  redirectTo: kIsWeb ? null : 'io.mydomain.myapp://callback',
+  onSignInComplete: (response) {
     // do something, for example: navigate('home');
   },
-  onError: (error) {
+  onSignUpComplete: (response) {
     // do something, for example: navigate("wait_for_email");
   },
   metadataFields: [
@@ -38,17 +38,6 @@ SupaEmailAuth(
       },
     ),
   ],
-),
-// Create a Signin form
-SupaEmailAuth(
-  authAction: SupaAuthAction.signIn,
-  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
-  onSuccess: (AuthResponse response) {
-    // do something, for example: navigate('home');
-  },
-  onError: (error) {
-    // do something, for example: navigate("wait_for_email");
-  },
 ),
 ```
 

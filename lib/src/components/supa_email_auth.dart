@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
-import 'package:supabase_auth_ui/src/utils/supa_auth_action.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Information about the metadata to pass to the signup form
@@ -38,34 +37,53 @@ class MetaDataField {
   });
 }
 
+/// {@template supa_email_auth}
 /// UI component to create email and password signup/ signin form
+///
+/// ```dart
+/// SupaEmailAuth(
+///   onSignInComplete: (response) {
+///     // handle sign in complete here
+///   },
+///   onSignUpComplete: (response) {
+///     // handle sign up complete here
+///   },
+/// ),
+/// ```
+/// /// {@endtemplate}
 class SupaEmailAuth extends StatefulWidget {
-  /// Whether the user is sining in or signin up
-  final SupaAuthAction authAction;
+  /// The URL to redirect the user to when clicking on the link on the
+  /// confirmation link after signing up.
+  final String? redirectTo;
 
-  /// `redirectUrl` to be passed to the `.signIn()` or `signUp()` methods
+  /// Callback for the user to complete a sign in.
+  final void Function(AuthResponse response) onSignInComplete;
+
+  /// Callback for the user to complete a signUp.
   ///
-  /// Typically used to pass a DeepLink
-  final String? redirectUrl;
+  /// If email confirmation is turned on, the user is
+  final void Function(AuthResponse response) onSignUpComplete;
 
-  /// Method to be called when the auth action is success
-  final void Function(AuthResponse response) onSuccess;
+  /// Callback for sending the password reset email
+  final void Function()? onPasswordResetEmailSent;
 
-  /// Method to be called when the auth action threw an excepction
+  /// Callback for when the auth action threw an excepction
+  ///
+  /// If set to `null`, a snack bar with error color will show up.
   final void Function(Object error)? onError;
 
   final List<MetaDataField>? metadataFields;
 
+  /// {@macro supa_email_auth}
   const SupaEmailAuth({
     Key? key,
-    required this.authAction,
-    this.redirectUrl,
-    required this.onSuccess,
+    this.redirectTo,
+    required this.onSignInComplete,
+    required this.onSignUpComplete,
+    this.onPasswordResetEmailSent,
     this.onError,
     this.metadataFields,
-  })  : assert(metadataFields == null || authAction == SupaAuthAction.signUp,
-            'metadataFields can only be used for signUp'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   State<SupaEmailAuth> createState() => _SupaEmailAuthState();
@@ -73,11 +91,16 @@ class SupaEmailAuth extends StatefulWidget {
 
 class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   late final Map<MetaDataField, TextEditingController> _metadataControllers;
 
   bool _isLoading = false;
+
+  /// The user has pressed forgot password button
+  bool _forgotPassword = false;
+
+  bool _isSigningIn = true;
 
   @override
   void initState() {
@@ -88,8 +111,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   @override
   void dispose() {
-    _email.dispose();
-    _password.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     for (final controller in _metadataControllers.values) {
       controller.dispose();
     }
@@ -98,8 +121,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final isSigningIn = widget.authAction == SupaAuthAction.signIn;
-
     return Form(
       key: _formKey,
       child: Column(
@@ -111,7 +132,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             validator: (value) {
               if (value == null ||
                   value.isEmpty ||
-                  !EmailValidator.validate(_email.text)) {
+                  !EmailValidator.validate(_emailController.text)) {
                 return 'Please enter a valid email address';
               }
               return null;
@@ -120,98 +141,156 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               prefixIcon: Icon(Icons.email),
               label: Text('Enter your email'),
             ),
-            controller: _email,
+            controller: _emailController,
           ),
-          spacer(16),
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty || value.length < 6) {
-                return 'Please enter a password that is at least 6 characters long';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              label: Text('Enter your password'),
+          if (!_forgotPassword) ...[
+            spacer(16),
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty || value.length < 6) {
+                  return 'Please enter a password that is at least 6 characters long';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.lock),
+                label: Text('Enter your password'),
+              ),
+              obscureText: true,
+              controller: _passwordController,
             ),
-            obscureText: true,
-            controller: _password,
-          ),
-          spacer(16),
-          if (widget.metadataFields != null)
-            ...widget.metadataFields!
-                .map((metadataField) => [
-                      TextFormField(
-                        controller: _metadataControllers[metadataField],
-                        decoration: InputDecoration(
-                          label: Text(metadataField.label),
-                          prefixIcon: metadataField.prefixIcon,
+            spacer(16),
+            if (widget.metadataFields != null && !_isSigningIn)
+              ...widget.metadataFields!
+                  .map((metadataField) => [
+                        TextFormField(
+                          controller: _metadataControllers[metadataField],
+                          decoration: InputDecoration(
+                            label: Text(metadataField.label),
+                            prefixIcon: metadataField.prefixIcon,
+                          ),
+                          validator: metadataField.validator,
                         ),
-                        validator: metadataField.validator,
+                        spacer(16),
+                      ])
+                  .expand((element) => element),
+            ElevatedButton(
+              child: (_isLoading)
+                  ? SizedBox(
+                      height: 16,
+                      width: 16,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        strokeWidth: 1.5,
                       ),
-                      spacer(16),
-                    ])
-                .expand((element) => element),
-          ElevatedButton(
-            child: (_isLoading)
-                ? SizedBox(
-                    height: 16,
-                    width: 16,
-                    child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      strokeWidth: 1.5,
-                    ),
-                  )
-                : Text(isSigningIn ? 'Sign In' : 'Sign Up'),
-            onPressed: () async {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              setState(() {
-                _isLoading = true;
-              });
-              try {
-                late final AuthResponse response;
-                if (isSigningIn) {
-                  response = await supaClient.auth.signInWithPassword(
-                    email: _email.text,
-                    password: _password.text,
-                  );
-                } else {
-                  response = await supaClient.auth.signUp(
-                    email: _email.text,
-                    password: _password.text,
-                    emailRedirectTo: widget.redirectUrl,
-                    data: widget.metadataFields == null
-                        ? null
-                        : _metadataControllers.map<String, dynamic>(
-                            (metaDataField, controller) =>
-                                MapEntry(metaDataField.key, controller.text)),
-                  );
+                    )
+                  : Text(_isSigningIn ? 'Sign In' : 'Sign Up'),
+              onPressed: () async {
+                if (!_formKey.currentState!.validate()) {
+                  return;
                 }
-                widget.onSuccess.call(response);
-              } on AuthException catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
-              } catch (error) {
-                if (widget.onError == null) {
-                  context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
-              }
-              if (mounted) {
                 setState(() {
-                  _isLoading = false;
+                  _isLoading = true;
                 });
-              }
-            },
-          ),
-          spacer(10),
+                try {
+                  if (_isSigningIn) {
+                    final response = await supabase.auth.signInWithPassword(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
+                    widget.onSignInComplete.call(response);
+                  } else {
+                    final response = await supabase.auth.signUp(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                      emailRedirectTo: widget.redirectTo,
+                      data: widget.metadataFields == null
+                          ? null
+                          : _metadataControllers.map<String, dynamic>(
+                              (metaDataField, controller) =>
+                                  MapEntry(metaDataField.key, controller.text)),
+                    );
+                    widget.onSignUpComplete.call(response);
+                  }
+                } on AuthException catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(error.message);
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                } catch (error) {
+                  if (widget.onError == null) {
+                    context.showErrorSnackBar(
+                        'Unexpected error has occurred: $error');
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                }
+                if (mounted) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }
+              },
+            ),
+            spacer(16),
+            if (_isSigningIn) ...[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _forgotPassword = true;
+                  });
+                },
+                child: const Text('Forgot your password?'),
+              ),
+            ],
+            TextButton(
+              key: const ValueKey('toggleSignInButton'),
+              onPressed: () {
+                setState(() {
+                  _forgotPassword = false;
+                  _isSigningIn = !_isSigningIn;
+                });
+              },
+              child: Text(_isSigningIn
+                  ? 'Don\'t have an account? Sign up'
+                  : 'Already have an account? Sign in'),
+            ),
+          ],
+          if (_isSigningIn && _forgotPassword) ...[
+            spacer(16),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  setState(() {
+                    _isLoading = true;
+                  });
+
+                  final email = _emailController.text.trim();
+                  await supabase.auth.resetPasswordForEmail(email);
+                  widget.onPasswordResetEmailSent?.call();
+                } on AuthException catch (error) {
+                  widget.onError?.call(error);
+                } catch (error) {
+                  widget.onError?.call(error);
+                }
+              },
+              child: const Text('Send password reset email'),
+            ),
+            spacer(16),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _forgotPassword = false;
+                });
+              },
+              child: const Text('Back to sign in'),
+            ),
+          ],
+          spacer(16),
         ],
       ),
     );

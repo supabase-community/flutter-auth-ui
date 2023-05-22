@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supaClient = Supabase.instance.client;
+final supabase = Supabase.instance.client;
 
 SizedBox spacer(double height) {
   return SizedBox(

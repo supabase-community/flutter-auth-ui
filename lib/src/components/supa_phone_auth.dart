@@ -89,13 +89,13 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               }
               try {
                 if (isSigningIn) {
-                  final response = await supaClient.auth.signInWithPassword(
+                  final response = await supabase.auth.signInWithPassword(
                     phone: _phone.text,
                     password: _password.text,
                   );
                   widget.onSuccess(response);
                 } else {
-                  final response = await supaClient.auth
+                  final response = await supabase.auth
                       .signUp(phone: _phone.text, password: _password.text);
                   if (!mounted) return;
                   widget.onSuccess(response);

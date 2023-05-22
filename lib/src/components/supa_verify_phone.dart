@@ -69,7 +69,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                 return;
               }
               try {
-                final response = await supaClient.auth.verifyOTP(
+                final response = await supabase.auth.verifyOTP(
                   phone: data!["phone"],
                   token: _code.text,
                   type: OtpType.sms,

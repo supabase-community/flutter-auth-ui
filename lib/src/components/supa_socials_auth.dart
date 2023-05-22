@@ -194,7 +194,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
         onAuthButtonPressed() async {
           try {
-            await supaClient.auth.signInWithOAuth(
+            await supabase.auth.signInWithOAuth(
               socialProvider.provider,
               redirectTo: widget.redirectUrl,
             );

@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import 'constants.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({Key? key}) : super(key: key);
+class SignUp extends StatelessWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,28 +15,26 @@ class SignIn extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         children: [
           SupaEmailAuth(
-            authAction: SupaAuthAction.signIn,
-            onSuccess: (response) {
+            redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
+            onSignInComplete: (response) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
-          ),
-          TextButton(
-            child: const Text(
-              'Forgot Password? Click here',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/forgot_password');
+            onSignUpComplete: (response) {
+              Navigator.of(context).pushReplacementNamed('/home');
             },
-          ),
-          TextButton(
-            child: const Text(
-              'Don\'t have an account? Sign Up',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/');
-            },
+            metadataFields: [
+              MetaDataField(
+                prefixIcon: const Icon(Icons.person),
+                label: 'Username',
+                key: 'username',
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return 'Please enter something';
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
           const Divider(),
           optionText,
@@ -54,6 +53,14 @@ class SignIn extends StatelessWidget {
             },
             icon: const Icon(Icons.phone),
             label: const Text('Sign in with Phone'),
+          ),
+          spacer,
+          SupaSocialsAuth(
+            colored: true,
+            socialProviders: SocialProviders.values,
+            onSuccess: (session) {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
           ),
         ],
       ),
