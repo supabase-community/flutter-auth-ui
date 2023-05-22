@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -14,6 +15,7 @@ class SignUp extends StatelessWidget {
         padding: const EdgeInsets.all(24.0),
         children: [
           SupaEmailAuth(
+            redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
             onSignInComplete: (response) {
               Navigator.of(context).pushReplacementNamed('/home');
             },
