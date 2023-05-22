@@ -37,7 +37,20 @@ class MetaDataField {
   });
 }
 
+/// {@template supa_email_auth}
 /// UI component to create email and password signup/ signin form
+///
+/// ```dart
+/// SupaEmailAuth(
+///   onSignInComplete: (response) {
+///     // handle sign in complete here
+///   },
+///   onSignUpComplete: (response) {
+///     // handle sign up complete here
+///   },
+/// ),
+/// ```
+/// /// {@endtemplate}
 class SupaEmailAuth extends StatefulWidget {
   /// The URL to redirect the user to when clicking on the link on the
   /// confirmation link after signing up.
@@ -61,6 +74,7 @@ class SupaEmailAuth extends StatefulWidget {
 
   final List<MetaDataField>? metadataFields;
 
+  /// {@macro supa_email_auth}
   const SupaEmailAuth({
     Key? key,
     this.redirectTo,
@@ -181,14 +195,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 try {
                   if (_isSigningIn) {
                     final response = await supabase.auth.signInWithPassword(
-                      email: _emailController.text,
-                      password: _passwordController.text,
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
                     );
                     widget.onSignInComplete.call(response);
                   } else {
                     final response = await supabase.auth.signUp(
-                      email: _emailController.text,
-                      password: _passwordController.text,
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
                       emailRedirectTo: widget.redirectTo,
                       data: widget.metadataFields == null
                           ? null
@@ -255,7 +269,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     _isLoading = true;
                   });
 
-                  final email = _emailController.text;
+                  final email = _emailController.text.trim();
                   await supabase.auth.resetPasswordForEmail(email);
                   widget.onPasswordResetEmailSent?.call();
                 } on AuthException catch (error) {
