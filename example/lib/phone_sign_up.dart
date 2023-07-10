@@ -22,7 +22,7 @@ class PhoneSignUp extends StatelessWidget {
             ),
             TextButton(
               child: const Text(
-                'Already have an account? Sign In',
+                'Create new account',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
