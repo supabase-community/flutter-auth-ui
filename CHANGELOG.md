@@ -1,3 +1,7 @@
+## 0.2.1
+
+- feat: Make `SupaSocialsAuth` success SnackBar optional [#54](https://github.com/supabase-community/flutter-auth-ui/pull/54)
+
 ## 0.2.0
 
 - BREAKING: `SupaEmailAuth` now contains sign-up, sign-in, and forget email in a single instance [#46](https://github.com/supabase-community/flutter-auth-ui/pull/46)
@@ -44,25 +48,25 @@
 - feat: add phone auth support
 - fix: only validate forms upon submission
 - feat: `metadataFields` has been added to add additional fields to the signup form to pass data as metadata in Supabase
-    ```dart
-    SupaEmailAuth(
-        authAction: AuthAction.signUp,
-        metadataFields: [
-            MetaDataField(
-                prefixIcon: const Icon(Icons.person),
-                label: 'Username',
-                key: 'username',
-                validator: (val) {
-                    if (val == null || val.isEmpty) {
-                    return 'Please enter something';
-                    }
-                    return null;
-                },
-            ),
-        ],
-        onSuccess: _handleSignupSuccess,
-    )
-    ```
+  ```dart
+  SupaEmailAuth(
+      authAction: AuthAction.signUp,
+      metadataFields: [
+          MetaDataField(
+              prefixIcon: const Icon(Icons.person),
+              label: 'Username',
+              key: 'username',
+              validator: (val) {
+                  if (val == null || val.isEmpty) {
+                  return 'Please enter something';
+                  }
+                  return null;
+              },
+          ),
+      ],
+      onSuccess: _handleSignupSuccess,
+  )
+  ```
 
 ## 0.0.1-dev.2
 
@@ -75,4 +79,4 @@
 
 ## 0.0.1-dev.1
 
-- Initial developer preview release. 
+- Initial developer preview release.
