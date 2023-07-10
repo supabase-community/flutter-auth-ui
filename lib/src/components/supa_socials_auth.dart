@@ -114,6 +114,9 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Whether to show a SnackBar after a successful sign in
+  final bool showSuccessSnackBar;
+
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
@@ -122,6 +125,7 @@ class SupaSocialsAuth extends StatefulWidget {
     required this.onSuccess,
     this.onError,
     this.socialButtonVariant = SocialButtonVariant.iconAndText,
+    this.showSuccessSnackBar = true,
   }) : super(key: key);
 
   @override
@@ -139,7 +143,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
-        context.showSnackBar('Successfully signed in !');
+        if (widget.showSuccessSnackBar) {
+          context.showSnackBar('Successfully signed in!');
+        }
       }
     });
   }
