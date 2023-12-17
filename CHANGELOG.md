@@ -1,3 +1,7 @@
+## 0.3.0
+
+- BREAKING: Update `supabase_flutter` to v2.0.1
+
 ## 0.2.1
 
 - feat: Make `SupaSocialsAuth` success SnackBar optional [#54](https://github.com/supabase-community/flutter-auth-ui/pull/54)
