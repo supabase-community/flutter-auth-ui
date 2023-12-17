@@ -110,13 +110,13 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                   context.showSnackBar('Check your email inbox!');
                 }
               } on AuthException catch (error) {
-                if (widget.onError == null) {
+                if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(error.message);
                 } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                if (widget.onError == null) {
+                if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(
                       'Unexpected error has occurred: $error');
                 } else {

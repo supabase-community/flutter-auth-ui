@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// UI component to create password reset form
 class SupaResetPassword extends StatefulWidget {
@@ -72,13 +72,13 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 );
                 widget.onSuccess.call(response);
               } on AuthException catch (error) {
-                if (widget.onError == null) {
+                if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(error.message);
                 } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                if (widget.onError == null) {
+                if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(
                       'Unexpected error has occurred: $error');
                 } else {

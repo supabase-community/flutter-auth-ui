@@ -10,62 +10,62 @@ enum SocialProviders {
   apple(
     iconData: FontAwesomeIcons.apple,
     btnBgColor: Colors.black,
-    provider: Provider.apple,
+    provider: OAuthProvider.apple,
   ),
   azure(
     iconData: FontAwesomeIcons.microsoft,
     btnBgColor: Colors.blueAccent,
-    provider: Provider.azure,
+    provider: OAuthProvider.azure,
   ),
   bitbucket(
     iconData: FontAwesomeIcons.bitbucket,
     btnBgColor: Colors.blue,
-    provider: Provider.bitbucket,
+    provider: OAuthProvider.bitbucket,
   ),
   discord(
     iconData: FontAwesomeIcons.discord,
     btnBgColor: Colors.purple,
-    provider: Provider.discord,
+    provider: OAuthProvider.discord,
   ),
   facebook(
     iconData: FontAwesomeIcons.facebook,
     btnBgColor: Color(0xFF3b5998),
-    provider: Provider.facebook,
+    provider: OAuthProvider.facebook,
   ),
   github(
     iconData: FontAwesomeIcons.github,
     btnBgColor: Colors.black,
-    provider: Provider.github,
+    provider: OAuthProvider.github,
   ),
   gitlab(
     iconData: FontAwesomeIcons.gitlab,
     btnBgColor: Colors.deepOrange,
-    provider: Provider.gitlab,
+    provider: OAuthProvider.gitlab,
   ),
   google(
     iconData: FontAwesomeIcons.google,
     btnBgColor: Colors.white,
-    provider: Provider.google,
+    provider: OAuthProvider.google,
   ),
   slack(
     iconData: FontAwesomeIcons.slack,
     btnBgColor: Colors.deepPurple,
-    provider: Provider.slack,
+    provider: OAuthProvider.slack,
   ),
   spotify(
     iconData: FontAwesomeIcons.spotify,
     btnBgColor: Colors.green,
-    provider: Provider.spotify,
+    provider: OAuthProvider.spotify,
   ),
   twitch(
     iconData: FontAwesomeIcons.twitch,
     btnBgColor: Colors.purpleAccent,
-    provider: Provider.twitch,
+    provider: OAuthProvider.twitch,
   ),
   twitter(
     iconData: FontAwesomeIcons.twitter,
     btnBgColor: Color(0xFF1DA1F2),
-    provider: Provider.twitter,
+    provider: OAuthProvider.twitter,
   );
 
   const SocialProviders({
@@ -77,7 +77,7 @@ enum SocialProviders {
 
   final IconData _iconData;
   final Color _btnBgColor;
-  final Provider provider;
+  final OAuthProvider provider;
 
   String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
@@ -205,13 +205,13 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               redirectTo: widget.redirectUrl,
             );
           } on AuthException catch (error) {
-            if (widget.onError == null) {
+            if (widget.onError == null && context.mounted) {
               context.showErrorSnackBar(error.message);
             } else {
               widget.onError?.call(error);
             }
           } catch (error) {
-            if (widget.onError == null) {
+            if (widget.onError == null && context.mounted) {
               context
                   .showErrorSnackBar('Unexpected error has occurred: $error');
             } else {

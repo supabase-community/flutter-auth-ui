@@ -50,7 +50,7 @@ class MetaDataField {
 ///   },
 /// ),
 /// ```
-/// /// {@endtemplate}
+/// {@endtemplate}
 class SupaEmailAuth extends StatefulWidget {
   /// The URL to redirect the user to when clicking on the link on the
   /// confirmation link after signing up.
@@ -213,13 +213,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     widget.onSignUpComplete.call(response);
                   }
                 } on AuthException catch (error) {
-                  if (widget.onError == null) {
+                  if (widget.onError == null && context.mounted) {
                     context.showErrorSnackBar(error.message);
                   } else {
                     widget.onError?.call(error);
                   }
                 } catch (error) {
-                  if (widget.onError == null) {
+                  if (widget.onError == null && context.mounted) {
                     context.showErrorSnackBar(
                         'Unexpected error has occurred: $error');
                   } else {
