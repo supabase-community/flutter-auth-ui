@@ -62,9 +62,9 @@ enum SocialProviders {
     btnBgColor: Colors.purpleAccent,
     provider: OAuthProvider.twitch,
   ),
-  twitter(
-    iconData: FontAwesomeIcons.twitter,
-    btnBgColor: Color(0xFF1DA1F2),
+  x(
+    iconData: FontAwesomeIcons.xTwitter,
+    btnBgColor: Colors.black,
     provider: OAuthProvider.twitter,
   );
 
