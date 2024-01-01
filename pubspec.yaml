@@ -22,4 +22,4 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/logos/google_light.png
+    - assets/logos/
