@@ -214,20 +214,20 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             color: iconColor,
           ),
         );
+        if (socialProvider == SocialProviders.google && coloredBg) {
+          iconWidget = Image.asset(
+            'assets/logos/google_light.png',
+            package: 'supabase_auth_ui',
+            width: 48,
+            height: 48,
+          );
+
+          foregroundColor = Colors.black;
+          backgroundColor = Colors.white;
+          overlayColor = Colors.white;
+        }
 
         switch (socialProvider) {
-          case SocialProviders.google:
-            iconWidget = Image.asset(
-              'assets/logos/google_light.png',
-              package: 'supabase_auth_ui',
-              width: 48,
-              height: 48,
-            );
-            iconColor = coloredBg ? Colors.black : null;
-            backgroundColor = coloredBg ? Colors.white : null;
-            overlayColor = Colors.white;
-            break;
-
           case SocialProviders.notion:
             iconWidget = Image.asset(
               'assets/logos/notion.png',
@@ -236,7 +236,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-
           case SocialProviders.kakao:
             iconWidget = Image.asset(
               'assets/logos/kakao.png',
@@ -245,7 +244,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-
           case SocialProviders.keycloak:
             iconWidget = Image.asset(
               'assets/logos/keycloak.png',
@@ -254,7 +252,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-
           case SocialProviders.workOS:
             iconWidget = Image.asset(
               'assets/logos/workOS.png',
@@ -264,7 +261,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-
           default:
             // Handle other cases or provide a default behavior.
             break;
