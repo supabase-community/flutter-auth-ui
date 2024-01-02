@@ -49,7 +49,7 @@ enum SocialProviders {
   ),
   slack(
     iconData: FontAwesomeIcons.slack,
-    btnBgColor: Colors.deepPurple,
+    btnBgColor: Color.fromRGBO(74, 21, 75, 1),
     provider: OAuthProvider.slack,
   ),
   spotify(
@@ -62,10 +62,40 @@ enum SocialProviders {
     btnBgColor: Colors.purpleAccent,
     provider: OAuthProvider.twitch,
   ),
-  twitter(
-    iconData: FontAwesomeIcons.twitter,
-    btnBgColor: Color(0xFF1DA1F2),
+  x(
+    iconData: FontAwesomeIcons.xTwitter,
+    btnBgColor: Colors.black,
     provider: OAuthProvider.twitter,
+  ),
+  figma(
+    iconData: FontAwesomeIcons.figma,
+    btnBgColor: Color.fromRGBO(241, 77, 27, 1),
+    provider: OAuthProvider.figma,
+  ),
+  notion(
+    iconData: FontAwesomeIcons.x,
+    btnBgColor: Color.fromRGBO(69, 75, 78, 1),
+    provider: OAuthProvider.notion,
+  ),
+  kakao(
+    iconData: FontAwesomeIcons.kaaba,
+    btnBgColor: Colors.black,
+    provider: OAuthProvider.kakao,
+  ),
+  keycloak(
+    iconData: FontAwesomeIcons.xTwitter,
+    btnBgColor: Color.fromRGBO(0, 138, 170, 1),
+    provider: OAuthProvider.keycloak,
+  ),
+  workOS(
+    iconData: FontAwesomeIcons.xTwitter,
+    btnBgColor: Color.fromRGBO(99, 99, 241, 1),
+    provider: OAuthProvider.workos,
+  ),
+  linkedIn(
+    iconData: FontAwesomeIcons.linkedin,
+    btnBgColor: Color.fromRGBO(0, 136, 209, 1),
+    provider: OAuthProvider.linkedin,
   );
 
   const SocialProviders({
@@ -184,7 +214,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             color: iconColor,
           ),
         );
-
         if (socialProvider == SocialProviders.google && coloredBg) {
           iconWidget = Image.asset(
             'assets/logos/google_light.png',
@@ -196,6 +225,45 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           foregroundColor = Colors.black;
           backgroundColor = Colors.white;
           overlayColor = Colors.white;
+        }
+
+        switch (socialProvider) {
+          case SocialProviders.notion:
+            iconWidget = Image.asset(
+              'assets/logos/notion.png',
+              package: 'supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+            break;
+          case SocialProviders.kakao:
+            iconWidget = Image.asset(
+              'assets/logos/kakao.png',
+              package: 'supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+            break;
+          case SocialProviders.keycloak:
+            iconWidget = Image.asset(
+              'assets/logos/keycloak.png',
+              package: 'supabase_auth_ui',
+              width: 48,
+              height: 48,
+            );
+            break;
+          case SocialProviders.workOS:
+            iconWidget = Image.asset(
+              'assets/logos/workOS.png',
+              package: 'supabase_auth_ui',
+              color: coloredBg ? Colors.white : null,
+              width: 48,
+              height: 48,
+            );
+            break;
+          default:
+            // Handle other cases or provide a default behavior.
+            break;
         }
 
         onAuthButtonPressed() async {
