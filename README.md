@@ -5,7 +5,7 @@
 </p>
 A simple library of predefined widgets to easily and quickly create auth components using Flutter and Supabase.
 
-![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png 'UI Sample')
+![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/.github/images/supabase_auth_ui.png 'UI Sample')
 
 ## Email Auth
 
@@ -13,6 +13,8 @@ Use a `SupaEmailAuth` widget to create an email and password signin/ signup form
 It also contains a button to toggle to display a forgot password form.
 
 You can pass `metadataFields` to add additional fields to the signup form to pass as metadata to Supabase.
+
+You need to setup deep links in your app to if you have enabled email confirmation. Learn more about deep links on the [supabase_flutter README](https://pub.dev/packages/supabase_flutter#deep-links).
 
 ```dart
 // Create a Email sign-in/sign-up form
@@ -42,7 +44,7 @@ SupaEmailAuth(
 
 ## Magic Link Auth
 
-Use `SupaMagicAuth` widget to create a magic link signIn form.
+Use `SupaMagicAuth` widget to create a magic link signIn form. You need to setup deep links in your app to use magic link. Learn more about deep links on the [supabase_flutter README](https://pub.dev/packages/supabase_flutter#deep-links).
 
 ```dart
 SupaMagicAuth(
@@ -74,7 +76,7 @@ SupaResetPassword(
 
 ## Social Auth
 
-Use `SupaSocialsAuth` to create list of social login buttons.
+Use `SupaSocialsAuth` to create list of social login buttons. You need to setup deep links in your app to use social auth. Learn more about deep links on the [supabase_flutter README](https://pub.dev/packages/supabase_flutter#deep-links).
 
 ```dart
 SupaSocialsAuth(
