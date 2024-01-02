@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   supabase_flutter: ^2.0.1
   email_validator: ^2.0.1
-  font_awesome_flutter: ^10.0.0
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +23,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/logos/
+
+screenshots:
+  - description: The flutter bloc package logo.
+    path: .github/images/supabase_auth_ui.png
