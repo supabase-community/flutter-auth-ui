@@ -1,12 +1,11 @@
 # flutter-auth-ui :iphone:
+
 <p float="left">
 <img src="https://raw.githubusercontent.com/supabase/supabase/master/packages/common/assets/images/supabase-logo-wordmark--dark.png"  width="60%" height="50%" />
 </p>
 A simple library of predefined widgets to easily and quickly create auth components using Flutter and Supabase.
 
-> :warning: **Developer Preview**: This is a developer preview and there maybe some breaking changes until we release v1.0.0.
-
-![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png "UI Sample")
+![Supabase Auth UI](https://raw.githubusercontent.com/supabase-community/flutter-auth-ui/main/assets/supabase_auth_ui.png 'UI Sample')
 
 ## Email Auth
 
@@ -87,7 +86,7 @@ SupaSocialsAuth(
     redirectUrl: kIsWeb
           ? null
           : 'io.supabase.flutter://reset-callback/',
-    onSuccess: (Session response) { 
+    onSuccess: (Session response) {
         // do something, for example: navigate('home');
     },
     onError: (error) {
