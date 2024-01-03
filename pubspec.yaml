@@ -26,4 +26,4 @@ flutter:
 
 screenshots:
   - description: The flutter bloc package logo.
-    path: .github/images/supabase_auth_ui.png
+    path: screenshots/supabase_auth_ui.png
