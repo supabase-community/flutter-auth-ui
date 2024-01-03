@@ -1,3 +1,10 @@
+## 0.4.0
+
+- BREAKING: Rename `twitter` to `x` for social provider and update branding.
+- feat: Add missing social providers.
+- chore: Update screenshot on readme.md.
+- chore: Add screenshot for pub.dev.
+
 ## 0.3.0
 
 - BREAKING: Update `supabase_flutter` to v2.0.1
