@@ -14,6 +14,8 @@ dependencies:
   supabase_flutter: ^2.0.1
   email_validator: ^2.0.1
   font_awesome_flutter: ^10.6.0
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^5.0.0
 
 dev_dependencies:
   flutter_test:
