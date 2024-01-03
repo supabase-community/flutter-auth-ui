@@ -25,5 +25,5 @@ flutter:
     - assets/logos/
 
 screenshots:
-  - description: The flutter bloc package logo.
+  - description: Supabase Auth UI
     path: screenshots/supabase_auth_ui.png

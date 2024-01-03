@@ -1,3 +1,7 @@
+## 0.4.0+1
+
+- chore: Minor updates to readme.md
+
 ## 0.4.0
 
 - BREAKING: Rename `twitter` to `x` for social provider and update branding.
