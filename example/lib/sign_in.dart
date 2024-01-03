@@ -57,7 +57,7 @@ class SignUp extends StatelessWidget {
           spacer,
           SupaSocialsAuth(
             colored: true,
-            socialProviders: SocialProviders.values,
+            socialProviders: OAuthProvider.values,
             onSuccess: (session) {
               Navigator.of(context).pushReplacementNamed('/home');
             },

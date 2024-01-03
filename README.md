@@ -81,8 +81,8 @@ Use `SupaSocialsAuth` to create list of social login buttons. You need to setup 
 ```dart
 SupaSocialsAuth(
     socialProviders: [
-        SocialProviders.apple,
-        SocialProviders.google,
+        OAuthProvider.apple,
+        OAuthProvider.google,
     ],
     colored: true,
     redirectUrl: kIsWeb
