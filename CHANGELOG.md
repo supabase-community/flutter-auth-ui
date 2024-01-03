@@ -1,6 +1,7 @@
 ## 0.4.0
 
 - BREAKING: Rename `twitter` to `x` for social provider and update branding.
+- BREAKING: Remove `SocialProviders` enum in favor of `OAuthProvider` to align the public API with supabase_flutter.
 - feat: Add missing social providers.
 - chore: Update screenshot on readme.md.
 - chore: Add screenshot for pub.dev.
