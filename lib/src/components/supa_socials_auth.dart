@@ -200,7 +200,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             );
             break;
           default:
-            // Handle other cases or provide a default behavior.
             break;
         }
 
