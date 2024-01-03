@@ -5,109 +5,47 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Social provider that are supported
-enum SocialProviders {
-  apple(
-    iconData: FontAwesomeIcons.apple,
-    btnBgColor: Colors.black,
-    provider: OAuthProvider.apple,
-  ),
-  azure(
-    iconData: FontAwesomeIcons.microsoft,
-    btnBgColor: Colors.blueAccent,
-    provider: OAuthProvider.azure,
-  ),
-  bitbucket(
-    iconData: FontAwesomeIcons.bitbucket,
-    btnBgColor: Colors.blue,
-    provider: OAuthProvider.bitbucket,
-  ),
-  discord(
-    iconData: FontAwesomeIcons.discord,
-    btnBgColor: Colors.purple,
-    provider: OAuthProvider.discord,
-  ),
-  facebook(
-    iconData: FontAwesomeIcons.facebook,
-    btnBgColor: Color(0xFF3b5998),
-    provider: OAuthProvider.facebook,
-  ),
-  github(
-    iconData: FontAwesomeIcons.github,
-    btnBgColor: Colors.black,
-    provider: OAuthProvider.github,
-  ),
-  gitlab(
-    iconData: FontAwesomeIcons.gitlab,
-    btnBgColor: Colors.deepOrange,
-    provider: OAuthProvider.gitlab,
-  ),
-  google(
-    iconData: FontAwesomeIcons.google,
-    btnBgColor: Colors.white,
-    provider: OAuthProvider.google,
-  ),
-  slack(
-    iconData: FontAwesomeIcons.slack,
-    btnBgColor: Color.fromRGBO(74, 21, 75, 1),
-    provider: OAuthProvider.slack,
-  ),
-  spotify(
-    iconData: FontAwesomeIcons.spotify,
-    btnBgColor: Colors.green,
-    provider: OAuthProvider.spotify,
-  ),
-  twitch(
-    iconData: FontAwesomeIcons.twitch,
-    btnBgColor: Colors.purpleAccent,
-    provider: OAuthProvider.twitch,
-  ),
-  x(
-    iconData: FontAwesomeIcons.xTwitter,
-    btnBgColor: Colors.black,
-    provider: OAuthProvider.twitter,
-  ),
-  figma(
-    iconData: FontAwesomeIcons.figma,
-    btnBgColor: Color.fromRGBO(241, 77, 27, 1),
-    provider: OAuthProvider.figma,
-  ),
-  notion(
-    iconData: FontAwesomeIcons.x,
-    btnBgColor: Color.fromRGBO(69, 75, 78, 1),
-    provider: OAuthProvider.notion,
-  ),
-  kakao(
-    iconData: FontAwesomeIcons.kaaba,
-    btnBgColor: Colors.black,
-    provider: OAuthProvider.kakao,
-  ),
-  keycloak(
-    iconData: FontAwesomeIcons.xTwitter,
-    btnBgColor: Color.fromRGBO(0, 138, 170, 1),
-    provider: OAuthProvider.keycloak,
-  ),
-  workOS(
-    iconData: FontAwesomeIcons.xTwitter,
-    btnBgColor: Color.fromRGBO(99, 99, 241, 1),
-    provider: OAuthProvider.workos,
-  ),
-  linkedIn(
-    iconData: FontAwesomeIcons.linkedin,
-    btnBgColor: Color.fromRGBO(0, 136, 209, 1),
-    provider: OAuthProvider.linkedin,
-  );
+extension SocialProvidersa on OAuthProvider {
+  IconData get _iconData => switch (this) {
+        OAuthProvider.apple => FontAwesomeIcons.apple,
+        OAuthProvider.azure => FontAwesomeIcons.microsoft,
+        OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
+        OAuthProvider.discord => FontAwesomeIcons.discord,
+        OAuthProvider.facebook => FontAwesomeIcons.facebook,
+        OAuthProvider.figma => FontAwesomeIcons.figma,
+        OAuthProvider.github => FontAwesomeIcons.github,
+        OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
+        OAuthProvider.google => FontAwesomeIcons.google,
+        OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
+        OAuthProvider.slack => FontAwesomeIcons.slack,
+        OAuthProvider.spotify => FontAwesomeIcons.spotify,
+        OAuthProvider.twitch => FontAwesomeIcons.twitch,
+        OAuthProvider.twitter => FontAwesomeIcons.x,
+        _ => Icons.close,
+      };
 
-  const SocialProviders({
-    required IconData iconData,
-    required Color btnBgColor,
-    required this.provider,
-  })  : _iconData = iconData,
-        _btnBgColor = btnBgColor;
-
-  final IconData _iconData;
-  final Color _btnBgColor;
-  final OAuthProvider provider;
+  Color get _btnBgColor => switch (this) {
+        OAuthProvider.apple => Colors.black,
+        OAuthProvider.azure => Colors.blueAccent,
+        OAuthProvider.bitbucket => Colors.blue,
+        OAuthProvider.discord => Colors.purple,
+        OAuthProvider.facebook => const Color(0xFF3b5998),
+        OAuthProvider.figma => const Color.fromRGBO(241, 77, 27, 1),
+        OAuthProvider.github => Colors.black,
+        OAuthProvider.gitlab => Colors.deepOrange,
+        OAuthProvider.google => Colors.white,
+        OAuthProvider.kakao => const Color(0xFFFFE812),
+        OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
+        OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
+        OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
+        OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
+        OAuthProvider.spotify => Colors.green,
+        OAuthProvider.twitch => Colors.purpleAccent,
+        OAuthProvider.twitter => Colors.black,
+        OAuthProvider.workos => const Color.fromRGBO(99, 99, 241, 1),
+        // ignore: unreachable_switch_case
+        _ => Colors.black,
+      };
 
   String get capitalizedName => name[0].toUpperCase() + name.substring(1);
 }
@@ -123,7 +61,7 @@ enum SocialButtonVariant {
 /// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
   /// List of social providers to show in the form
-  final List<SocialProviders> socialProviders;
+  final List<OAuthProvider> socialProviders;
 
   /// Whether or not to color the social buttons in their respecful colors
   ///
@@ -214,7 +152,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             color: iconColor,
           ),
         );
-        if (socialProvider == SocialProviders.google && coloredBg) {
+        if (socialProvider == OAuthProvider.google && coloredBg) {
           iconWidget = Image.asset(
             'assets/logos/google_light.png',
             package: 'supabase_auth_ui',
@@ -228,7 +166,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         }
 
         switch (socialProvider) {
-          case SocialProviders.notion:
+          case OAuthProvider.notion:
             iconWidget = Image.asset(
               'assets/logos/notion.png',
               package: 'supabase_auth_ui',
@@ -236,7 +174,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-          case SocialProviders.kakao:
+          case OAuthProvider.kakao:
             iconWidget = Image.asset(
               'assets/logos/kakao.png',
               package: 'supabase_auth_ui',
@@ -244,7 +182,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-          case SocialProviders.keycloak:
+          case OAuthProvider.keycloak:
             iconWidget = Image.asset(
               'assets/logos/keycloak.png',
               package: 'supabase_auth_ui',
@@ -252,7 +190,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               height: 48,
             );
             break;
-          case SocialProviders.workOS:
+          case OAuthProvider.workos:
             iconWidget = Image.asset(
               'assets/logos/workOS.png',
               package: 'supabase_auth_ui',
@@ -269,7 +207,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         onAuthButtonPressed() async {
           try {
             await supabase.auth.signInWithOAuth(
-              socialProvider.provider,
+              socialProvider,
               redirectTo: widget.redirectUrl,
             );
           } on AuthException catch (error) {
