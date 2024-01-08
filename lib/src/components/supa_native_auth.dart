@@ -104,27 +104,42 @@ class _SupaNativeAuthState extends State<SupaNativeAuth> {
   }
 
   Widget _nativeAuthBtn(
-      IconData icon, String label, Future Function() signInMethod) {
-    return ElevatedButton.icon(
-      onPressed: () async {
-        try {
-          await signInMethod();
-        } on AuthException catch (error) {
-          if (widget.onError == null && context.mounted) {
-            context.showErrorSnackBar(error.message);
-          } else {
-            widget.onError?.call(error);
+      {required Widget icon,
+      required String label,
+      required Color bgColor,
+      required Color textColor,
+      required Future Function() signInMethod}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: ElevatedButton.icon(
+        onPressed: () async {
+          try {
+            await signInMethod();
+          } on AuthException catch (error) {
+            if (widget.onError == null && context.mounted) {
+              context.showErrorSnackBar(error.message);
+            } else {
+              widget.onError?.call(error);
+            }
+          } catch (error) {
+            if (widget.onError == null && context.mounted) {
+              context
+                  .showErrorSnackBar('Unexpected error has occurred: $error');
+            } else {
+              widget.onError?.call(error);
+            }
           }
-        } catch (error) {
-          if (widget.onError == null && context.mounted) {
-            context.showErrorSnackBar('Unexpected error has occurred: $error');
-          } else {
-            widget.onError?.call(error);
-          }
-        }
-      },
-      icon: Icon(icon),
-      label: Text(label),
+        },
+        icon: icon,
+        label: Text(label),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          foregroundColor: textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+      ),
     );
   }
 
@@ -160,18 +175,29 @@ class _SupaNativeAuthState extends State<SupaNativeAuth> {
       children: [
         if (provider.google != null)
           _nativeAuthBtn(
-            FontAwesomeIcons.google,
-            'Sign in with Google',
-            () => _googleSignIn(
+            icon: Image.asset(
+              'assets/logos/google_light.png',
+              package: 'supabase_auth_ui',
+              width: 36,
+              height: 36,
+            ),
+            label: 'Sign in with Google',
+            signInMethod: () => _googleSignIn(
               provider.google!.webClientId,
               provider.google!.iosClientId,
             ),
+            bgColor: const Color.fromRGBO(242, 242, 242, 1),
+            textColor: Colors.black,
           ),
         if (provider.apple)
           _nativeAuthBtn(
-            FontAwesomeIcons.apple,
-            'Sign in with Apple',
-            _appleSignIn,
+            icon: const Icon(
+              FontAwesomeIcons.apple,
+            ),
+            label: 'Sign in with Apple',
+            signInMethod: _appleSignIn,
+            bgColor: Colors.black,
+            textColor: Colors.white,
           ),
       ],
     );
