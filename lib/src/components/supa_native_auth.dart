@@ -1,30 +1,49 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:async';
 
-import 'package:crypto/crypto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupaNativeAuth extends StatefulWidget {
+class AuthType {
+  GoogleAuthType? google;
+  bool apple;
+
+  AuthType({this.google, required this.apple});
+}
+
+class GoogleAuthType {
   /// Web Client ID and iOS Client ID that you registered with Google Cloud.
-  final String webClientId, iosClientId;
+  /// Needed for Sign in with Google
+  String webClientId;
+  String iosClientId;
 
-  /// Callback for the user to complete a sign in.
-  final void Function(AuthResponse response) onSignInComplete;
+  GoogleAuthType({required this.webClientId, required this.iosClientId});
+}
 
-  /// Callback for the user to complete a signUp.
-  final void Function(AuthResponse response) onSignUpComplete;
+class SupaNativeAuth extends StatefulWidget {
+  /// Defines native auth providers to show in the form
+  final AuthType authType;
+
+  /// Method to be called when the auth action is success
+  final void Function(Session) onSuccess;
+
+  /// Method to be called when the auth action threw an excepction
+  final void Function(Object error)? onError;
+
+  /// Whether to show a SnackBar after a successful sign in
+  final bool showSuccessSnackBar;
 
   const SupaNativeAuth({
     super.key,
-    required this.webClientId,
-    required this.iosClientId,
-    required this.onSignInComplete,
-    required this.onSignUpComplete,
+    required this.authType,
+    required this.onSuccess,
+    this.onError,
+    this.showSuccessSnackBar = true,
   });
 
   @override
@@ -84,18 +103,77 @@ class _SupaNativeAuthState extends State<SupaNativeAuth> {
     );
   }
 
+  Widget _nativeAuthBtn(
+      IconData icon, String label, Future Function() signInMethod) {
+    return ElevatedButton.icon(
+      onPressed: () async {
+        try {
+          await signInMethod();
+        } on AuthException catch (error) {
+          if (widget.onError == null && context.mounted) {
+            context.showErrorSnackBar(error.message);
+          } else {
+            widget.onError?.call(error);
+          }
+        } catch (error) {
+          if (widget.onError == null && context.mounted) {
+            context.showErrorSnackBar('Unexpected error has occurred: $error');
+          } else {
+            widget.onError?.call(error);
+          }
+        }
+      },
+      icon: Icon(icon),
+      label: Text(label),
+    );
+  }
+
+  late final StreamSubscription<AuthState> _gotrueSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _gotrueSubscription =
+        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      final session = data.session;
+      if (session != null && mounted) {
+        widget.onSuccess.call(session);
+        if (widget.showSuccessSnackBar) {
+          context.showSnackBar('Successfully signed in!');
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _gotrueSubscription.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final webClientId = widget.webClientId;
-    final iosClientId = widget.iosClientId;
-    return ElevatedButton(
-        onPressed: () async {
-          Platform.isAndroid
-              ? await _googleSignIn(webClientId, iosClientId)
-              : Platform.isIOS
-                  ? await _appleSignIn()
-                  : null;
-        },
-        child: const Text('Sign in with Google'));
+    final provider = widget.authType;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (provider.google != null)
+          _nativeAuthBtn(
+            FontAwesomeIcons.google,
+            'Sign in with Google',
+            () => _googleSignIn(
+              provider.google!.webClientId,
+              provider.google!.iosClientId,
+            ),
+          ),
+        if (provider.apple)
+          _nativeAuthBtn(
+            FontAwesomeIcons.apple,
+            'Sign in with Apple',
+            _appleSignIn,
+          ),
+      ],
+    );
   }
 }
