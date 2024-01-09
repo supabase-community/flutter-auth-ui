@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-extension SocialProviders on OAuthProvider {
-  IconData get _iconData => switch (this) {
+extension on OAuthProvider {
+  IconData get iconData => switch (this) {
         OAuthProvider.apple => FontAwesomeIcons.apple,
         OAuthProvider.azure => FontAwesomeIcons.microsoft,
         OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
@@ -24,7 +24,7 @@ extension SocialProviders on OAuthProvider {
         _ => Icons.close,
       };
 
-  Color get _btnBgColor => switch (this) {
+  Color get btnBgColor => switch (this) {
         OAuthProvider.apple => Colors.black,
         OAuthProvider.azure => Colors.blueAccent,
         OAuthProvider.bitbucket => Colors.blue,
@@ -139,7 +139,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         final socialProvider = providers[index];
 
         Color? foregroundColor = coloredBg ? Colors.white : null;
-        Color? backgroundColor = coloredBg ? socialProvider._btnBgColor : null;
+        Color? backgroundColor = coloredBg ? socialProvider.btnBgColor : null;
         Color? overlayColor = coloredBg ? Colors.white10 : null;
 
         Color? iconColor = coloredBg ? Colors.white : null;
@@ -148,7 +148,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           height: 48,
           width: 48,
           child: Icon(
-            socialProvider._iconData,
+            socialProvider.iconData,
             color: iconColor,
           ),
         );
