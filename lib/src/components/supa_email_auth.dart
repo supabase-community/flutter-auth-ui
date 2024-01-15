@@ -74,6 +74,8 @@ class SupaEmailAuth extends StatefulWidget {
 
   final List<MetaDataField>? metadataFields;
 
+  final Map<String, dynamic>? extraMetadata;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     Key? key,
@@ -83,6 +85,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.onPasswordResetEmailSent,
     this.onError,
     this.metadataFields,
+    this.extraMetadata
   }) : super(key: key);
 
   @override
@@ -204,11 +207,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
                       emailRedirectTo: widget.redirectTo,
-                      data: widget.metadataFields == null
-                          ? null
-                          : _metadataControllers.map<String, dynamic>(
-                              (metaDataField, controller) =>
-                                  MapEntry(metaDataField.key, controller.text)),
+                      data: _resolveData(),
                     );
                     widget.onSignUpComplete.call(response);
                   }
@@ -294,5 +293,19 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         ],
       ),
     );
+  }
+
+  Map<String, dynamic> _resolveData() {
+    var extra = widget.extraMetadata ?? <String, dynamic>{};
+    extra.addAll(_resolveMetadataFieldsData());
+    return extra;
+  }
+
+  Map<String, dynamic> _resolveMetadataFieldsData() {
+    return widget.metadataFields != null
+      ? _metadataControllers.map<String, dynamic>(
+          (metaDataField, controller) =>
+          MapEntry(metaDataField.key, controller.text))
+      : <String, dynamic>{};
   }
 }
