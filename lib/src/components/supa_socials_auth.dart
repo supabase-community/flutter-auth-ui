@@ -85,6 +85,12 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Whether to show a SnackBar after a successful sign in
   final bool showSuccessSnackBar;
 
+  /// OpenID scope(s) for provider authorization request (ex. '.default')
+  final String? scopes;
+
+  /// Parameters to include in provider authorization request (ex. {'prompt': 'consent'})
+  final Map<String, String>? queryParams;
+
   const SupaSocialsAuth({
     Key? key,
     required this.socialProviders,
@@ -94,6 +100,8 @@ class SupaSocialsAuth extends StatefulWidget {
     this.onError,
     this.socialButtonVariant = SocialButtonVariant.iconAndText,
     this.showSuccessSnackBar = true,
+    this.scopes,
+    this.queryParams,
   }) : super(key: key);
 
   @override
@@ -209,6 +217,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             await supabase.auth.signInWithOAuth(
               socialProvider,
               redirectTo: widget.redirectUrl,
+              scopes: widget.scopes,
+              queryParams: widget.queryParams,
             );
           } on AuthException catch (error) {
             if (widget.onError == null && context.mounted) {
