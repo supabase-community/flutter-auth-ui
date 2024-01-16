@@ -67,13 +67,16 @@ class SupaEmailAuth extends StatefulWidget {
   /// Callback for sending the password reset email
   final void Function()? onPasswordResetEmailSent;
 
-  /// Callback for when the auth action threw an excepction
+  /// Callback for when the auth action threw an exception
   ///
   /// If set to `null`, a snack bar with error color will show up.
   final void Function(Object error)? onError;
 
+  /// Set of additional fields to the signup form that will become
+  /// part of the user_metadata
   final List<MetaDataField>? metadataFields;
 
+  /// Additional properties for user_metadata on signup
   final Map<String, dynamic>? extraMetadata;
 
   /// {@macro supa_email_auth}
@@ -295,12 +298,17 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
     );
   }
 
+  /// Resolve the user_metadata that we will send during sign-up
+  ///
+  /// In case both MetadataFields and extraMetadata have the same
+  /// key in their map, the MetadataFields (form fields) win
   Map<String, dynamic> _resolveData() {
     var extra = widget.extraMetadata ?? <String, dynamic>{};
     extra.addAll(_resolveMetadataFieldsData());
     return extra;
   }
 
+  /// Resolve the user_metadata coming from the metadataFields
   Map<String, dynamic> _resolveMetadataFieldsData() {
     return widget.metadataFields != null
       ? _metadataControllers.map<String, dynamic>(
