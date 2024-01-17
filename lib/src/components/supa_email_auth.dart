@@ -88,7 +88,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.onPasswordResetEmailSent,
     this.onError,
     this.metadataFields,
-    this.extraMetadata
+    this.extraMetadata,
   }) : super(key: key);
 
   @override
@@ -311,9 +311,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   /// Resolve the user_metadata coming from the metadataFields
   Map<String, dynamic> _resolveMetadataFieldsData() {
     return widget.metadataFields != null
-      ? _metadataControllers.map<String, dynamic>(
-          (metaDataField, controller) =>
-          MapEntry(metaDataField.key, controller.text))
-      : <String, dynamic>{};
+        ? _metadataControllers.map<String, dynamic>(
+            (metaDataField, controller) =>
+                MapEntry(metaDataField.key, controller.text))
+        : <String, dynamic>{};
   }
 }
