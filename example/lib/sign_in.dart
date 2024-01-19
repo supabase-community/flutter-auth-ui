@@ -55,21 +55,13 @@ class SignUp extends StatelessWidget {
             label: const Text('Sign in with Phone'),
           ),
           spacer,
-          SupaNativeAuth(
-            authType: AuthType(
-              google: GoogleAuthType(
-                webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com',
-                iosClientId: 'YOUR_IOS_CLIENT_ID.apps.googleusercontent.com',
-              ),
-              apple: true,
-            ),
-            onSuccess: (response) {
-              Navigator.of(context).pushReplacementNamed('/home');
-            },
-          ),
-          spacer,
           SupaSocialsAuth(
             colored: true,
+            nativeGoogleAuthConfig: NativeGoogleAuthConfig(
+              webClientId: '',
+              iosClientId: '',
+            ),
+            enableNativeAppleAuth: false,
             socialProviders: OAuthProvider.values,
             onSuccess: (session) {
               Navigator.of(context).pushReplacementNamed('/home');
