@@ -58,8 +58,40 @@ enum SocialButtonVariant {
   iconAndText,
 }
 
+// class NativeGoogleAuthConfig {
+//   GoogleNativeAuthConfig? google;
+//   bool enableNativeAppleAuth;
+
+//   NativeGoogleAuthConfig({this.google, required this.enableNativeAppleAuth});
+// }
+
+class NativeGoogleAuthConfig {
+  /// Web Client ID and iOS Client ID that you registered with Google Cloud.
+  /// Needed for Sign in with Google
+  String webClientId;
+  String iosClientId;
+
+  NativeGoogleAuthConfig(
+      {required this.webClientId, required this.iosClientId});
+}
+
+class GoogleNativeAuthConfig {
+  /// Web Client ID and iOS Client ID that you registered with Google Cloud.
+  /// Needed for Sign in with Google
+  String webClientId;
+  String iosClientId;
+
+  GoogleNativeAuthConfig(
+      {required this.webClientId, required this.iosClientId});
+}
+
 /// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
+  /// Defines native auth providers to show in the form
+  final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
+
+  final bool? enableNativeAppleAuth;
+
   /// List of social providers to show in the form
   final List<OAuthProvider> socialProviders;
 
@@ -87,6 +119,8 @@ class SupaSocialsAuth extends StatefulWidget {
 
   const SupaSocialsAuth({
     Key? key,
+    this.nativeGoogleAuthConfig,
+    this.enableNativeAppleAuth,
     required this.socialProviders,
     this.colored = true,
     this.redirectUrl,
