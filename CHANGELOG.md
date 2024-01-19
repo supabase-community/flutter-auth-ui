@@ -1,3 +1,7 @@
+## 0.4.1
+
+- feat: Add `extraMetadata` parameter to `SupaEmailAuth` to add headless signup user metadata.
+
 ## 0.4.0+1
 
 - chore: Minor updates to readme.md
