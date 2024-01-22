@@ -65,8 +65,8 @@ enum SocialButtonVariant {
 class NativeGoogleAuthConfig {
   /// Web Client ID and iOS Client ID that you registered with Google Cloud.
   /// Needed for Sign in with Google
-  String webClientId;
-  String iosClientId;
+  final String webClientId;
+  final String iosClientId;
 
   NativeGoogleAuthConfig(
       {required this.webClientId, required this.iosClientId});
