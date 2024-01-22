@@ -78,7 +78,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
 
   /// Defines apple provider
-  final bool? enableNativeAppleAuth;
+  final bool enableNativeAppleAuth;
 
   /// List of social providers to show in the form
   final List<OAuthProvider> socialProviders;
