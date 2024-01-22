@@ -108,7 +108,7 @@ class SupaSocialsAuth extends StatefulWidget {
   const SupaSocialsAuth({
     Key? key,
     this.nativeGoogleAuthConfig,
-    this.enableNativeAppleAuth,
+    this.enableNativeAppleAuth = true,
     required this.socialProviders,
     this.colored = true,
     this.redirectUrl,
