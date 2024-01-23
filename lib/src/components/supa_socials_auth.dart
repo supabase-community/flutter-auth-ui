@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -63,13 +65,20 @@ enum SocialButtonVariant {
 }
 
 class NativeGoogleAuthConfig {
-  /// Web Client ID and iOS Client ID that you registered with Google Cloud.
-  /// Needed for Sign in with Google
-  final String webClientId;
-  final String iosClientId;
+  /// Web Client ID that you registered with Google Cloud.
+  ///
+  /// Required to perform native Google Sign In on Android
+  final String? webClientId;
 
-  NativeGoogleAuthConfig(
-      {required this.webClientId, required this.iosClientId});
+  /// iOS Client ID that you registered with Google Cloud.
+  ///
+  /// Required to perform native Google Sign In on iOS
+  final String? iosClientId;
+
+  const NativeGoogleAuthConfig({
+    this.webClientId,
+    this.iosClientId,
+  });
 }
 
 /// UI Component to create social login form
@@ -77,7 +86,7 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Defines native google provider to show in the form
   final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
 
-  /// Defines apple provider
+  /// Whether to use native Apple sign in on iOS and macOS
   final bool enableNativeAppleAuth;
 
   /// List of social providers to show in the form
@@ -126,7 +135,10 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   late final StreamSubscription<AuthState> _gotrueSubscription;
 
   /// Performs Google sign in on Android and iOS
-  Future<AuthResponse> _googleSignIn(webClientId, iosClientId) async {
+  Future<AuthResponse> _nativeGoogleSignIn({
+    required String? webClientId,
+    required String? iosClientId,
+  }) async {
     final GoogleSignIn googleSignIn = GoogleSignIn(
       clientId: iosClientId,
       serverClientId: webClientId,
@@ -138,10 +150,12 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final idToken = googleAuth.idToken;
 
     if (accessToken == null) {
-      throw 'No Access Token found.';
+      throw const AuthException(
+          'No Access Token found from Google sign in result.');
     }
     if (idToken == null) {
-      throw 'No ID Token found.';
+      throw const AuthException(
+          'No ID Token found from Google sign in result.');
     }
 
     return supabase.auth.signInWithIdToken(
@@ -152,7 +166,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   }
 
   /// Performs Apple sign in on iOS or macOS
-  Future<AuthResponse> _appleSignIn() async {
+  Future<AuthResponse> _nativeAppleSignIn() async {
     final rawNonce = supabase.auth.generateRawNonce();
     final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
 
@@ -167,78 +181,13 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final idToken = credential.identityToken;
     if (idToken == null) {
       throw const AuthException(
-          'Could not find ID Token from generated credential.');
+          'Could not find ID Token from generated Apple sign in credential.');
     }
 
     return supabase.auth.signInWithIdToken(
       provider: OAuthProvider.apple,
       idToken: idToken,
       nonce: rawNonce,
-    );
-  }
-
-  Widget _nativeAuthBtn(
-      {required Widget icon,
-      required String label,
-      Color? bgColor,
-      Color? textColor,
-      required Future Function() signInMethod}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-      child: widget.socialButtonVariant == SocialButtonVariant.icon
-          ? Material(
-              shape: const CircleBorder(),
-              elevation: 2,
-              color: bgColor,
-              child: InkResponse(
-                radius: 24,
-                onTap: () async {
-                  try {
-                    await signInMethod();
-                  } on AuthException catch (error) {
-                    if (widget.onError == null && context.mounted) {
-                      context.showErrorSnackBar(error.message);
-                    } else {
-                      widget.onError?.call(error);
-                    }
-                  } catch (error) {
-                    if (widget.onError == null && context.mounted) {
-                      context.showErrorSnackBar(
-                          'Unexpected error has occurred: $error');
-                    } else {
-                      widget.onError?.call(error);
-                    }
-                  }
-                },
-                child: SizedBox(height: 48, width: 48, child: icon),
-              ),
-            )
-          : ElevatedButton.icon(
-              onPressed: () async {
-                try {
-                  await signInMethod();
-                } on AuthException catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(error.message);
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                } catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(
-                        'Unexpected error has occurred: $error');
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                }
-              },
-              icon: icon,
-              label: Text(label),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: bgColor,
-                foregroundColor: textColor,
-              ),
-            ),
     );
   }
 
@@ -267,7 +216,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   Widget build(BuildContext context) {
     final providers = widget.socialProviders;
     final googleAuthConfig = widget.nativeGoogleAuthConfig;
-    final isAppleAuth = widget.enableNativeAppleAuth == true;
+    final isNativeAppleAuthEnabled = widget.enableNativeAppleAuth;
     final coloredBg = widget.colored == true;
 
     if (providers.isEmpty) {
@@ -346,6 +295,33 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
         onAuthButtonPressed() async {
           try {
+            // Check if native Google login should be performed
+            if (socialProvider == OAuthProvider.google) {
+              final webClientId = googleAuthConfig?.webClientId;
+              final iosClientId = googleAuthConfig?.iosClientId;
+              final shouldPerformNativeGoogleSignIn =
+                  (webClientId != null && !kIsWeb && Platform.isAndroid) ||
+                      (iosClientId != null && !kIsWeb && Platform.isIOS);
+              if (shouldPerformNativeGoogleSignIn) {
+                await _nativeGoogleSignIn(
+                  webClientId: webClientId,
+                  iosClientId: iosClientId,
+                );
+                return;
+              }
+            }
+
+            // Check if native Apple login should be performed
+            if (socialProvider == OAuthProvider.apple) {
+              final shouldPerformNativeAppleSignIn =
+                  (isNativeAppleAuthEnabled && !kIsWeb && Platform.isIOS) ||
+                      (isNativeAppleAuthEnabled && !kIsWeb && Platform.isMacOS);
+              if (shouldPerformNativeAppleSignIn) {
+                await _nativeAppleSignIn();
+                return;
+              }
+            }
+
             await supabase.auth.signInWithOAuth(
               socialProvider,
               redirectTo: widget.redirectUrl,
@@ -400,68 +376,11 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     return widget.socialButtonVariant == SocialButtonVariant.icon
         ? Wrap(
             alignment: WrapAlignment.spaceEvenly,
-            children: [
-              if (googleAuthConfig != null)
-                _nativeAuthBtn(
-                  icon: Image.asset(
-                    'assets/logos/google_light.png',
-                    package: 'supabase_auth_ui',
-                    width: 48,
-                    height: 48,
-                  ),
-                  label: 'Sign in with Google',
-                  signInMethod: () => _googleSignIn(
-                    googleAuthConfig!.webClientId,
-                    googleAuthConfig.iosClientId,
-                  ),
-                  bgColor: const Color.fromRGBO(242, 242, 242, 1),
-                  textColor: Colors.black,
-                ),
-              if (isAppleAuth)
-                _nativeAuthBtn(
-                  icon: const Icon(
-                    FontAwesomeIcons.apple,
-                    color: Colors.white,
-                  ),
-                  label: 'Sign in with Apple',
-                  signInMethod: _appleSignIn,
-                  bgColor: Colors.black,
-                  textColor: Colors.white,
-                ),
-              ...authButtons,
-            ],
+            children: authButtons,
           )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (googleAuthConfig != null)
-                _nativeAuthBtn(
-                  icon: Image.asset(
-                    'assets/logos/google_light.png',
-                    package: 'supabase_auth_ui',
-                    width: 48,
-                    height: 48,
-                  ),
-                  label: 'Sign in with Google',
-                  signInMethod: () => _googleSignIn(
-                    googleAuthConfig!.webClientId,
-                    googleAuthConfig.iosClientId,
-                  ),
-                  bgColor: const Color.fromRGBO(242, 242, 242, 1),
-                  textColor: Colors.black,
-                ),
-              if (isAppleAuth)
-                _nativeAuthBtn(
-                  icon: const Icon(
-                    FontAwesomeIcons.apple,
-                  ),
-                  label: 'Sign in with Apple',
-                  signInMethod: _appleSignIn,
-                  bgColor: Colors.black,
-                  textColor: Colors.white,
-                ),
-              ...authButtons,
-            ],
+            children: authButtons,
           );
   }
 }
