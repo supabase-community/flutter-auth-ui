@@ -106,7 +106,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function(Session) onSuccess;
+  final void Function(Session session) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
