@@ -86,10 +86,10 @@ class SupaSocialsAuth extends StatefulWidget {
   final bool showSuccessSnackBar;
 
   /// OpenID scope(s) for provider authorization request (ex. '.default')
-  final String? scopes;
+  final Map<OAuthProvider, String>? scopes;
 
   /// Parameters to include in provider authorization request (ex. {'prompt': 'consent'})
-  final Map<String, String>? queryParams;
+  final Map<OAuthProvider, Map<String, String>>? queryParams;
 
   const SupaSocialsAuth({
     Key? key,
@@ -217,8 +217,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             await supabase.auth.signInWithOAuth(
               socialProvider,
               redirectTo: widget.redirectUrl,
-              scopes: widget.scopes,
-              queryParams: widget.queryParams,
+              scopes: widget.scopes?[socialProvider],
+              queryParams: widget.queryParams?[socialProvider],
             );
           } on AuthException catch (error) {
             if (widget.onError == null && context.mounted) {
