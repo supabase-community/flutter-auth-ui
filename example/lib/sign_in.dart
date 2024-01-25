@@ -57,6 +57,11 @@ class SignUp extends StatelessWidget {
           spacer,
           SupaSocialsAuth(
             colored: true,
+            nativeGoogleAuthConfig: const NativeGoogleAuthConfig(
+              webClientId: 'YOUR_WEB_CLIENT_ID',
+              iosClientId: 'YOUR_IOS_CLIENT_ID',
+            ),
+            enableNativeAppleAuth: false,
             socialProviders: OAuthProvider.values,
             onSuccess: (session) {
               Navigator.of(context).pushReplacementNamed('/home');

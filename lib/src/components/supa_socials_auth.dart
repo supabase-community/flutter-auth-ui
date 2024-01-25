@@ -1,7 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,7 +26,7 @@ extension on OAuthProvider {
         OAuthProvider.slack => FontAwesomeIcons.slack,
         OAuthProvider.spotify => FontAwesomeIcons.spotify,
         OAuthProvider.twitch => FontAwesomeIcons.twitch,
-        OAuthProvider.twitter => FontAwesomeIcons.x,
+        OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
         _ => Icons.close,
       };
 
@@ -58,8 +64,31 @@ enum SocialButtonVariant {
   iconAndText,
 }
 
+class NativeGoogleAuthConfig {
+  /// Web Client ID that you registered with Google Cloud.
+  ///
+  /// Required to perform native Google Sign In on Android
+  final String? webClientId;
+
+  /// iOS Client ID that you registered with Google Cloud.
+  ///
+  /// Required to perform native Google Sign In on iOS
+  final String? iosClientId;
+
+  const NativeGoogleAuthConfig({
+    this.webClientId,
+    this.iosClientId,
+  });
+}
+
 /// UI Component to create social login form
 class SupaSocialsAuth extends StatefulWidget {
+  /// Defines native google provider to show in the form
+  final NativeGoogleAuthConfig? nativeGoogleAuthConfig;
+
+  /// Whether to use native Apple sign in on iOS and macOS
+  final bool enableNativeAppleAuth;
+
   /// List of social providers to show in the form
   final List<OAuthProvider> socialProviders;
 
@@ -77,7 +106,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final String? redirectUrl;
 
   /// Method to be called when the auth action is success
-  final void Function(Session) onSuccess;
+  final void Function(Session session) onSuccess;
 
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
@@ -93,6 +122,8 @@ class SupaSocialsAuth extends StatefulWidget {
 
   const SupaSocialsAuth({
     Key? key,
+    this.nativeGoogleAuthConfig,
+    this.enableNativeAppleAuth = true,
     required this.socialProviders,
     this.colored = true,
     this.redirectUrl,
@@ -110,6 +141,63 @@ class SupaSocialsAuth extends StatefulWidget {
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   late final StreamSubscription<AuthState> _gotrueSubscription;
+
+  /// Performs Google sign in on Android and iOS
+  Future<AuthResponse> _nativeGoogleSignIn({
+    required String? webClientId,
+    required String? iosClientId,
+  }) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      clientId: iosClientId,
+      serverClientId: webClientId,
+    );
+
+    final googleUser = await googleSignIn.signIn();
+    final googleAuth = await googleUser!.authentication;
+    final accessToken = googleAuth.accessToken;
+    final idToken = googleAuth.idToken;
+
+    if (accessToken == null) {
+      throw const AuthException(
+          'No Access Token found from Google sign in result.');
+    }
+    if (idToken == null) {
+      throw const AuthException(
+          'No ID Token found from Google sign in result.');
+    }
+
+    return supabase.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+  }
+
+  /// Performs Apple sign in on iOS or macOS
+  Future<AuthResponse> _nativeAppleSignIn() async {
+    final rawNonce = supabase.auth.generateRawNonce();
+    final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+      nonce: hashedNonce,
+    );
+
+    final idToken = credential.identityToken;
+    if (idToken == null) {
+      throw const AuthException(
+          'Could not find ID Token from generated Apple sign in credential.');
+    }
+
+    return supabase.auth.signInWithIdToken(
+      provider: OAuthProvider.apple,
+      idToken: idToken,
+      nonce: rawNonce,
+    );
+  }
 
   @override
   void initState() {
@@ -135,6 +223,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   Widget build(BuildContext context) {
     final providers = widget.socialProviders;
+    final googleAuthConfig = widget.nativeGoogleAuthConfig;
+    final isNativeAppleAuthEnabled = widget.enableNativeAppleAuth;
     final coloredBg = widget.colored == true;
 
     if (providers.isEmpty) {
@@ -208,12 +298,38 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             );
             break;
           default:
-            // Handle other cases or provide a default behavior.
             break;
         }
 
         onAuthButtonPressed() async {
           try {
+            // Check if native Google login should be performed
+            if (socialProvider == OAuthProvider.google) {
+              final webClientId = googleAuthConfig?.webClientId;
+              final iosClientId = googleAuthConfig?.iosClientId;
+              final shouldPerformNativeGoogleSignIn =
+                  (webClientId != null && !kIsWeb && Platform.isAndroid) ||
+                      (iosClientId != null && !kIsWeb && Platform.isIOS);
+              if (shouldPerformNativeGoogleSignIn) {
+                await _nativeGoogleSignIn(
+                  webClientId: webClientId,
+                  iosClientId: iosClientId,
+                );
+                return;
+              }
+            }
+
+            // Check if native Apple login should be performed
+            if (socialProvider == OAuthProvider.apple) {
+              final shouldPerformNativeAppleSignIn =
+                  (isNativeAppleAuthEnabled && !kIsWeb && Platform.isIOS) ||
+                      (isNativeAppleAuthEnabled && !kIsWeb && Platform.isMacOS);
+              if (shouldPerformNativeAppleSignIn) {
+                await _nativeAppleSignIn();
+                return;
+              }
+            }
+
             await supabase.auth.signInWithOAuth(
               socialProvider,
               redirectTo: widget.redirectUrl,
