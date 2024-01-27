@@ -1,3 +1,7 @@
+## 0.4.2
+
+- feat: Add `nativeGoogleAuthConfig` and `enableNativeAppleAuth` parameter to `SupaSocialsAuth` to support native Google and Apple auth.
+
 ## 0.4.1
 
 - feat: Add `extraMetadata` parameter to `SupaEmailAuth` to add headless signup user metadata.
