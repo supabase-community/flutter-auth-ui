@@ -50,6 +50,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            autofillHints: const [AutofillHints.telephoneNumber],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter a valid phone number';
@@ -64,6 +65,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
           ),
           spacer(16),
           TextFormField(
+            autofillHints: isSigningIn ? [AutofillHints.password] : [AutofillHints.newPassword],
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
                 return 'Please enter a password that is at least 6 characters long';
