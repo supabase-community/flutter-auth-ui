@@ -42,6 +42,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            autofillHints: const [AutofillHints.newPassword],
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
                 return 'Please enter a password that is at least 6 characters long';
