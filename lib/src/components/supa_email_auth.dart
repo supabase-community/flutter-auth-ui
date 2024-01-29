@@ -152,7 +152,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           if (!_forgotPassword) ...[
             spacer(16),
             TextFormField(
-              autofillHints: _isSigningIn ? [AutofillHints.password] : [AutofillHints.newPassword],
+              autofillHints: _isSigningIn
+                  ? [AutofillHints.password]
+                  : [AutofillHints.newPassword],
               validator: (value) {
                 if (value == null || value.isEmpty || value.length < 6) {
                   return 'Please enter a password that is at least 6 characters long';
