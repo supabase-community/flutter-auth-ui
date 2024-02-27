@@ -13,11 +13,15 @@ class SupaPhoneAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Localization for the form
+  final SupaPhoneAuthLocalization localization;
+
   const SupaPhoneAuth({
     Key? key,
     required this.authAction,
     required this.onSuccess,
     this.onError,
+    this.localization = const SupaPhoneAuthLocalization(),
   }) : super(key: key);
 
   @override
@@ -43,6 +47,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = widget.localization;
     final isSigningIn = widget.authAction == SupaAuthAction.signIn;
     return Form(
       key: _formKey,
@@ -53,13 +58,13 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
             autofillHints: const [AutofillHints.telephoneNumber],
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter a valid phone number';
+                return localization.validPhoneNumberError;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.phone),
-              label: Text('Enter your phone number'),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.phone),
+              label: Text(localization.enterPhoneNumber),
             ),
             controller: _phone,
           ),
@@ -70,13 +75,13 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                 : [AutofillHints.newPassword],
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
-                return 'Please enter a password that is at least 6 characters long';
+                return localization.passwordLengthError;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.lock),
-              label: Text('Enter your password'),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.lock),
+              label: Text(localization.enterPassword),
             ),
             obscureText: true,
             controller: _password,
@@ -84,7 +89,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
           spacer(16),
           ElevatedButton(
             child: Text(
-              isSigningIn ? 'Sign In' : 'Sign Up',
+              isSigningIn ? localization.signIn : localization.signUp,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
@@ -113,7 +118,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               } catch (error) {
                 if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
+                      '${localization.unexpectedError}: $error');
                 } else {
                   widget.onError?.call(error);
                 }
