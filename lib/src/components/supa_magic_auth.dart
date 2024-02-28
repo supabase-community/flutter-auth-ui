@@ -112,7 +112,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                   email: _email.text,
                   emailRedirectTo: widget.redirectUrl,
                 );
-                if (mounted) {
+                if (context.mounted) {
                   context.showSnackBar(localization.checkYourEmail);
                 }
               } on AuthException catch (error) {
