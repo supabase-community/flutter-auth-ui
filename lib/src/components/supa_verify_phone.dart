@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/localizations/supa_verify_phone_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,10 +11,14 @@ class SupaVerifyPhone extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Localization for the form
+  final SupaVerifyPhoneLocalization localization;
+
   const SupaVerifyPhone({
     Key? key,
     required this.onSuccess,
     this.onError,
+    this.localization = const SupaVerifyPhoneLocalization(),
   }) : super(key: key);
 
   @override
@@ -38,6 +43,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = widget.localization;
     var args = ModalRoute.of(context)?.settings.arguments;
     if (args != null) data = args as Map;
     return Form(
@@ -48,21 +54,21 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
           TextFormField(
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter the one time code sent';
+                return localization.enterOneTimeCode;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.code),
-              label: Text('Enter the code sent'),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.code),
+              label: Text(localization.enterCodeSent),
             ),
             controller: _code,
           ),
           spacer(16),
           ElevatedButton(
-            child: const Text(
-              'Verify Phone',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            child: Text(
+              localization.verifyPhone,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
@@ -84,7 +90,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
               } catch (error) {
                 if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
+                      '${localization.unexpectedErrorOccurred}: $error');
                 } else {
                   widget.onError?.call(error);
                 }

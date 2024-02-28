@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -79,6 +80,9 @@ class SupaEmailAuth extends StatefulWidget {
   /// Additional properties for user_metadata on signup
   final Map<String, dynamic>? extraMetadata;
 
+  /// Localization for the form
+  final SupaEmailAuthLocalization localization;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     Key? key,
@@ -89,6 +93,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.onError,
     this.metadataFields,
     this.extraMetadata,
+    this.localization = const SupaEmailAuthLocalization(),
   }) : super(key: key);
 
   @override
@@ -127,6 +132,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = widget.localization;
     return Form(
       key: _formKey,
       child: Column(
@@ -139,13 +145,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               if (value == null ||
                   value.isEmpty ||
                   !EmailValidator.validate(_emailController.text)) {
-                return 'Please enter a valid email address';
+                return localization.validEmailError;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.email),
-              label: Text('Enter your email'),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.email),
+              label: Text(localization.enterEmail),
             ),
             controller: _emailController,
           ),
@@ -157,13 +163,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   : [AutofillHints.newPassword],
               validator: (value) {
                 if (value == null || value.isEmpty || value.length < 6) {
-                  return 'Please enter a password that is at least 6 characters long';
+                  return localization.passwordLengthError;
                 }
                 return null;
               },
-              decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.lock),
-                label: Text('Enter your password'),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock),
+                label: Text(localization.enterPassword),
               ),
               obscureText: true,
               controller: _passwordController,
@@ -193,7 +199,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                         strokeWidth: 1.5,
                       ),
                     )
-                  : Text(_isSigningIn ? 'Sign In' : 'Sign Up'),
+                  : Text(
+                      _isSigningIn ? localization.signIn : localization.signUp),
               onPressed: () async {
                 if (!_formKey.currentState!.validate()) {
                   return;
@@ -226,7 +233,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 } catch (error) {
                   if (widget.onError == null && context.mounted) {
                     context.showErrorSnackBar(
-                        'Unexpected error has occurred: $error');
+                        '${localization.unexpectedError}: $error');
                   } else {
                     widget.onError?.call(error);
                   }
@@ -246,7 +253,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     _forgotPassword = true;
                   });
                 },
-                child: const Text('Forgot your password?'),
+                child: Text(localization.forgotPassword),
               ),
             ],
             TextButton(
@@ -258,8 +265,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 });
               },
               child: Text(_isSigningIn
-                  ? 'Don\'t have an account? Sign up'
-                  : 'Already have an account? Sign in'),
+                  ? localization.dontHaveAccount
+                  : localization.haveAccount),
             ),
           ],
           if (_isSigningIn && _forgotPassword) ...[
@@ -283,7 +290,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   widget.onError?.call(error);
                 }
               },
-              child: const Text('Send password reset email'),
+              child: Text(localization.sendPasswordReset),
             ),
             spacer(16),
             TextButton(
@@ -292,7 +299,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   _forgotPassword = false;
                 });
               },
-              child: const Text('Back to sign in'),
+              child: Text(localization.backToSignIn),
             ),
           ],
           spacer(16),

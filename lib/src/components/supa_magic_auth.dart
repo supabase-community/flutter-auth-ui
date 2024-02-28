@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/localizations/supa_magic_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,11 +19,15 @@ class SupaMagicAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Localization for the form
+  final SupaMagicAuthLocalization localization;
+
   const SupaMagicAuth({
     Key? key,
     this.redirectUrl,
     required this.onSuccess,
     this.onError,
+    this.localization = const SupaMagicAuthLocalization(),
   }) : super(key: key);
 
   @override
@@ -57,6 +62,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = widget.localization;
     return Form(
       key: _formKey,
       child: Column(
@@ -69,13 +75,13 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
               if (value == null ||
                   value.isEmpty ||
                   !EmailValidator.validate(_email.text)) {
-                return 'Please enter a valid email address';
+                return localization.validEmailError;
               }
               return null;
             },
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.email),
-              label: Text('Enter your email'),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.email),
+              label: Text(localization.enterEmail),
             ),
             controller: _email,
           ),
@@ -90,9 +96,9 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                       strokeWidth: 1.5,
                     ),
                   )
-                : const Text(
-                    'Continue with magic Link',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                : Text(
+                    localization.continueWithMagicLink,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
             onPressed: () async {
               if (!_formKey.currentState!.validate()) {
@@ -106,8 +112,8 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                   email: _email.text,
                   emailRedirectTo: widget.redirectUrl,
                 );
-                if (mounted) {
-                  context.showSnackBar('Check your email inbox!');
+                if (context.mounted) {
+                  context.showSnackBar(localization.checkYourEmail);
                 }
               } on AuthException catch (error) {
                 if (widget.onError == null && context.mounted) {
@@ -118,7 +124,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
               } catch (error) {
                 if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(
-                      'Unexpected error has occurred: $error');
+                      '${localization.unexpectedError}: $error');
                 } else {
                   widget.onError?.call(error);
                 }

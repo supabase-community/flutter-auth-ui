@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:supabase_auth_ui/src/localizations/supa_socials_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -120,6 +121,9 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Parameters to include in provider authorization request (ex. {'prompt': 'consent'})
   final Map<OAuthProvider, Map<String, String>>? queryParams;
 
+  /// Localization for the form
+  final SupaSocialsAuthLocalization localization;
+
   const SupaSocialsAuth({
     Key? key,
     this.nativeGoogleAuthConfig,
@@ -133,6 +137,7 @@ class SupaSocialsAuth extends StatefulWidget {
     this.showSuccessSnackBar = true,
     this.scopes,
     this.queryParams,
+    this.localization = const SupaSocialsAuthLocalization(),
   }) : super(key: key);
 
   @override
@@ -141,6 +146,7 @@ class SupaSocialsAuth extends StatefulWidget {
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   late final StreamSubscription<AuthState> _gotrueSubscription;
+  late final SupaSocialsAuthLocalization localization;
 
   /// Performs Google sign in on Android and iOS
   Future<AuthResponse> _nativeGoogleSignIn({
@@ -202,13 +208,14 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   void initState() {
     super.initState();
+    localization = widget.localization;
     _gotrueSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
         if (widget.showSuccessSnackBar) {
-          context.showSnackBar('Successfully signed in!');
+          context.showSnackBar(localization.successSignInMessage);
         }
       }
     });
@@ -345,7 +352,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           } catch (error) {
             if (widget.onError == null && context.mounted) {
               context
-                  .showErrorSnackBar('Unexpected error has occurred: $error');
+                  .showErrorSnackBar('${localization.unexpectedError}: $error');
             } else {
               widget.onError?.call(error);
             }
@@ -376,8 +383,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                   icon: iconWidget,
                   style: authButtonStyle,
                   onPressed: onAuthButtonPressed,
-                  label:
-                      Text('Continue with ${socialProvider.capitalizedName}'),
+                  label: Text(
+                      '${localization.continueWith} ${socialProvider.capitalizedName}'),
                 ),
         );
       },
