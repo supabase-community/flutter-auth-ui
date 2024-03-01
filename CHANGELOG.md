@@ -1,3 +1,18 @@
+## 0.4.3
+
+- feat: Add localization / text customization support for all components.
+  ```dart
+  // Use the `localization` parameter to customize the text of the UI components.
+  SupaEmailAuth(
+    localization: const SupaEmailAuthLocalization(
+      enterEmail: 'What\'s your email?',
+      enterPassword: 'Enter your password',
+    ),
+    onSignInComplete: _onSignInComplete,
+    onSignUpComplete: _onSignUpComplete,
+  ),
+  ```
+
 ## 0.4.2
 
 - feat: Add `nativeGoogleAuthConfig` and `enableNativeAppleAuth` parameter to `SupaSocialsAuth` to support native Google and Apple auth.
