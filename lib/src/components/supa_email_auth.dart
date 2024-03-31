@@ -200,8 +200,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                           strokeWidth: 1.5,
                         ),
                       )
-                    : Text(
-                        _isSigningIn ? localization.signIn : localization.signUp),
+                    : Text(_isSigningIn
+                        ? localization.signIn
+                        : localization.signUp),
                 onPressed: () async {
                   if (!_formKey.currentState!.validate()) {
                     return;
