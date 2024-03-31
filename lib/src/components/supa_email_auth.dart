@@ -141,6 +141,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           TextFormField(
             keyboardType: TextInputType.emailAddress,
             autofillHints: const [AutofillHints.email],
+            textInputAction:
+                _forgotPassword ? TextInputAction.done : TextInputAction.next,
             validator: (value) {
               if (value == null ||
                   value.isEmpty ||
@@ -161,6 +163,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               autofillHints: _isSigningIn
                   ? [AutofillHints.password]
                   : [AutofillHints.newPassword],
+              textInputAction: widget.metadataFields != null && !_isSigningIn
+                  ? TextInputAction.next
+                  : TextInputAction.done,
               validator: (value) {
                 if (value == null || value.isEmpty || value.length < 6) {
                   return localization.passwordLengthError;
@@ -180,6 +185,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   .map((metadataField) => [
                         TextFormField(
                           controller: _metadataControllers[metadataField],
+                          textInputAction:
+                              widget.metadataFields!.last == metadataField
+                                  ? TextInputAction.done
+                                  : TextInputAction.next,
                           decoration: InputDecoration(
                             label: Text(metadataField.label),
                             prefixIcon: metadataField.prefixIcon,

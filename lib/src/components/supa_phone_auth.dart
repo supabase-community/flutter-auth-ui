@@ -56,6 +56,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
         children: [
           TextFormField(
             autofillHints: const [AutofillHints.telephoneNumber],
+            textInputAction: TextInputAction.next,
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return localization.validPhoneNumberError;
@@ -73,6 +74,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
             autofillHints: isSigningIn
                 ? [AutofillHints.password]
                 : [AutofillHints.newPassword],
+            textInputAction: TextInputAction.done,
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
                 return localization.passwordLengthError;
