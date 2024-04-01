@@ -49,88 +49,90 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   Widget build(BuildContext context) {
     final localization = widget.localization;
     final isSigningIn = widget.authAction == SupaAuthAction.signIn;
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            autofillHints: const [AutofillHints.telephoneNumber],
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return localization.validPhoneNumberError;
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.phone),
-              label: Text(localization.enterPhoneNumber),
-            ),
-            controller: _phone,
-          ),
-          spacer(16),
-          TextFormField(
-            autofillHints: isSigningIn
-                ? [AutofillHints.password]
-                : [AutofillHints.newPassword],
-            validator: (value) {
-              if (value == null || value.isEmpty || value.length < 6) {
-                return localization.passwordLengthError;
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock),
-              label: Text(localization.enterPassword),
-            ),
-            obscureText: true,
-            controller: _password,
-          ),
-          spacer(16),
-          ElevatedButton(
-            child: Text(
-              isSigningIn ? localization.signIn : localization.signUp,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onPressed: () async {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              try {
-                if (isSigningIn) {
-                  final response = await supabase.auth.signInWithPassword(
-                    phone: _phone.text,
-                    password: _password.text,
-                  );
-                  widget.onSuccess(response);
-                } else {
-                  final response = await supabase.auth
-                      .signUp(phone: _phone.text, password: _password.text);
-                  if (!mounted) return;
-                  widget.onSuccess(response);
+    return AutofillGroup(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              autofillHints: const [AutofillHints.telephoneNumber],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return localization.validPhoneNumberError;
                 }
-              } on AuthException catch (error) {
-                if (widget.onError == null && context.mounted) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
+                return null;
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.phone),
+                label: Text(localization.enterPhoneNumber),
+              ),
+              controller: _phone,
+            ),
+            spacer(16),
+            TextFormField(
+              autofillHints: isSigningIn
+                  ? [AutofillHints.password]
+                  : [AutofillHints.newPassword],
+              validator: (value) {
+                if (value == null || value.isEmpty || value.length < 6) {
+                  return localization.passwordLengthError;
                 }
-              } catch (error) {
-                if (widget.onError == null && context.mounted) {
-                  context.showErrorSnackBar(
-                      '${localization.unexpectedError}: $error');
-                } else {
-                  widget.onError?.call(error);
+                return null;
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock),
+                label: Text(localization.enterPassword),
+              ),
+              obscureText: true,
+              controller: _password,
+            ),
+            spacer(16),
+            ElevatedButton(
+              child: Text(
+                isSigningIn ? localization.signIn : localization.signUp,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onPressed: () async {
+                if (!_formKey.currentState!.validate()) {
+                  return;
                 }
-              }
-              setState(() {
-                _phone.text = '';
-                _password.text = '';
-              });
-            },
-          ),
-          spacer(10),
-        ],
+                try {
+                  if (isSigningIn) {
+                    final response = await supabase.auth.signInWithPassword(
+                      phone: _phone.text,
+                      password: _password.text,
+                    );
+                    widget.onSuccess(response);
+                  } else {
+                    final response = await supabase.auth
+                        .signUp(phone: _phone.text, password: _password.text);
+                    if (!mounted) return;
+                    widget.onSuccess(response);
+                  }
+                } on AuthException catch (error) {
+                  if (widget.onError == null && context.mounted) {
+                    context.showErrorSnackBar(error.message);
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                } catch (error) {
+                  if (widget.onError == null && context.mounted) {
+                    context.showErrorSnackBar(
+                        '${localization.unexpectedError}: $error');
+                  } else {
+                    widget.onError?.call(error);
+                  }
+                }
+                setState(() {
+                  _phone.text = '';
+                  _password.text = '';
+                });
+              },
+            ),
+            spacer(10),
+          ],
+        ),
       ),
     );
   }

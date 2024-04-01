@@ -133,177 +133,180 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   @override
   Widget build(BuildContext context) {
     final localization = widget.localization;
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: const [AutofillHints.email],
-            validator: (value) {
-              if (value == null ||
-                  value.isEmpty ||
-                  !EmailValidator.validate(_emailController.text)) {
-                return localization.validEmailError;
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.email),
-              label: Text(localization.enterEmail),
-            ),
-            controller: _emailController,
-          ),
-          if (!_forgotPassword) ...[
-            spacer(16),
+    return AutofillGroup(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             TextFormField(
-              autofillHints: _isSigningIn
-                  ? [AutofillHints.password]
-                  : [AutofillHints.newPassword],
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
               validator: (value) {
-                if (value == null || value.isEmpty || value.length < 6) {
-                  return localization.passwordLengthError;
+                if (value == null ||
+                    value.isEmpty ||
+                    !EmailValidator.validate(_emailController.text)) {
+                  return localization.validEmailError;
                 }
                 return null;
               },
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.lock),
-                label: Text(localization.enterPassword),
+                prefixIcon: const Icon(Icons.email),
+                label: Text(localization.enterEmail),
               ),
-              obscureText: true,
-              controller: _passwordController,
+              controller: _emailController,
             ),
-            spacer(16),
-            if (widget.metadataFields != null && !_isSigningIn)
-              ...widget.metadataFields!
-                  .map((metadataField) => [
-                        TextFormField(
-                          controller: _metadataControllers[metadataField],
-                          decoration: InputDecoration(
-                            label: Text(metadataField.label),
-                            prefixIcon: metadataField.prefixIcon,
-                          ),
-                          validator: metadataField.validator,
-                        ),
-                        spacer(16),
-                      ])
-                  .expand((element) => element),
-            ElevatedButton(
-              child: (_isLoading)
-                  ? SizedBox(
-                      height: 16,
-                      width: 16,
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        strokeWidth: 1.5,
-                      ),
-                    )
-                  : Text(
-                      _isSigningIn ? localization.signIn : localization.signUp),
-              onPressed: () async {
-                if (!_formKey.currentState!.validate()) {
-                  return;
-                }
-                setState(() {
-                  _isLoading = true;
-                });
-                try {
-                  if (_isSigningIn) {
-                    final response = await supabase.auth.signInWithPassword(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                    );
-                    widget.onSignInComplete.call(response);
-                  } else {
-                    final response = await supabase.auth.signUp(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                      emailRedirectTo: widget.redirectTo,
-                      data: _resolveData(),
-                    );
-                    widget.onSignUpComplete.call(response);
+            if (!_forgotPassword) ...[
+              spacer(16),
+              TextFormField(
+                autofillHints: _isSigningIn
+                    ? [AutofillHints.password]
+                    : [AutofillHints.newPassword],
+                validator: (value) {
+                  if (value == null || value.isEmpty || value.length < 6) {
+                    return localization.passwordLengthError;
                   }
-                } on AuthException catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(error.message);
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                } catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(
-                        '${localization.unexpectedError}: $error');
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                }
-                if (mounted) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                }
-              },
-            ),
-            spacer(16),
-            if (_isSigningIn) ...[
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _forgotPassword = true;
-                  });
+                  return null;
                 },
-                child: Text(localization.forgotPassword),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.lock),
+                  label: Text(localization.enterPassword),
+                ),
+                obscureText: true,
+                controller: _passwordController,
               ),
-            ],
-            TextButton(
-              key: const ValueKey('toggleSignInButton'),
-              onPressed: () {
-                setState(() {
-                  _forgotPassword = false;
-                  _isSigningIn = !_isSigningIn;
-                });
-              },
-              child: Text(_isSigningIn
-                  ? localization.dontHaveAccount
-                  : localization.haveAccount),
-            ),
-          ],
-          if (_isSigningIn && _forgotPassword) ...[
-            spacer(16),
-            ElevatedButton(
-              onPressed: () async {
-                try {
+              spacer(16),
+              if (widget.metadataFields != null && !_isSigningIn)
+                ...widget.metadataFields!
+                    .map((metadataField) => [
+                          TextFormField(
+                            controller: _metadataControllers[metadataField],
+                            decoration: InputDecoration(
+                              label: Text(metadataField.label),
+                              prefixIcon: metadataField.prefixIcon,
+                            ),
+                            validator: metadataField.validator,
+                          ),
+                          spacer(16),
+                        ])
+                    .expand((element) => element),
+              ElevatedButton(
+                child: (_isLoading)
+                    ? SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          strokeWidth: 1.5,
+                        ),
+                      )
+                    : Text(_isSigningIn
+                        ? localization.signIn
+                        : localization.signUp),
+                onPressed: () async {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
                   setState(() {
                     _isLoading = true;
                   });
+                  try {
+                    if (_isSigningIn) {
+                      final response = await supabase.auth.signInWithPassword(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+                      widget.onSignInComplete.call(response);
+                    } else {
+                      final response = await supabase.auth.signUp(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                        emailRedirectTo: widget.redirectTo,
+                        data: _resolveData(),
+                      );
+                      widget.onSignUpComplete.call(response);
+                    }
+                  } on AuthException catch (error) {
+                    if (widget.onError == null && context.mounted) {
+                      context.showErrorSnackBar(error.message);
+                    } else {
+                      widget.onError?.call(error);
+                    }
+                  } catch (error) {
+                    if (widget.onError == null && context.mounted) {
+                      context.showErrorSnackBar(
+                          '${localization.unexpectedError}: $error');
+                    } else {
+                      widget.onError?.call(error);
+                    }
+                  }
+                  if (mounted) {
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  }
+                },
+              ),
+              spacer(16),
+              if (_isSigningIn) ...[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _forgotPassword = true;
+                    });
+                  },
+                  child: Text(localization.forgotPassword),
+                ),
+              ],
+              TextButton(
+                key: const ValueKey('toggleSignInButton'),
+                onPressed: () {
+                  setState(() {
+                    _forgotPassword = false;
+                    _isSigningIn = !_isSigningIn;
+                  });
+                },
+                child: Text(_isSigningIn
+                    ? localization.dontHaveAccount
+                    : localization.haveAccount),
+              ),
+            ],
+            if (_isSigningIn && _forgotPassword) ...[
+              spacer(16),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    setState(() {
+                      _isLoading = true;
+                    });
 
-                  final email = _emailController.text.trim();
-                  await supabase.auth.resetPasswordForEmail(email);
-                  widget.onPasswordResetEmailSent?.call();
-                } on AuthException catch (error) {
-                  widget.onError?.call(error);
-                } catch (error) {
-                  widget.onError?.call(error);
-                }
-              },
-              child: Text(localization.sendPasswordReset),
-            ),
+                    final email = _emailController.text.trim();
+                    await supabase.auth.resetPasswordForEmail(email);
+                    widget.onPasswordResetEmailSent?.call();
+                  } on AuthException catch (error) {
+                    widget.onError?.call(error);
+                  } catch (error) {
+                    widget.onError?.call(error);
+                  }
+                },
+                child: Text(localization.sendPasswordReset),
+              ),
+              spacer(16),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _forgotPassword = false;
+                  });
+                },
+                child: Text(localization.backToSignIn),
+              ),
+            ],
             spacer(16),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  _forgotPassword = false;
-                });
-              },
-              child: Text(localization.backToSignIn),
-            ),
           ],
-          spacer(16),
-        ],
+        ),
       ),
     );
   }
