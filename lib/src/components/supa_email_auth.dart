@@ -284,7 +284,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     });
 
                     final email = _emailController.text.trim();
-                    await supabase.auth.resetPasswordForEmail(email);
+                    await supabase.auth.resetPasswordForEmail(email, redirectTo: widget.redirectTo);
                     widget.onPasswordResetEmailSent?.call();
                   } on AuthException catch (error) {
                     widget.onError?.call(error);
