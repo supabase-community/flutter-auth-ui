@@ -1,3 +1,10 @@
+## 0.4.4
+
+- feat: Update minimum supabase_flutter version to v2.3.4
+- fix: Add redirectTo for email password reset [#83](https://github.com/supabase-community/flutter-auth-ui/pull/83)
+- feat: Add TextInputAction to phone and email sign in [#82](https://github.com/supabase-community/flutter-auth-ui/pull/82)
+- fix: Fix autofill not opening when tapping on email field in SupaEmailAuth [#80](https://github.com/supabase-community/flutter-auth-ui/pull/80)
+
 ## 0.4.3
 
 - feat: Add localization / text customization support for all components.
