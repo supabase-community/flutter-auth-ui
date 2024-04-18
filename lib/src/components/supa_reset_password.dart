@@ -78,6 +78,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                   ),
                 );
                 widget.onSuccess.call(response);
+                context.showSnackBar(localization.passwordResetSent);
               } on AuthException catch (error) {
                 if (widget.onError == null && context.mounted) {
                   context.showErrorSnackBar(error.message);

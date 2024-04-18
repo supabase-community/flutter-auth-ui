@@ -298,10 +298,20 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       redirectTo: widget.redirectTo,
                     );
                     widget.onPasswordResetEmailSent?.call();
+                    context.showSnackBar(localization.passwordResetSent);
+                    setState(() {
+                      _forgotPassword = false;
+                    });
                   } on AuthException catch (error) {
                     widget.onError?.call(error);
                   } catch (error) {
                     widget.onError?.call(error);
+                  } finally {
+                    if (mounted) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
                   }
                 },
                 child: Text(localization.sendPasswordReset),
