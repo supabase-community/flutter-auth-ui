@@ -57,6 +57,10 @@ class SupaEmailAuth extends StatefulWidget {
   /// confirmation link after signing up.
   final String? redirectTo;
 
+  /// The URL to redirect the user to when clicking on the link on the
+  /// confirmation link from a reset password confirm email.
+  final String? redirectToResetPwd;
+
   /// Callback for the user to complete a sign in.
   final void Function(AuthResponse response) onSignInComplete;
 
@@ -87,6 +91,7 @@ class SupaEmailAuth extends StatefulWidget {
   const SupaEmailAuth({
     Key? key,
     this.redirectTo,
+    this.redirectToResetPwd,
     required this.onSignInComplete,
     required this.onSignUpComplete,
     this.onPasswordResetEmailSent,
@@ -295,7 +300,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     final email = _emailController.text.trim();
                     await supabase.auth.resetPasswordForEmail(
                       email,
-                      redirectTo: widget.redirectTo,
+                      redirectTo: widget.redirectToResetPwd,
                     );
                     widget.onPasswordResetEmailSent?.call();
                     // FIX use_build_context_synchronously
