@@ -15,11 +15,11 @@ class SupaVerifyPhone extends StatefulWidget {
   final SupaVerifyPhoneLocalization localization;
 
   const SupaVerifyPhone({
-    Key? key,
+    super.key,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaVerifyPhoneLocalization(),
-  }) : super(key: key);
+  });
 
   @override
   State<SupaVerifyPhone> createState() => _SupaVerifyPhoneState();
