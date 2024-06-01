@@ -23,12 +23,12 @@ class SupaMagicAuth extends StatefulWidget {
   final SupaMagicAuthLocalization localization;
 
   const SupaMagicAuth({
-    Key? key,
+    super.key,
     this.redirectUrl,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaMagicAuthLocalization(),
-  }) : super(key: key);
+  });
 
   @override
   State<SupaMagicAuth> createState() => _SupaMagicAuthState();

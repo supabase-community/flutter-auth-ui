@@ -125,7 +125,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final SupaSocialsAuthLocalization localization;
 
   const SupaSocialsAuth({
-    Key? key,
+    super.key,
     this.nativeGoogleAuthConfig,
     this.enableNativeAppleAuth = true,
     required this.socialProviders,
@@ -138,7 +138,7 @@ class SupaSocialsAuth extends StatefulWidget {
     this.scopes,
     this.queryParams,
     this.localization = const SupaSocialsAuthLocalization(),
-  }) : super(key: key);
+  });
 
   @override
   State<SupaSocialsAuth> createState() => _SupaSocialsAuthState();
@@ -360,10 +360,10 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         }
 
         final authButtonStyle = ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(foregroundColor),
-          backgroundColor: MaterialStateProperty.all(backgroundColor),
-          overlayColor: MaterialStateProperty.all(overlayColor),
-          iconColor: MaterialStateProperty.all(iconColor),
+          foregroundColor: WidgetStateProperty.all(foregroundColor),
+          backgroundColor: WidgetStateProperty.all(backgroundColor),
+          overlayColor: WidgetStateProperty.all(overlayColor),
+          iconColor: WidgetStateProperty.all(iconColor),
         );
 
         return Padding(

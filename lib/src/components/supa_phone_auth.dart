@@ -17,12 +17,12 @@ class SupaPhoneAuth extends StatefulWidget {
   final SupaPhoneAuthLocalization localization;
 
   const SupaPhoneAuth({
-    Key? key,
+    super.key,
     required this.authAction,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaPhoneAuthLocalization(),
-  }) : super(key: key);
+  });
 
   @override
   State<SupaPhoneAuth> createState() => _SupaPhoneAuthState();
