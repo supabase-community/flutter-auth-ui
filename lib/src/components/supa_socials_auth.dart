@@ -125,7 +125,7 @@ class SupaSocialsAuth extends StatefulWidget {
   final SupaSocialsAuthLocalization localization;
 
   const SupaSocialsAuth({
-    Key? key,
+    super.key,
     this.nativeGoogleAuthConfig,
     this.enableNativeAppleAuth = true,
     required this.socialProviders,
@@ -138,7 +138,7 @@ class SupaSocialsAuth extends StatefulWidget {
     this.scopes,
     this.queryParams,
     this.localization = const SupaSocialsAuthLocalization(),
-  }) : super(key: key);
+  });
 
   @override
   State<SupaSocialsAuth> createState() => _SupaSocialsAuthState();
