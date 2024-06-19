@@ -54,8 +54,7 @@ extension on OAuthProvider {
         _ => Colors.black,
       };
 
-  String get labelText =>
-      'Continue with ${name[0].toUpperCase()}${name.substring(1)}';
+  String get labelText => '${name[0].toUpperCase()}${name.substring(1)}';
 }
 
 enum SocialButtonVariant {
