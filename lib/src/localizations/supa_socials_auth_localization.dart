@@ -2,7 +2,6 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 class SupaSocialsAuthLocalization {
   final String continueWith;
-  final String updatePassword;
   final String successSignInMessage;
   final String unexpectedError;
 
@@ -27,7 +26,6 @@ class SupaSocialsAuthLocalization {
 
   const SupaSocialsAuthLocalization({
     this.continueWith = 'Continue with',
-    this.updatePassword = 'Update Password',
     this.successSignInMessage = 'Successfully signed in!',
     this.unexpectedError = 'An unexpected error occurred',
     this.oAuthButtonLabels = const {},
