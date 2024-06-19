@@ -337,6 +337,17 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               }
             }
 
+            final user = supabase.auth.currentUser;
+            if (user?.isAnonymous == true) {
+              await supabase.auth.linkIdentity(
+                socialProvider,
+                redirectTo: widget.redirectUrl,
+                scopes: widget.scopes?[socialProvider],
+                queryParams: widget.queryParams?[socialProvider],
+              );
+              return;
+            }
+
             await supabase.auth.signInWithOAuth(
               socialProvider,
               redirectTo: widget.redirectUrl,

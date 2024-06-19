@@ -227,12 +227,27 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       );
                       widget.onSignInComplete.call(response);
                     } else {
-                      final response = await supabase.auth.signUp(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                        emailRedirectTo: widget.redirectTo,
-                        data: _resolveData(),
-                      );
+                      final user = supabase.auth.currentUser;
+                      late final AuthResponse response;
+                      if (user?.isAnonymous == true) {
+                        await supabase.auth.updateUser(
+                          UserAttributes(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                            data: _resolveData(),
+                          ),
+                          emailRedirectTo: widget.redirectTo,
+                        );
+                        final newSession = supabase.auth.currentSession;
+                        response = AuthResponse(session: newSession);
+                      } else {
+                        response = await supabase.auth.signUp(
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                          emailRedirectTo: widget.redirectTo,
+                          data: _resolveData(),
+                        );
+                      }
                       widget.onSignUpComplete.call(response);
                     }
                   } on AuthException catch (error) {
