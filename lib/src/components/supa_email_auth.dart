@@ -73,6 +73,12 @@ class SupaEmailAuth extends StatefulWidget {
   /// If set to `null`, a snack bar with error color will show up.
   final void Function(Object error)? onError;
 
+  /// Callback for toggling between sign in and sign up
+  final void Function(bool isSigningIn)? onToggleSignIn;
+
+  /// Callback for toggling between sign-in/ sign-up and password recovery
+  final void Function(bool isRecoveringPassword)? onToggleRecoverPassword;
+
   /// Set of additional fields to the signup form that will become
   /// part of the user_metadata
   final List<MetaDataField>? metadataFields;
@@ -91,6 +97,8 @@ class SupaEmailAuth extends StatefulWidget {
     required this.onSignUpComplete,
     this.onPasswordResetEmailSent,
     this.onError,
+    this.onToggleSignIn,
+    this.onToggleRecoverPassword,
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
@@ -109,8 +117,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   bool _isLoading = false;
 
   /// The user has pressed forgot password button
-  bool _forgotPassword = false;
+  bool _isRecoveringPassword = false;
 
+  /// Whether the user is signing in or signing up
   bool _isSigningIn = true;
 
   @override
@@ -142,8 +151,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
-              textInputAction:
-                  _forgotPassword ? TextInputAction.done : TextInputAction.next,
+              textInputAction: _isRecoveringPassword
+                  ? TextInputAction.done
+                  : TextInputAction.next,
               validator: (value) {
                 if (value == null ||
                     value.isEmpty ||
@@ -158,7 +168,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               ),
               controller: _emailController,
             ),
-            if (!_forgotPassword) ...[
+            if (!_isRecoveringPassword) ...[
               spacer(16),
               TextFormField(
                 autofillHints: _isSigningIn
@@ -261,8 +271,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      _forgotPassword = true;
+                      _isRecoveringPassword = true;
                     });
+                    widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                   },
                   child: Text(localization.forgotPassword),
                 ),
@@ -271,16 +282,18 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 key: const ValueKey('toggleSignInButton'),
                 onPressed: () {
                   setState(() {
-                    _forgotPassword = false;
+                    _isRecoveringPassword = false;
                     _isSigningIn = !_isSigningIn;
                   });
+                  widget.onToggleSignIn?.call(_isSigningIn);
+                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                 },
                 child: Text(_isSigningIn
                     ? localization.dontHaveAccount
                     : localization.haveAccount),
               ),
             ],
-            if (_isSigningIn && _forgotPassword) ...[
+            if (_isSigningIn && _isRecoveringPassword) ...[
               spacer(16),
               ElevatedButton(
                 onPressed: () async {
@@ -302,7 +315,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     if (!context.mounted) return;
                     context.showSnackBar(localization.passwordResetSent);
                     setState(() {
-                      _forgotPassword = false;
+                      _isRecoveringPassword = false;
                     });
                   } on AuthException catch (error) {
                     widget.onError?.call(error);
@@ -322,7 +335,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    _forgotPassword = false;
+                    _isRecoveringPassword = false;
                   });
                 },
                 child: Text(localization.backToSignIn),
