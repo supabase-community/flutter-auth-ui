@@ -7,7 +7,7 @@ class SupaSocialsAuthLocalization {
 
   /// Overrides the name of the OAuth provider shown on the sign-in button.
   ///
-  /// Defaults to the provider's name.
+  /// Defaults to `Continue with [ProviderName]`
   ///
   /// ```dart
   /// SupaSocialsAuth(
