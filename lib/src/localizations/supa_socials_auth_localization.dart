@@ -4,15 +4,16 @@ class SupaSocialsAuthLocalization {
   final String updatePassword;
   final String successSignInMessage;
   final String unexpectedError;
-  final String continueWith;
 
   /// Overrides the name of the OAuth provider shown on the sign-in button.
+  ///
+  /// Defaults to the provider's name.
   ///
   /// ```dart
   /// SupaSocialsAuth(
   ///   socialProviders: const [OAuthProvider.azure],
   ///   localization: const SupaSocialsAuthLocalization(
-  ///     oAuthProviderLabelOverrides: {
+  ///     oAuthButtonLabels: {
   ///       OAuthProvider.azure: 'Microsoft (Azure)'
   ///     },
   ///   ),
@@ -21,13 +22,12 @@ class SupaSocialsAuthLocalization {
   ///   },
   /// ),
   /// ```
-  final Map<OAuthProvider, String> oAuthProviderLabelOverrides;
+  final Map<OAuthProvider, String> oAuthButtonLabels;
 
   const SupaSocialsAuthLocalization({
     this.updatePassword = 'Update Password',
     this.successSignInMessage = 'Successfully signed in!',
     this.unexpectedError = 'An unexpected error occurred',
-    this.continueWith = 'Continue with',
-    this.oAuthProviderLabelOverrides = const {},
+    this.oAuthButtonLabels = const {},
   });
 }
