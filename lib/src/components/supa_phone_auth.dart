@@ -107,8 +107,21 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                     );
                     widget.onSuccess(response);
                   } else {
-                    final response = await supabase.auth
-                        .signUp(phone: _phone.text, password: _password.text);
+                    late final AuthResponse response;
+                    final user = supabase.auth.currentUser;
+                    if (user?.isAnonymous == true) {
+                      await supabase.auth.updateUser(
+                        UserAttributes(
+                          phone: _phone.text,
+                          password: _password.text,
+                        ),
+                      );
+                    } else {
+                      response = await supabase.auth.signUp(
+                        phone: _phone.text,
+                        password: _password.text,
+                      );
+                    }
                     if (!mounted) return;
                     widget.onSuccess(response);
                   }
