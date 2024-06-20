@@ -54,7 +54,8 @@ extension on OAuthProvider {
         _ => Colors.black,
       };
 
-  String get capitalizedName => name[0].toUpperCase() + name.substring(1);
+  String get labelText =>
+      'Continue with ${name[0].toUpperCase()}${name.substring(1)}';
 }
 
 enum SocialButtonVariant {
@@ -384,7 +385,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                   style: authButtonStyle,
                   onPressed: onAuthButtonPressed,
                   label: Text(
-                      '${localization.continueWith} ${socialProvider.capitalizedName}'),
+                    localization.oAuthButtonLabels[socialProvider] ??
+                        socialProvider.labelText,
+                  ),
                 ),
         );
       },
