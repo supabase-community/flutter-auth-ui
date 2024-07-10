@@ -95,6 +95,9 @@ class SupaEmailAuth extends StatefulWidget {
   /// Localization for the form
   final SupaEmailAuthLocalization localization;
 
+  /// Whether the form should display sign-in or sign-up initially
+  final bool isSigningIn;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     super.key,
@@ -109,6 +112,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
+    this.isSigningIn = true,
   });
 
   @override
@@ -120,14 +124,12 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   late final Map<MetaDataField, TextEditingController> _metadataControllers;
+  late bool _isSigningIn;
 
   bool _isLoading = false;
 
   /// The user has pressed forgot password button
   bool _isRecoveringPassword = false;
-
-  /// Whether the user is signing in or signing up
-  bool _isSigningIn = true;
 
   /// Focus node for email field
   final FocusNode _emailFocusNode = FocusNode();
@@ -135,6 +137,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   @override
   void initState() {
     super.initState();
+    _isSigningIn = widget.isSigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
         (metadataField) => MapEntry(metadataField, TextEditingController())));
   }
