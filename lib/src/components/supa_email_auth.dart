@@ -129,6 +129,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   /// Whether the user is signing in or signing up
   bool _isSigningIn = true;
 
+  /// Focus node for email field
+  final FocusNode _emailFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -158,6 +161,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autofocus: true,
+              focusNode: _emailFocusNode,
               textInputAction: _isRecoveringPassword
                   ? TextInputAction.done
                   : TextInputAction.next,
@@ -174,6 +180,11 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 label: Text(localization.enterEmail),
               ),
               controller: _emailController,
+              onFieldSubmitted: (_) {
+                if (_isRecoveringPassword) {
+                  _passwordRecovery();
+                }
+              },
             ),
             if (!_isRecoveringPassword) ...[
               spacer(16),
@@ -181,6 +192,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 autofillHints: _isSigningIn
                     ? [AutofillHints.password]
                     : [AutofillHints.newPassword],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 textInputAction: widget.metadataFields != null && !_isSigningIn
                     ? TextInputAction.next
                     : TextInputAction.done,
@@ -196,6 +208,11 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 ),
                 obscureText: true,
                 controller: _passwordController,
+                onFieldSubmitted: (_) {
+                  if (widget.metadataFields == null || _isSigningIn) {
+                    _signInSignUp();
+                  }
+                },
               ),
               spacer(16),
               if (widget.metadataFields != null && !_isSigningIn)
@@ -212,11 +229,20 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                               prefixIcon: metadataField.prefixIcon,
                             ),
                             validator: metadataField.validator,
+                            onFieldSubmitted: (_) {
+                              if (metadataField !=
+                                  widget.metadataFields!.last) {
+                                FocusScope.of(context).nextFocus();
+                              } else {
+                                _signInSignUp();
+                              }
+                            },
                           ),
                           spacer(16),
                         ])
                     .expand((element) => element),
               ElevatedButton(
+                onPressed: _signInSignUp,
                 child: (_isLoading)
                     ? SizedBox(
                         height: 16,
@@ -229,64 +255,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     : Text(_isSigningIn
                         ? localization.signIn
                         : localization.signUp),
-                onPressed: () async {
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  try {
-                    if (_isSigningIn) {
-                      final response = await supabase.auth.signInWithPassword(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-                      widget.onSignInComplete.call(response);
-                    } else {
-                      final user = supabase.auth.currentUser;
-                      late final AuthResponse response;
-                      if (user?.isAnonymous == true) {
-                        await supabase.auth.updateUser(
-                          UserAttributes(
-                            email: _emailController.text.trim(),
-                            password: _passwordController.text.trim(),
-                            data: _resolveData(),
-                          ),
-                          emailRedirectTo: widget.redirectTo,
-                        );
-                        final newSession = supabase.auth.currentSession;
-                        response = AuthResponse(session: newSession);
-                      } else {
-                        response = await supabase.auth.signUp(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          emailRedirectTo: widget.redirectTo,
-                          data: _resolveData(),
-                        );
-                      }
-                      widget.onSignUpComplete.call(response);
-                    }
-                  } on AuthException catch (error) {
-                    if (widget.onError == null && context.mounted) {
-                      context.showErrorSnackBar(error.message);
-                    } else {
-                      widget.onError?.call(error);
-                    }
-                  } catch (error) {
-                    if (widget.onError == null && context.mounted) {
-                      context.showErrorSnackBar(
-                          '${localization.unexpectedError}: $error');
-                    } else {
-                      widget.onError?.call(error);
-                    }
-                  }
-                  if (mounted) {
-                    setState(() {
-                      _isLoading = false;
-                    });
-                  }
-                },
               ),
               spacer(16),
               if (_isSigningIn) ...[
@@ -318,40 +286,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             if (_isSigningIn && _isRecoveringPassword) ...[
               spacer(16),
               ElevatedButton(
-                onPressed: () async {
-                  try {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    final email = _emailController.text.trim();
-                    await supabase.auth.resetPasswordForEmail(
-                      email,
-                      redirectTo:
-                          widget.resetPasswordRedirectTo ?? widget.redirectTo,
-                    );
-                    widget.onPasswordResetEmailSent?.call();
-                    // FIX use_build_context_synchronously
-                    if (!context.mounted) return;
-                    context.showSnackBar(localization.passwordResetSent);
-                    setState(() {
-                      _isRecoveringPassword = false;
-                    });
-                  } on AuthException catch (error) {
-                    widget.onError?.call(error);
-                  } catch (error) {
-                    widget.onError?.call(error);
-                  } finally {
-                    if (mounted) {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                    }
-                  }
-                },
+                onPressed: _passwordRecovery,
                 child: Text(localization.sendPasswordReset),
               ),
               spacer(16),
@@ -369,6 +304,103 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         ),
       ),
     );
+  }
+
+  void _signInSignUp() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      if (_isSigningIn) {
+        final response = await supabase.auth.signInWithPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        widget.onSignInComplete.call(response);
+      } else {
+        final user = supabase.auth.currentUser;
+        late final AuthResponse response;
+        if (user?.isAnonymous == true) {
+          await supabase.auth.updateUser(
+            UserAttributes(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+              data: _resolveData(),
+            ),
+            emailRedirectTo: widget.redirectTo,
+          );
+          final newSession = supabase.auth.currentSession;
+          response = AuthResponse(session: newSession);
+        } else {
+          response = await supabase.auth.signUp(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+            emailRedirectTo: widget.redirectTo,
+            data: _resolveData(),
+          );
+        }
+        widget.onSignUpComplete.call(response);
+      }
+    } on AuthException catch (error) {
+      if (widget.onError == null && mounted) {
+        context.showErrorSnackBar(error.message);
+      } else {
+        widget.onError?.call(error);
+      }
+      _emailFocusNode.requestFocus();
+    } catch (error) {
+      if (widget.onError == null && mounted) {
+        context.showErrorSnackBar(
+            '${widget.localization.unexpectedError}: $error');
+      } else {
+        widget.onError?.call(error);
+      }
+      _emailFocusNode.requestFocus();
+    }
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _passwordRecovery() async {
+    try {
+      if (!_formKey.currentState!.validate()) {
+        // Focus on email field if validation fails
+        _emailFocusNode.requestFocus();
+        return;
+      }
+      setState(() {
+        _isLoading = true;
+      });
+
+      final email = _emailController.text.trim();
+      await supabase.auth.resetPasswordForEmail(
+        email,
+        redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
+      );
+      widget.onPasswordResetEmailSent?.call();
+      // FIX use_build_context_synchronously
+      if (!mounted) return;
+      context.showSnackBar(widget.localization.passwordResetSent);
+      setState(() {
+        _isRecoveringPassword = false;
+      });
+    } on AuthException catch (error) {
+      widget.onError?.call(error);
+    } catch (error) {
+      widget.onError?.call(error);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   /// Resolve the user_metadata that we will send during sign-up
