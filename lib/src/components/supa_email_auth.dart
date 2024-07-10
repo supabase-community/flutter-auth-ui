@@ -345,14 +345,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         widget.onSignUpComplete.call(response);
       }
     } on AuthException catch (error) {
-      if (widget.onError == null && context.mounted) {
+      if (widget.onError == null && mounted) {
         context.showErrorSnackBar(error.message);
       } else {
         widget.onError?.call(error);
       }
       _emailFocusNode.requestFocus();
     } catch (error) {
-      if (widget.onError == null && context.mounted) {
+      if (widget.onError == null && mounted) {
         context.showErrorSnackBar(
             '${widget.localization.unexpectedError}: $error');
       } else {
@@ -385,7 +385,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       );
       widget.onPasswordResetEmailSent?.call();
       // FIX use_build_context_synchronously
-      if (!context.mounted) return;
+      if (!mounted) return;
       context.showSnackBar(widget.localization.passwordResetSent);
       setState(() {
         _isRecoveringPassword = false;
