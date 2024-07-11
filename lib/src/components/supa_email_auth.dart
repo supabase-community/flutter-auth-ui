@@ -96,7 +96,7 @@ class SupaEmailAuth extends StatefulWidget {
   final SupaEmailAuthLocalization localization;
 
   /// Whether the form should display sign-in or sign-up initially
-  final bool isSigningIn;
+  final bool isInitiallySigningIn;
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
