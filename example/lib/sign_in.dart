@@ -35,6 +35,7 @@ class SignUp extends StatelessWidget {
                 },
               ),
             ],
+            isPrefixIcons: true,
           ),
           const Divider(),
           optionText,
