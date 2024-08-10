@@ -6,9 +6,13 @@ import 'constants.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+
+    void navigateHome(AuthResponse response) {
+      Navigator.of(context).pushReplacementNamed('/home');
+    }
+
     return Scaffold(
       appBar: appBar('Sign In'),
       body: ListView(
@@ -16,12 +20,8 @@ class SignUp extends StatelessWidget {
         children: [
           SupaEmailAuth(
             redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
-            onSignInComplete: (response) {
-              Navigator.of(context).pushReplacementNamed('/home');
-            },
-            onSignUpComplete: (response) {
-              Navigator.of(context).pushReplacementNamed('/home');
-            },
+            onSignInComplete: navigateHome,
+            onSignUpComplete: navigateHome,
             metadataFields: [
               MetaDataField(
                 prefixIcon: const Icon(Icons.person),
