@@ -95,8 +95,9 @@ class SupaEmailAuth extends StatefulWidget {
   /// Localization for the form
   final SupaEmailAuthLocalization localization;
 
-  /// Use icon in UI
-  final bool isPrefixIcons;
+  /// Icons or custom prefix widgets for email UI
+  final Widget? prefixIconsEmail;
+  final Widget? prefixIconsPassword;
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
@@ -112,7 +113,8 @@ class SupaEmailAuth extends StatefulWidget {
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
-    this.isPrefixIcons = true,
+    this.prefixIconsEmail = const Icon(Icons.email),
+    this.prefixIconsPassword = const Icon(Icons.lock),
   });
 
   @override
@@ -180,7 +182,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 return null;
               },
               decoration: InputDecoration(
-                prefixIcon: widget.isPrefixIcons ? const Icon(Icons.email) : null,
+                prefixIcon: widget.prefixIconsEmail,
                 label: Text(localization.enterEmail),
               ),
               controller: _emailController,
@@ -207,7 +209,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  prefixIcon: widget.isPrefixIcons ? const Icon(Icons.email) : null,
+                  prefixIcon: widget.prefixIconsPassword,
                   label: Text(localization.enterPassword),
                 ),
                 obscureText: true,
