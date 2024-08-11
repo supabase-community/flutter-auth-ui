@@ -13,11 +13,43 @@ class SignUp extends StatelessWidget {
       Navigator.of(context).pushReplacementNamed('/home');
     }
 
+    var darkModeThemeData = ThemeData.dark().copyWith(
+      colorScheme: ColorScheme.dark(
+        primary: Color.fromARGB(248, 183, 183, 183),
+      ),
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: Colors.blueGrey[300],
+        selectionColor: Colors.blueGrey.withOpacity(0.3),
+        selectionHandleColor: Colors.blueGrey[300],
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        fillColor: Colors.grey[800],
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+        labelStyle: TextStyle(color: Color.fromARGB(179, 255, 255, 255)),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color.fromARGB(255, 155, 155, 155),
+          foregroundColor: Color.fromARGB(255, 255, 255, 255),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+    );
+
+
+
     return Scaffold(
       appBar: appBar('Sign In'),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
+
           SupaEmailAuth(
             redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
             onSignInComplete: navigateHome,
@@ -35,9 +67,38 @@ class SignUp extends StatelessWidget {
                 },
               ),
             ],
-            // prefixIconsEmail: null,
-            // prefixIconsPassword: null,
           ),
+
+          const Divider(),
+          optionText,
+          spacer,
+
+          // Dark theme example
+          Card(
+            elevation: 10,
+            color: const Color.fromARGB(255, 24, 24, 24),
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child:  Theme(
+              data: darkModeThemeData,
+              child: SupaEmailAuth(
+                redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
+                onSignInComplete: navigateHome,
+                onSignUpComplete: navigateHome,
+                prefixIconsEmail : null,
+                prefixIconsPassword: null,
+                localization: const SupaEmailAuthLocalization(
+                  enterEmail: "email", 
+                  enterPassword: "password",
+                  dontHaveAccount: "sign up",
+                  forgotPassword: "forgot password"
+                ),
+              ),
+            ),
+            
+            )
+          ),
+
           const Divider(),
           optionText,
           spacer,
