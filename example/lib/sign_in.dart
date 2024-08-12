@@ -13,7 +13,7 @@ class SignUp extends StatelessWidget {
     }
 
     var darkModeThemeData = ThemeData.dark().copyWith(
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: Color.fromARGB(248, 183, 183, 183),
       ),
       textSelectionTheme: TextSelectionThemeData(
@@ -28,12 +28,12 @@ class SignUp extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
-        labelStyle: TextStyle(color: Color.fromARGB(179, 255, 255, 255)),
+        labelStyle: const TextStyle(color: Color.fromARGB(179, 255, 255, 255)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 155, 155, 155),
-          foregroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: const Color.fromARGB(255, 155, 155, 155),
+          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
