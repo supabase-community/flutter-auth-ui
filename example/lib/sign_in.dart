@@ -8,7 +8,6 @@ class SignUp extends StatelessWidget {
   const SignUp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-
     void navigateHome(AuthResponse response) {
       Navigator.of(context).pushReplacementNamed('/home');
     }
@@ -42,14 +41,11 @@ class SignUp extends StatelessWidget {
       ),
     );
 
-
-
     return Scaffold(
       appBar: appBar('Sign In'),
       body: ListView(
         padding: const EdgeInsets.all(24.0),
         children: [
-
           SupaEmailAuth(
             redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
             onSignInComplete: navigateHome,
@@ -75,29 +71,26 @@ class SignUp extends StatelessWidget {
 
           // Dark theme example
           Card(
-            elevation: 10,
-            color: const Color.fromARGB(255, 24, 24, 24),
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child:  Theme(
-              data: darkModeThemeData,
-              child: SupaEmailAuth(
-                redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
-                onSignInComplete: navigateHome,
-                onSignUpComplete: navigateHome,
-                prefixIconsEmail : null,
-                prefixIconsPassword: null,
-                localization: const SupaEmailAuthLocalization(
-                  enterEmail: "email", 
-                  enterPassword: "password",
-                  dontHaveAccount: "sign up",
-                  forgotPassword: "forgot password"
+              elevation: 10,
+              color: const Color.fromARGB(255, 24, 24, 24),
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Theme(
+                  data: darkModeThemeData,
+                  child: SupaEmailAuth(
+                    redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
+                    onSignInComplete: navigateHome,
+                    onSignUpComplete: navigateHome,
+                    prefixIconsEmail: null,
+                    prefixIconsPassword: null,
+                    localization: const SupaEmailAuthLocalization(
+                        enterEmail: "email",
+                        enterPassword: "password",
+                        dontHaveAccount: "sign up",
+                        forgotPassword: "forgot password"),
+                  ),
                 ),
-              ),
-            ),
-            
-            )
-          ),
+              )),
 
           const Divider(),
           optionText,
