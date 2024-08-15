@@ -12,7 +12,7 @@ class SignUp extends StatelessWidget {
       Navigator.of(context).pushReplacementNamed('/home');
     }
 
-    var darkModeThemeData = ThemeData.dark().copyWith(
+    final darkModeThemeData = ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.dark(
         primary: Color.fromARGB(248, 183, 183, 183), // text below main button
       ),
