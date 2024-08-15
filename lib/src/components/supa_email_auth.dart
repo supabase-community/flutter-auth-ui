@@ -96,8 +96,8 @@ class SupaEmailAuth extends StatefulWidget {
   final SupaEmailAuthLocalization localization;
 
   /// Icons or custom prefix widgets for email UI
-  final Widget? prefixIconsEmail;
-  final Widget? prefixIconsPassword;
+  final Widget? prefixIconEmail;
+  final Widget? prefixIconPassword;
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
