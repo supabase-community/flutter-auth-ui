@@ -14,26 +14,24 @@ class SignUp extends StatelessWidget {
 
     var darkModeThemeData = ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.dark(
-        primary: Color.fromARGB(248, 183, 183, 183),
+        primary: Color.fromARGB(248, 183, 183, 183), // text below sign in / up
       ),
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.blueGrey[300],
-        selectionColor: Colors.blueGrey.withOpacity(0.3),
-        selectionHandleColor: Colors.blueGrey[300],
+        cursorColor: Colors.blueGrey[300], // cursor when typing
       ),
       inputDecorationTheme: InputDecorationTheme(
-        fillColor: Colors.grey[800],
+        fillColor: Colors.grey[800], // background of text entry
         filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide.none,
         ),
-        labelStyle: const TextStyle(color: Color.fromARGB(179, 255, 255, 255)),
+        labelStyle: const TextStyle(color: Color.fromARGB(179, 255, 255, 255)), // text labeling text entry
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 155, 155, 155),
-          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Color.fromARGB(255, 22, 135, 188), // sign in / up button
+          foregroundColor: const Color.fromARGB(255, 255, 255, 255), // sign in / up text
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
