@@ -30,8 +30,8 @@ class SignUp extends StatelessWidget {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 22, 135, 188), // sign in / up button
-          foregroundColor: const Color.fromARGB(255, 255, 255, 255), // sign in / up text
+          backgroundColor: Color.fromARGB(255, 22, 135, 188), // main button
+          foregroundColor: const Color.fromARGB(255, 255, 255, 255), // main button text
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
