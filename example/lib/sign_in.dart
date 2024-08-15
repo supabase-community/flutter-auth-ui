@@ -14,7 +14,7 @@ class SignUp extends StatelessWidget {
 
     var darkModeThemeData = ThemeData.dark().copyWith(
       colorScheme: const ColorScheme.dark(
-        primary: Color.fromARGB(248, 183, 183, 183), // text below sign in / up
+        primary: Color.fromARGB(248, 183, 183, 183), // text below main button
       ),
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: Colors.blueGrey[300], // cursor when typing
