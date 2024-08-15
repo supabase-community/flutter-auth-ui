@@ -30,7 +30,7 @@ class SignUp extends StatelessWidget {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 22, 135, 188), // main button
+          backgroundColor: const Color.fromARGB(255, 22, 135, 188), // main button
           foregroundColor: const Color.fromARGB(255, 255, 255, 255), // main button text
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -79,8 +79,8 @@ class SignUp extends StatelessWidget {
                     redirectTo: kIsWeb ? null : 'io.supabase.flutter://',
                     onSignInComplete: navigateHome,
                     onSignUpComplete: navigateHome,
-                    prefixIconsEmail: null,
-                    prefixIconsPassword: null,
+                    prefixIconEmail: null,
+                    prefixIconPassword: null,
                     localization: const SupaEmailAuthLocalization(
                         enterEmail: "email",
                         enterPassword: "password",

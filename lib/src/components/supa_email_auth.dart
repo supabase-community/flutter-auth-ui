@@ -113,8 +113,8 @@ class SupaEmailAuth extends StatefulWidget {
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
-    this.prefixIconsEmail = const Icon(Icons.email),
-    this.prefixIconsPassword = const Icon(Icons.lock),
+    this.prefixIconEmail = const Icon(Icons.email),
+    this.prefixIconPassword = const Icon(Icons.lock),
   });
 
   @override
@@ -182,7 +182,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 return null;
               },
               decoration: InputDecoration(
-                prefixIcon: widget.prefixIconsEmail,
+                prefixIcon: widget.prefixIconEmail,
                 label: Text(localization.enterEmail),
               ),
               controller: _emailController,
@@ -209,7 +209,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  prefixIcon: widget.prefixIconsPassword,
+                  prefixIcon: widget.prefixIconPassword,
                   label: Text(localization.enterPassword),
                 ),
                 obscureText: true,
