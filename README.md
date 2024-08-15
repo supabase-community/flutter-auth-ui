@@ -100,3 +100,4 @@ SupaSocialsAuth(
 ## Theming
 
 This library uses bare Flutter components so that you can control the appearance of the components using your own theme.
+See theme example in example/lib/sign_in.dart
