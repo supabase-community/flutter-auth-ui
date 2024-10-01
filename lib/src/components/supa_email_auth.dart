@@ -36,16 +36,6 @@ class MetaDataField {
     this.validator,
     this.prefixIcon,
   });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MetaDataField &&
-          runtimeType == other.runtimeType &&
-          key == other.key;
-
-  @override
-  int get hashCode => key.hashCode;
 }
 
 /// {@template supa_email_auth}
