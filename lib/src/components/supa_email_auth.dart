@@ -125,7 +125,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late final Map<MetaDataField, TextEditingController> _metadataControllers;
+  late final Map<String, TextEditingController> _metadataControllers;
 
   bool _isLoading = false;
 
@@ -142,7 +142,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   void initState() {
     super.initState();
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
-        (metadataField) => MapEntry(metadataField, TextEditingController())));
+        (metadataField) =>
+            MapEntry(metadataField.key, TextEditingController())));
   }
 
   @override
@@ -225,7 +226,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 ...widget.metadataFields!
                     .map((metadataField) => [
                           TextFormField(
-                            controller: _metadataControllers[metadataField],
+                            controller: _metadataControllers[metadataField.key],
                             textInputAction:
                                 widget.metadataFields!.last == metadataField
                                     ? TextInputAction.done
@@ -423,8 +424,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   Map<String, dynamic> _resolveMetadataFieldsData() {
     return widget.metadataFields != null
         ? _metadataControllers.map<String, dynamic>(
-            (metaDataField, controller) =>
-                MapEntry(metaDataField.key, controller.text))
+            (key, controller) => MapEntry(key, controller.text))
         : <String, dynamic>{};
   }
 }
