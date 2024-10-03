@@ -102,7 +102,7 @@ class BooleanMetaDataField extends MetaDataField {
   /// Whether the field is required.
   ///
   /// If true, the user must check the checkbox in order for the form to submit.
-  final bool required;
+  final bool isRequired;
 
   /// Semantic label for the checkbox.
   final String? checkboxSemanticLabel;
@@ -112,7 +112,7 @@ class BooleanMetaDataField extends MetaDataField {
     String? label,
     this.richLabelSpans,
     this.checkboxSemanticLabel,
-    this.required = false,
+    this.isRequired = false,
     this.checkboxPosition = ListTileControlAffinity.platform,
     required super.key,
   })  : assert(label != null || richLabelSpans != null,
@@ -120,9 +120,9 @@ class BooleanMetaDataField extends MetaDataField {
         super(label: label ?? '');
 
   Widget getLabelWidget(BuildContext context) {
-    // It's important that this matches the default style of [TextField], which
-    // is used for the other fields in the form. TextField's default style
-    // uses bodyLarge for Material 3, or otherwise titleMedium.
+    // This matches the default style of [TextField], to match the other fields
+    // in the form. TextField's default style uses `bodyLarge` for Material 3,
+    // or otherwise `titleMedium`.
     final defaultStyle = Theme.of(context).useMaterial3
         ? Theme.of(context).textTheme.bodyLarge
         : Theme.of(context).textTheme.titleMedium;
@@ -333,10 +333,11 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 ...widget.metadataFields!
                     .map((metadataField) => [
                           // Render a Checkbox that displays an error message
-                          // beneath it if the field is required and the user hasn't checked it when submitting.
+                          // beneath it if the field is required and the user
+                          // hasn't checked it when submitting the form.
                           if (metadataField is BooleanMetaDataField)
                             FormField<bool>(
-                              validator: metadataField.required
+                              validator: metadataField.isRequired
                                   ? (bool? value) {
                                       if (value != true) {
                                         return localization.requiredFieldError;
@@ -368,6 +369,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                           metadataField.checkboxSemanticLabel,
                                       controlAffinity:
                                           metadataField.checkboxPosition,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 4.0),
                                       activeColor: theme.colorScheme.primary,
                                       checkColor: theme.colorScheme.onPrimary,
                                       tileColor: isDark

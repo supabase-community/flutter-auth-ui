@@ -65,16 +65,14 @@ class SignUp extends StatelessWidget {
                   return null;
                 },
               ),
-              // Checkbox on the right
               BooleanMetaDataField(
-                label: 'I agree to a checkbox on the right',
-                key: 'right_checkbox',
+                label: 'Keep me up to date with the latest news and updates.',
+                key: 'marketing_consent',
+                checkboxPosition: ListTileControlAffinity.leading,
               ),
-
-              // Checkbox on the left
               BooleanMetaDataField(
                 key: 'terms_agreement',
-                required: true,
+                isRequired: true,
                 checkboxPosition: ListTileControlAffinity.leading,
                 richLabelSpans: [
                   const TextSpan(text: 'I have read and agree to the '),
@@ -85,8 +83,7 @@ class SignUp extends StatelessWidget {
                     ),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        //ignore: avoid_print
-                        print('Terms and Conditions');
+                        // Handle tap on Terms and Conditions
                       },
                   ),
                 ],
@@ -130,19 +127,20 @@ class SignUp extends StatelessWidget {
                           },
                         ),
                         BooleanMetaDataField(
-                          label: 'I wish to receive marketing emails',
+                          label:
+                              'Keep me up to date with the latest news and updates.',
                           key: 'marketing_consent',
                           checkboxPosition: ListTileControlAffinity.leading,
                         ),
                         BooleanMetaDataField(
                           key: 'terms_agreement',
-                          required: true,
+                          isRequired: true,
                           checkboxPosition: ListTileControlAffinity.leading,
                           richLabelSpans: [
                             const TextSpan(
                                 text: 'I have read and agree to the '),
                             TextSpan(
-                              text: 'Terms and Conditions',
+                              text: 'Terms and Conditions.',
                               style: const TextStyle(
                                 color: Colors.blue,
                               ),
