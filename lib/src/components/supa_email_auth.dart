@@ -197,14 +197,12 @@ class SupaEmailAuth extends StatefulWidget {
   /// Localization for the form
   final SupaEmailAuthLocalization localization;
 
-
   /// Whether the form should display sign-in or sign-up initially
   final bool isInitiallySigningIn;
 
   /// Icons or custom prefix widgets for email UI
   final Widget? prefixIconEmail;
   final Widget? prefixIconPassword;
-
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
@@ -233,7 +231,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  late final Map<MetaDataField, TextEditingController> _metadataControllers;
   late bool _isSigningIn;
   late final Map<String, MetadataController> _metadataControllers;
 
