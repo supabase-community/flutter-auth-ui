@@ -112,7 +112,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
-    this.isSigningIn = true,
+    this.isInitiallySigningIn = true,
   });
 
   @override
@@ -137,7 +137,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   @override
   void initState() {
     super.initState();
-    _isSigningIn = widget.isSigningIn;
+    _isSigningIn = widget.isInitiallySigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
         (metadataField) => MapEntry(metadataField, TextEditingController())));
   }
