@@ -1,3 +1,8 @@
+## 0.5.1
+
+- feat: Improve form interaction and code organization in `SupaEmailAuth` [#106](https://github.com/supabase-community/flutter-auth-ui/pull/106)
+- feat: Enable custom icons for `SupaEmailAuth` [#108](https://github.com/supabase-community/flutter-auth-ui/pull/108)
+
 ## 0.5.0
 
 - feat: Allow password recovery email to be redirected to other URL [#98](https://github.com/supabase-community/flutter-auth-ui/pull/98)

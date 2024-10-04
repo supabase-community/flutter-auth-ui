@@ -4,9 +4,11 @@ import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// {@template metadata_field}
 /// Information about the metadata to pass to the signup form
 ///
-/// You can use this object to create additional fields that will be passed to the metadata of the user upon signup.
+/// You can use this object to create additional text fields that will be
+/// passed to the metadata of the user upon signup.
 /// For example, in order to create additional `username` field, you can use the following:
 /// ```dart
 /// MetaDataField(label: 'Username', key: 'username')
@@ -17,6 +19,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 /// ```dart
 /// { 'username': 'Whatever your user entered' }
 /// ```
+/// {@endtemplate}
 class MetaDataField {
   /// Label of the `TextFormField` for this metadata
   final String label;
@@ -30,6 +33,7 @@ class MetaDataField {
   /// Icon to show as the prefix icon in TextFormField
   final Icon? prefixIcon;
 
+  /// {@macro metadata_field}
   MetaDataField({
     required this.label,
     required this.key,
@@ -37,6 +41,104 @@ class MetaDataField {
     this.prefixIcon,
   });
 }
+
+/// {@template boolean_metadata_field}
+/// Represents a boolean metadata field for the signup form.
+///
+/// This class is used to create checkbox fields that will be passed
+/// to the metadata of the user upon signup. It supports both simple
+/// text labels and rich text labels with interactive elements.
+///
+/// For example, in order to add a simple consent checkbox,
+/// you can use the following:
+/// ```dart
+/// BooleanMetaDataField(
+///   label: 'I agree to marketing emails',
+///   key: 'email_consent',
+/// )
+/// ```
+///
+/// Which will update the user's metadata accordingly:
+///
+/// ```dart
+/// { 'email_consent': true }
+/// ```
+///
+/// You can also use rich text labels with interactive elements.
+/// For example:
+/// ```dart
+/// BooleanMetaDataField(
+///   key: 'terms_and_conditions_consent',
+///   required: true,
+///   richLabelSpans: [
+///     TextSpan(text: 'I have read and agree to the '),
+///     TextSpan(
+///       text: 'Terms and Conditions',
+///       style: TextStyle(color: Colors.blue),
+///       recognizer: TapGestureRecognizer()
+///         ..onTap = () {
+///           // Handle tap on 'Terms and Conditions'
+///         },
+///     ),
+///   ],
+/// )
+/// ```
+///
+/// This will create a checkbox with a label that includes a link to the terms
+/// and conditions. When the user taps on the link, you can handle the tap
+/// event in your application. Because `required` is set to `true`, the user
+/// must check the checkbox in order to sign up.
+/// {@endtemplate}
+class BooleanMetaDataField extends MetaDataField {
+  /// Rich text spans for the label. If provided, this will be used instead of [label].
+  final List<InlineSpan>? richLabelSpans;
+
+  /// Position of the checkbox in the [ListTile] created by this.
+  ///
+  /// Default is to ListTileControlAffinity.platform, which matches the default
+  /// value of the underlying ListTile widget.
+  final ListTileControlAffinity checkboxPosition;
+
+  /// Whether the field is required.
+  ///
+  /// If true, the user must check the checkbox in order for the form to submit.
+  final bool isRequired;
+
+  /// Semantic label for the checkbox.
+  final String? checkboxSemanticLabel;
+
+  /// {@macro boolean_metadata_field}
+  BooleanMetaDataField({
+    String? label,
+    this.richLabelSpans,
+    this.checkboxSemanticLabel,
+    this.isRequired = false,
+    this.checkboxPosition = ListTileControlAffinity.platform,
+    required super.key,
+  })  : assert(label != null || richLabelSpans != null,
+            'Either label or richLabelSpans must be provided'),
+        super(label: label ?? '');
+
+  Widget getLabelWidget(BuildContext context) {
+    // This matches the default style of [TextField], to match the other fields
+    // in the form. TextField's default style uses `bodyLarge` for Material 3,
+    // or otherwise `titleMedium`.
+    final defaultStyle = Theme.of(context).useMaterial3
+        ? Theme.of(context).textTheme.bodyLarge
+        : Theme.of(context).textTheme.titleMedium;
+    return richLabelSpans != null
+        ? RichText(
+            text: TextSpan(
+              style: defaultStyle,
+              children: richLabelSpans,
+            ),
+          )
+        : Text(label, style: defaultStyle);
+  }
+}
+
+// Used to allow storing both bool and TextEditingController in the same map.
+typedef MetadataController = Object;
 
 /// {@template supa_email_auth}
 /// UI component to create email and password signup/ signin form
@@ -95,8 +197,14 @@ class SupaEmailAuth extends StatefulWidget {
   /// Localization for the form
   final SupaEmailAuthLocalization localization;
 
+
   /// Whether the form should display sign-in or sign-up initially
   final bool isInitiallySigningIn;
+
+  /// Icons or custom prefix widgets for email UI
+  final Widget? prefixIconEmail;
+  final Widget? prefixIconPassword;
+
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
@@ -113,6 +221,8 @@ class SupaEmailAuth extends StatefulWidget {
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
     this.isInitiallySigningIn = true,
+    this.prefixIconEmail = const Icon(Icons.email),
+    this.prefixIconPassword = const Icon(Icons.lock),
   });
 
   @override
@@ -125,6 +235,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _passwordController = TextEditingController();
   late final Map<MetaDataField, TextEditingController> _metadataControllers;
   late bool _isSigningIn;
+  late final Map<String, MetadataController> _metadataControllers;
 
   bool _isLoading = false;
 
@@ -139,7 +250,11 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
     super.initState();
     _isSigningIn = widget.isInitiallySigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
-        (metadataField) => MapEntry(metadataField, TextEditingController())));
+      (metadataField) => MapEntry(
+        metadataField.key,
+        metadataField is BooleanMetaDataField ? false : TextEditingController(),
+      ),
+    ));
   }
 
   @override
@@ -147,7 +262,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
     _emailController.dispose();
     _passwordController.dispose();
     for (final controller in _metadataControllers.values) {
-      controller.dispose();
+      if (controller is TextEditingController) {
+        controller.dispose();
+      }
     }
     super.dispose();
   }
@@ -179,7 +296,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 return null;
               },
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.email),
+                prefixIcon: widget.prefixIconEmail,
                 label: Text(localization.enterEmail),
               ),
               controller: _emailController,
@@ -206,7 +323,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   return null;
                 },
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock),
+                  prefixIcon: widget.prefixIconPassword,
                   label: Text(localization.enterPassword),
                 ),
                 obscureText: true,
@@ -221,26 +338,106 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               if (widget.metadataFields != null && !_isSigningIn)
                 ...widget.metadataFields!
                     .map((metadataField) => [
-                          TextFormField(
-                            controller: _metadataControllers[metadataField],
-                            textInputAction:
-                                widget.metadataFields!.last == metadataField
-                                    ? TextInputAction.done
-                                    : TextInputAction.next,
-                            decoration: InputDecoration(
-                              label: Text(metadataField.label),
-                              prefixIcon: metadataField.prefixIcon,
+                          // Render a Checkbox that displays an error message
+                          // beneath it if the field is required and the user
+                          // hasn't checked it when submitting the form.
+                          if (metadataField is BooleanMetaDataField)
+                            FormField<bool>(
+                              validator: metadataField.isRequired
+                                  ? (bool? value) {
+                                      if (value != true) {
+                                        return localization.requiredFieldError;
+                                      }
+                                      return null;
+                                    }
+                                  : null,
+                              builder: (FormFieldState<bool> field) {
+                                final theme = Theme.of(context);
+                                final isDark =
+                                    theme.brightness == Brightness.dark;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CheckboxListTile(
+                                      title:
+                                          metadataField.getLabelWidget(context),
+                                      value: _metadataControllers[
+                                          metadataField.key] as bool,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          _metadataControllers[metadataField
+                                              .key] = value ?? false;
+                                        });
+                                        field.didChange(value);
+                                      },
+                                      checkboxSemanticLabel:
+                                          metadataField.checkboxSemanticLabel,
+                                      controlAffinity:
+                                          metadataField.checkboxPosition,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 4.0),
+                                      activeColor: theme.colorScheme.primary,
+                                      checkColor: theme.colorScheme.onPrimary,
+                                      tileColor: isDark
+                                          ? theme.inputDecorationTheme.fillColor
+                                          : null,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                        side: BorderSide(
+                                          color: field.hasError
+                                              ? theme.colorScheme.error
+                                              : theme
+                                                      .inputDecorationTheme
+                                                      .border
+                                                      ?.borderSide
+                                                      .color ??
+                                                  theme.dividerColor,
+                                        ),
+                                      ),
+                                    ),
+                                    if (field.hasError)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, top: 4),
+                                        child: Text(
+                                          field.errorText!,
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            )
+                          else
+                            // Otherwise render a normal TextFormField matching
+                            // the style of the other fields in the form.
+                            TextFormField(
+                              controller:
+                                  _metadataControllers[metadataField.key]
+                                      as TextEditingController,
+                              textInputAction:
+                                  widget.metadataFields!.last == metadataField
+                                      ? TextInputAction.done
+                                      : TextInputAction.next,
+                              decoration: InputDecoration(
+                                label: Text(metadataField.label),
+                                prefixIcon: metadataField.prefixIcon,
+                              ),
+                              validator: metadataField.validator,
+                              onFieldSubmitted: (_) {
+                                if (metadataField !=
+                                    widget.metadataFields!.last) {
+                                  FocusScope.of(context).nextFocus();
+                                } else {
+                                  _signInSignUp();
+                                }
+                              },
                             ),
-                            validator: metadataField.validator,
-                            onFieldSubmitted: (_) {
-                              if (metadataField !=
-                                  widget.metadataFields!.last) {
-                                FocusScope.of(context).nextFocus();
-                              } else {
-                                _signInSignUp();
-                              }
-                            },
-                          ),
                           spacer(16),
                         ])
                     .expand((element) => element),
@@ -418,10 +615,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
   /// Resolve the user_metadata coming from the metadataFields
   Map<String, dynamic> _resolveMetadataFieldsData() {
-    return widget.metadataFields != null
-        ? _metadataControllers.map<String, dynamic>(
-            (metaDataField, controller) =>
-                MapEntry(metaDataField.key, controller.text))
-        : <String, dynamic>{};
+    return Map.fromEntries(_metadataControllers.entries.map((entry) => MapEntry(
+        entry.key,
+        entry.value is TextEditingController
+            ? (entry.value as TextEditingController).text
+            : entry.value)));
   }
 }

@@ -27,6 +27,8 @@ SupaEmailAuth(
     // do something, for example: navigate("wait_for_email");
   },
   metadataFields: [
+    // Creates an additional TextField for string metadata, for example:
+    // {'username': 'exampleUsername'}
     MetaDataField(
       prefixIcon: const Icon(Icons.person),
       label: 'Username',
@@ -38,8 +40,38 @@ SupaEmailAuth(
         return null;
       },
     ),
-  ],
-),
+
+    // Creates a CheckboxListTile for boolean metadata, for example:
+    // {'marketing_consent': true}
+    BooleanMetaDataField(
+      label: 'I wish to receive marketing emails',
+      key: 'marketing_consent',
+      checkboxPosition: ListTileControlAffinity.leading,
+    ),
+    // Supports interactive text. Fields can be marked as required, blocking form
+    // submission unless the checkbox is checked.
+    BooleanMetaDataField(
+      key: 'terms_agreement',
+      isRequired: true,
+      checkboxPosition: ListTileControlAffinity.leading,
+      richLabelSpans: [
+        const TextSpan(
+            text: 'I have read and agree to the '),
+        TextSpan(
+          text: 'Terms and Conditions',
+          style: const TextStyle(
+            color: Colors.blue,
+          ),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              // do something, for example: navigate("terms_and_conditions");
+            },
+        ),
+        // Or use some other custom widget.
+        WidgetSpan()
+      ],
+    ),
+  ]),
 ```
 
 ## Magic Link Auth
@@ -100,3 +132,4 @@ SupaSocialsAuth(
 ## Theming
 
 This library uses bare Flutter components so that you can control the appearance of the components using your own theme.
+See theme example in example/lib/sign_in.dart
