@@ -12,6 +12,7 @@ class SupaEmailAuthLocalization {
   final String passwordResetSent;
   final String backToSignIn;
   final String unexpectedError;
+  final String requiredFieldError;
 
   const SupaEmailAuthLocalization({
     this.enterEmail = 'Enter your email',
@@ -28,5 +29,6 @@ class SupaEmailAuthLocalization {
     this.passwordResetSent = 'Password reset email has been sent',
     this.backToSignIn = 'Back to sign in',
     this.unexpectedError = 'An unexpected error occurred',
+    this.requiredFieldError = 'This field is required',
   });
 }
