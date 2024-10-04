@@ -1,3 +1,10 @@
+## 0.5.2
+
+- feat: enhancement: allow user to decide launch mode [#110](https://github.com/supabase-community/flutter-auth-ui/pull/110)
+- fix: MetadataFields text field values being lost in SupaEmailAuth widget (Fixes #113) [#114](https://github.com/supabase-community/flutter-auth-ui/pull/114)
+- feat: Add BooleanMetaDataField to support checkbox inputs on sign-up form [#115](https://github.com/supabase-community/flutter-auth-ui/pull/115)
+- feat: Support for displaying sign-in or sign-up initially [#116](https://github.com/supabase-community/flutter-auth-ui/pull/116)
+
 ## 0.5.1
 
 - feat: Improve form interaction and code organization in `SupaEmailAuth` [#106](https://github.com/supabase-community/flutter-auth-ui/pull/106)
