@@ -197,6 +197,9 @@ class SupaEmailAuth extends StatefulWidget {
   /// Localization for the form
   final SupaEmailAuthLocalization localization;
 
+  /// Whether the form should display sign-in or sign-up initially
+  final bool isInitiallySigningIn;
+
   /// Icons or custom prefix widgets for email UI
   final Widget? prefixIconEmail;
   final Widget? prefixIconPassword;
@@ -215,6 +218,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.metadataFields,
     this.extraMetadata,
     this.localization = const SupaEmailAuthLocalization(),
+    this.isInitiallySigningIn = true,
     this.prefixIconEmail = const Icon(Icons.email),
     this.prefixIconPassword = const Icon(Icons.lock),
   });
@@ -227,6 +231,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late bool _isSigningIn;
   late final Map<String, MetadataController> _metadataControllers;
 
   bool _isLoading = false;
@@ -234,15 +239,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   /// The user has pressed forgot password button
   bool _isRecoveringPassword = false;
 
-  /// Whether the user is signing in or signing up
-  bool _isSigningIn = true;
-
   /// Focus node for email field
   final FocusNode _emailFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    _isSigningIn = widget.isInitiallySigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
       (metadataField) => MapEntry(
         metadataField.key,
