@@ -90,6 +90,9 @@ class MetaDataField {
 /// must check the checkbox in order to sign up.
 /// {@endtemplate}
 class BooleanMetaDataField extends MetaDataField {
+  /// Whether the checkbox is initially checked.
+  final bool value;
+
   /// Rich text spans for the label. If provided, this will be used instead of [label].
   final List<InlineSpan>? richLabelSpans;
 
@@ -110,6 +113,7 @@ class BooleanMetaDataField extends MetaDataField {
   /// {@macro boolean_metadata_field}
   BooleanMetaDataField({
     String? label,
+    this.value = false,
     this.richLabelSpans,
     this.checkboxSemanticLabel,
     this.isRequired = false,
@@ -249,7 +253,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
       (metadataField) => MapEntry(
         metadataField.key,
-        metadataField is BooleanMetaDataField ? false : TextEditingController(),
+        metadataField is BooleanMetaDataField
+            ? metadataField.value
+            : TextEditingController(),
       ),
     ));
   }
