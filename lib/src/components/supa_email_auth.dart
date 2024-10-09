@@ -165,6 +165,12 @@ class SupaEmailAuth extends StatefulWidget {
   /// If unspecified, the [redirectTo] value will be used.
   final String? resetPasswordRedirectTo;
 
+  /// Validator function for the password field
+  ///
+  /// If null, a default validator will be used that checks if
+  /// the password is at least 6 characters long.
+  final String? Function(String?)? passwordValidator;
+
   /// Callback for the user to complete a sign in.
   final void Function(AuthResponse response) onSignInComplete;
 
@@ -209,6 +215,7 @@ class SupaEmailAuth extends StatefulWidget {
     super.key,
     this.redirectTo,
     this.resetPasswordRedirectTo,
+    this.passwordValidator,
     required this.onSignInComplete,
     required this.onSignUpComplete,
     this.onPasswordResetEmailSent,
@@ -313,12 +320,13 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 textInputAction: widget.metadataFields != null && !_isSigningIn
                     ? TextInputAction.next
                     : TextInputAction.done,
-                validator: (value) {
-                  if (value == null || value.isEmpty || value.length < 6) {
-                    return localization.passwordLengthError;
-                  }
-                  return null;
-                },
+                validator: widget.passwordValidator ??
+                    (value) {
+                      if (value == null || value.isEmpty || value.length < 6) {
+                        return localization.passwordLengthError;
+                      }
+                      return null;
+                    },
                 decoration: InputDecoration(
                   prefixIcon: widget.prefixIconPassword,
                   label: Text(localization.enterPassword),
