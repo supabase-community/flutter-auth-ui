@@ -1,3 +1,8 @@
+## 0.5.3
+
+- feat: Add value property to BooleanMetaDataField to set initial state of checkbox [#120](https://github.com/supabase-community/flutter-auth-ui/pull/120)
+- feat: add custom password validation to SupaEmailAuth form [#121](https://github.com/supabase-community/flutter-auth-ui/pull/121)
+
 ## 0.5.2
 
 - feat: enhancement: allow user to decide launch mode [#110](https://github.com/supabase-community/flutter-auth-ui/pull/110)
