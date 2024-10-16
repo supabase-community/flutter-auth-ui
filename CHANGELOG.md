@@ -1,3 +1,8 @@
+## 0.5.4
+
+- feat: Add autovalidation [#125](https://github.com/supabase-community/flutter-auth-ui/pull/125)
+- fix: Remove hardcoded styling from checkboxes [#125](https://github.com/supabase-community/flutter-auth-ui/pull/125)
+
 ## 0.5.3
 
 - feat: Add value property to BooleanMetaDataField to set initial state of checkbox [#120](https://github.com/supabase-community/flutter-auth-ui/pull/120)
