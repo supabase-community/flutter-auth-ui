@@ -364,8 +364,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                   : null,
                               builder: (FormFieldState<bool> field) {
                                 final theme = Theme.of(context);
-                                final isDark =
-                                    theme.brightness == Brightness.dark;
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,24 +387,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               horizontal: 4.0),
-                                      activeColor: theme.colorScheme.primary,
-                                      checkColor: theme.colorScheme.onPrimary,
-                                      tileColor: isDark
-                                          ? theme.inputDecorationTheme.fillColor
-                                          : null,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                        side: BorderSide(
-                                          color: field.hasError
-                                              ? theme.colorScheme.error
-                                              : theme
-                                                      .inputDecorationTheme
-                                                      .border
-                                                      ?.borderSide
-                                                      .color ??
-                                                  theme.dividerColor,
-                                        ),
-                                      ),
                                     ),
                                     if (field.hasError)
                                       Padding(
@@ -440,6 +420,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                 prefixIcon: metadataField.prefixIcon,
                               ),
                               validator: metadataField.validator,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               onFieldSubmitted: (_) {
                                 if (metadataField !=
                                     widget.metadataFields!.last) {
