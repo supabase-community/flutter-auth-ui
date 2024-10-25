@@ -214,6 +214,9 @@ class SupaEmailAuth extends StatefulWidget {
   final Widget? prefixIconEmail;
   final Widget? prefixIconPassword;
 
+  /// Whether the confirm password field should be displayed
+  final bool showConfirmPasswordField;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     super.key,
@@ -232,6 +235,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.isInitiallySigningIn = true,
     this.prefixIconEmail = const Icon(Icons.email),
     this.prefixIconPassword = const Icon(Icons.lock),
+    this.showConfirmPasswordField = false,
   });
 
   @override
@@ -242,6 +246,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   late bool _isSigningIn;
   late final Map<String, MetadataController> _metadataControllers;
 
@@ -271,6 +276,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     for (final controller in _metadataControllers.values) {
       if (controller is TextEditingController) {
         controller.dispose();
@@ -345,6 +351,23 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   }
                 },
               ),
+              if (widget.showConfirmPasswordField && !_isSigningIn) ...[
+                spacer(16),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    prefixIcon: widget.prefixIconPassword,
+                    label: Text(localization.confirmPassword),
+                  ),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value != _passwordController.text) {
+                      return localization.confirmPasswordError;
+                    }
+                    return null;
+                  },
+                ),
+              ],
               spacer(16),
               if (widget.metadataFields != null && !_isSigningIn)
                 ...widget.metadataFields!

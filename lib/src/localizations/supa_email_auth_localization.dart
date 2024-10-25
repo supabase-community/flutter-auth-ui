@@ -13,6 +13,8 @@ class SupaEmailAuthLocalization {
   final String backToSignIn;
   final String unexpectedError;
   final String requiredFieldError;
+  final String confirmPasswordError;
+  final String confirmPassword;
 
   const SupaEmailAuthLocalization({
     this.enterEmail = 'Enter your email',
@@ -30,5 +32,7 @@ class SupaEmailAuthLocalization {
     this.backToSignIn = 'Back to sign in',
     this.unexpectedError = 'An unexpected error occurred',
     this.requiredFieldError = 'This field is required',
+    this.confirmPasswordError = 'Passwords do not match',
+    this.confirmPassword = 'Confirm Password',
   });
 }
