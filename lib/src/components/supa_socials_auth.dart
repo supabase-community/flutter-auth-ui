@@ -158,9 +158,15 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     required String? webClientId,
     required String? iosClientId,
   }) async {
+    final scopes = widget.scopes != null
+        ? widget.scopes![OAuthProvider.google]?.split(',')
+        : null;
+
     final GoogleSignIn googleSignIn = GoogleSignIn(
       clientId: iosClientId,
       serverClientId: webClientId,
+      // These default values ['email', 'profile'] are needed as to gogole authenitcation recent update
+      scopes: scopes ?? ['email', 'profile'],
     );
 
     final googleUser = await googleSignIn.signIn();
