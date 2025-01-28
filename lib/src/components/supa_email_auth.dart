@@ -298,7 +298,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              autofocus: true,
+              autofocus: false,
               focusNode: _emailFocusNode,
               textInputAction: _isRecoveringPassword
                   ? TextInputAction.done
