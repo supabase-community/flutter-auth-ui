@@ -129,6 +129,72 @@ SupaSocialsAuth(
 ),
 ```
 
+## SupaAvatar
+
+A plug-and-play widget to show and edit a Supabase user's profile image. 
+Supports both readonly and editable modes with full customization options.
+
+<!-- demo gif here -->
+![](screenshots/avatar-demo.gif)
+
+### Usage
+
+```dart
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SupaAvatar(
+        radius: 50,
+        isEditable: true,
+      ),
+    );
+  }
+}
+```
+
+### Customization
+
+```dart
+SupaAvatar(
+  radius: 60,
+  isEditable: true,
+  supabaseStorageBucket: 'avatars',
+  supabaseStoragePath: 'profile_image', // stored as userId/profile_image
+  supabaseUserAttributeImageUrlKey: 'avatar_url',
+
+  fallbackIcon: Icon(Icons.person_2_rounded, size: 32),
+  cacheBuster: DateTime.now().millisecondsSinceEpoch.toString(),
+
+  // Modal customization
+  modalShape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  ),
+  modalBackgroundColor: Colors.grey[900],
+
+  // Snackbar colors
+  snackBarBackgroundColor: Colors.green[600],
+  snackBarTextColor: Colors.white,
+  snackBarErrorBackgroundColor: Colors.red[600],
+  snackBarErrorTextColor: Colors.white,
+  snackBarDuration: Duration(seconds: 2),
+)
+```
+
+
+### Notes
+
+- The image is stored in `avatars/{userId}/{supabaseStoragePath}`.
+- The metadata field (`avatar_url` by default) is updated on upload/remove.
+- Uses `cacheBuster` to bypass CDN cache after upload.
+- Tapping on avatar opens a bottom sheet for edit options when `isEditable` is true.
+
+---
+
 ## Theming
 
 This library uses bare Flutter components so that you can control the appearance of the components using your own theme.
