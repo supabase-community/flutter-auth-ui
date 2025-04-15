@@ -134,8 +134,9 @@ SupaSocialsAuth(
 A plug-and-play widget to show and edit a Supabase user's profile image. 
 Supports both readonly and editable modes with full customization options.
 
-<!-- demo gif here -->
-![](screenshots/avatar-demo.gif)
+
+<img src="screenshots/avatar.gif" alt="avatar-screenshot">
+
 
 ### Usage
 
@@ -156,6 +157,12 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 ```
+When you tap on the avatar & `isEditable: true`, the avatar editor is opened:
+
+| dialog    | modal |
+| -------- | ------- |
+| <img src="screenshots/dialog-editor.png" alt="dialog-editor" width="300"/>  | <img src="screenshots/modal-editor.png" alt="modal-editor" width="300"/>    |
+| `editorType: SupaAvatarEditorType.dialog,`  | `editorType: SupaAvatarEditorType.modal,`  |
 
 ### Customization
 
