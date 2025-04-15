@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+import 'package:ui_avatar/ui_avatar.dart';
 
 class SupaUserAvatar extends StatelessWidget {
   const SupaUserAvatar({
@@ -19,7 +20,6 @@ class SupaUserAvatar extends StatelessWidget {
   final String supabaseStoragePath;
   final String supabaseUserAttributeImageUrlKey;
 
-
   @override
   Widget build(BuildContext context) {
     final user = Supabase.instance.client.auth.currentUser;
@@ -27,18 +27,16 @@ class SupaUserAvatar extends StatelessWidget {
       return CircleAvatar(radius: radius, child: fallbackIcon);
     }
 
-    // 1. Check metadata first
     final avatarUrl = user.userMetadata?[supabaseUserAttributeImageUrlKey] as String?;
     if (avatarUrl != null && avatarUrl.startsWith('http')) {
       final bustedUrl = _appendCacheBuster(avatarUrl);
       return CircleAvatar(
         radius: radius,
         foregroundImage: NetworkImage(bustedUrl),
-        child: fallbackIcon,
+        child: _buildUiAvatar(user),
       );
     }
 
-    // 2. Fall back to public storage
     final publicUrl = Supabase.instance.client.storage
         .from(supabaseStorageBucket)
         .getPublicUrl('${user.id}/$supabaseStoragePath');
@@ -47,12 +45,20 @@ class SupaUserAvatar extends StatelessWidget {
     return CircleAvatar(
       radius: radius,
       foregroundImage: NetworkImage(bustedUrl),
-      child: fallbackIcon,
+      child: _buildUiAvatar(user),
     );
   }
 
   String _appendCacheBuster(String url) {
     if (cacheBuster == null) return url;
     return '$url?cb=$cacheBuster';
+  }
+
+  Widget _buildUiAvatar(User user) {
+    final name = user.userMetadata?['username'] ?? user.email ?? '';
+    if (name.isNotEmpty) {
+      return UiAvatar(name: name, size: radius * 2, useRandomColors: true,);
+    }
+    return fallbackIcon;
   }
 }
