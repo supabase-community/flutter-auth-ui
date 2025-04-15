@@ -237,6 +237,13 @@ class _SupaAvatarEditorState extends State<SupaAvatar> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: bgColor,
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: textColor,
+          onPressed: () {
+            ScaffoldMessenger.of(context).clearSnackBars();
+          },
+        ),
         duration: widget.snackBarDuration ?? const Duration(milliseconds: 4000),
         content: Text(message, style: TextStyle(color: textColor)),
       ),

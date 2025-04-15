@@ -58,9 +58,6 @@ class _SupaAvatarModalState extends State<SupaAvatarEditor> {
     ).pop({'file': _localImageFile, 'remove': _removeRequested});
   }
 
-  void _onDiscard() {
-    Navigator.of(context).pop();
-  }
 
   @override
   Widget build(BuildContext context) {
