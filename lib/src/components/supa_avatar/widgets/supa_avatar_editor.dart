@@ -97,6 +97,7 @@ class _SupaAvatarModalState extends State<SupaAvatarEditor> {
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        
         children: [
           const Text(
             "Update User Avatar",
@@ -107,56 +108,43 @@ class _SupaAvatarModalState extends State<SupaAvatarEditor> {
           const SizedBox(height: 16),
           avatar,
           const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              OutlinedButton.icon(
-                onPressed: () => _pickImage(ImageSource.gallery),
-                icon: const Icon(Icons.photo),
-                label: const Text("Gallery"),
-              ),
-              OutlinedButton.icon(
-                onPressed: () => _pickImage(ImageSource.camera),
-                icon: const Icon(Icons.camera_alt),
-                label: const Text("Camera"),
-              ),
-            ],
+          ListTile(
+            onTap: () => _pickImage(ImageSource.gallery),
+            leading: const Icon(Icons.photo),
+            title: const Text("Choose from gallery"),
           ),
-          const SizedBox(height: 16),
-          TextButton.icon(
-            onPressed: (_localImageFile == null && _removeRequested)
+          ListTile(
+            onTap: () => _pickImage(ImageSource.camera),
+            leading: const Icon(Icons.camera_alt),
+            title: const Text("Take photo"),
+          ),
+          
+          ListTile(
+            onTap: (_localImageFile == null && _removeRequested)
                 ? null
                 : _removeImage,
-            icon: Icon(Icons.delete, color: theme.colorScheme.error),
-            label: Text(
-              "Remove Avatar",
+            leading: Icon(Icons.delete, color: theme.colorScheme.error),
+            title: Text(
+              "Remove avatar",
               style: TextStyle(color: theme.colorScheme.error),
             ),
           ),
-          const SizedBox(height: 24),
+         
           
-            Row(
-              
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: _onDiscard,
-                    child: const Text("Discard Changes", textAlign: TextAlign.center,),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                    ),
-                    onPressed: isChanged? _onSaveChanges: null,
-                    child: const Text("Save Changes", textAlign: TextAlign.center,),
-                  ),
-                ),
-              ],
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+              ),
+              onPressed: isChanged ? _onSaveChanges : null,
+              child: const Text(
+                "Save changes",
+                textAlign: TextAlign.center,
+              ),
             ),
+          ),
         ],
       ),
     );
