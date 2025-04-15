@@ -148,6 +148,7 @@ class _SupaAvatarEditorState extends State<SupaAvatar> {
             widget.supabaseUserAttributeImageUrlKey,
         fallbackIcon: widget.fallbackIcon,
         radius: widget.radius,
+        user: user,
       ),
     );
 

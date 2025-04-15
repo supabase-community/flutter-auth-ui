@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_auth_ui/src/components/supa_avatar/widgets/supa_user_avatar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:ui_avatar/ui_avatar.dart';
 
 class SupaAvatarModal extends StatefulWidget {
   final String? cacheBuster;
@@ -11,6 +13,7 @@ class SupaAvatarModal extends StatefulWidget {
   final String supabaseUserAttributeImageUrlKey;
   final Widget fallbackIcon;
   final double radius;
+  final User? user;
 
   const SupaAvatarModal({
     super.key,
@@ -20,6 +23,7 @@ class SupaAvatarModal extends StatefulWidget {
     required this.supabaseUserAttributeImageUrlKey,
     required this.fallbackIcon,
     required this.radius,
+    this.user,
   });
 
   @override
@@ -62,6 +66,8 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isChanged = _removeRequested || _localImageFile != null;
+    final String name =
+        widget.user?.userMetadata?['username'] ?? widget.user?.email ?? '';
 
     final avatar = _localImageFile != null
         ? CircleAvatar(
@@ -69,7 +75,14 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
             backgroundImage: FileImage(_localImageFile!),
           )
         : _removeRequested
-            ? CircleAvatar(radius: widget.radius, child: widget.fallbackIcon)
+            ? name.isNotEmpty
+                ? UiAvatar(
+                    name: name,
+                    size: widget.radius * 2,
+                    useRandomColors: true,
+                  )
+                : CircleAvatar(
+                    radius: widget.radius, child: widget.fallbackIcon)
             : SupaUserAvatar(
                 radius: widget.radius,
                 cacheBuster: widget.cacheBuster,
@@ -121,7 +134,7 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
             ),
           ),
           const SizedBox(height: 24),
-          if (isChanged)
+          
             Row(
               children: [
                 Expanded(
@@ -137,7 +150,7 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
                       backgroundColor: theme.colorScheme.primary,
                       foregroundColor: theme.colorScheme.onPrimary,
                     ),
-                    onPressed: _onSaveChanges,
+                    onPressed: isChanged? _onSaveChanges: null,
                     child: const Text("Save Changes"),
                   ),
                 ),
