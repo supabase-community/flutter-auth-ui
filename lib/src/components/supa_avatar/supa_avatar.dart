@@ -270,7 +270,7 @@ class _SupaAvatarEditorState extends State<SupaAvatar> {
         alignment: Alignment.center,
         children: [
           avatarWidget,
-          if (!_isLoading)
+          if (_isLoading)
             Container(
               width: widget.radius * 2,
               height: widget.radius * 2,
