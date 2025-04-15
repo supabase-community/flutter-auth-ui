@@ -6,7 +6,7 @@ import 'package:supabase_auth_ui/src/components/supa_avatar/widgets/supa_user_av
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ui_avatar/ui_avatar.dart';
 
-class SupaAvatarModal extends StatefulWidget {
+class SupaAvatarEditor extends StatefulWidget {
   final String? cacheBuster;
   final String supabaseStorageBucket;
   final String supabaseStoragePath;
@@ -15,7 +15,7 @@ class SupaAvatarModal extends StatefulWidget {
   final double radius;
   final User? user;
 
-  const SupaAvatarModal({
+  const SupaAvatarEditor({
     super.key,
     this.cacheBuster,
     required this.supabaseStorageBucket,
@@ -27,10 +27,10 @@ class SupaAvatarModal extends StatefulWidget {
   });
 
   @override
-  State<SupaAvatarModal> createState() => _SupaAvatarModalState();
+  State<SupaAvatarEditor> createState() => _SupaAvatarModalState();
 }
 
-class _SupaAvatarModalState extends State<SupaAvatarModal> {
+class _SupaAvatarModalState extends State<SupaAvatarEditor> {
   File? _localImageFile;
   bool _removeRequested = false;
   final _picker = ImagePicker();
@@ -136,11 +136,12 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
           const SizedBox(height: 24),
           
             Row(
+              
               children: [
                 Expanded(
                   child: OutlinedButton(
                     onPressed: _onDiscard,
-                    child: const Text("Discard Changes"),
+                    child: const Text("Discard Changes", textAlign: TextAlign.center,),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -151,7 +152,7 @@ class _SupaAvatarModalState extends State<SupaAvatarModal> {
                       foregroundColor: theme.colorScheme.onPrimary,
                     ),
                     onPressed: isChanged? _onSaveChanges: null,
-                    child: const Text("Save Changes"),
+                    child: const Text("Save Changes", textAlign: TextAlign.center,),
                   ),
                 ),
               ],

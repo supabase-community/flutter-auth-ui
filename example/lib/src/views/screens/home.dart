@@ -21,11 +21,11 @@ class Home extends StatelessWidget {
             const SizedBox(height: 20),
             const SupaAvatar(
               isEditable: true,
+              // editorType: SupaAvatarEditorType.dialog, // defaults to modal sheet
             ),
             ElevatedButton(
               onPressed: () {
                 Supabase.instance.client.auth.signOut();
-           
               },
               child: const Text(
                 'Log Out',

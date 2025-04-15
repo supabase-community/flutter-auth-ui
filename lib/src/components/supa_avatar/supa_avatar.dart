@@ -2,9 +2,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mime/mime.dart';
-import 'package:supabase_auth_ui/src/components/supa_avatar/widgets/supa_avatar_modal.dart';
+import 'package:supabase_auth_ui/src/components/supa_avatar/widgets/supa_avatar_editor.dart';
 import 'package:supabase_auth_ui/src/components/supa_avatar/widgets/supa_user_avatar.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
+
+enum SupaAvatarEditorType {
+  modal,
+  dialog,
+}
 
 class SupaAvatar extends StatefulWidget {
   /// Creates a SupaAvatar widget.
@@ -26,11 +31,11 @@ class SupaAvatar extends StatefulWidget {
     /// Optional cache buster string added to the image URL to bypass cached versions.
     this.cacheBuster,
 
-    /// Custom shape for the modal bottom sheet (used in editable mode).
-    this.modalShape,
+    /// Custom shape for the editor (used in editable mode).
+    this.editorShape,
 
-    /// Custom background color for the modal bottom sheet.
-    this.modalBackgroundColor,
+    /// Custom background color for the editor.
+    this.editorBackgroundColor,
 
     /// The Supabase storage bucket where avatars are stored.
     /// Defaults to `'avatars'`.
@@ -62,6 +67,13 @@ class SupaAvatar extends StatefulWidget {
     /// The user metadata key used to retrieve the avatar URL.
     /// Defaults to `'avatar_url'`.
     this.supabaseUserAttributeImageUrlKey = 'avatar_url',
+
+    /// The type of editor to use for the avatar
+    ///
+    /// Defaults to [SupaAvatarEditorType.modal]
+    ///
+    /// If you want to use a dialog instead of a modal, set this to [SupaAvatarEditorType.dialog]
+    this.editorType = SupaAvatarEditorType.modal,
   });
 
   /// Radius of the avatar circle.
@@ -75,10 +87,10 @@ class SupaAvatar extends StatefulWidget {
   final String? cacheBuster;
 
   /// Custom shape for the modal bottom sheet (used in editable mode).
-  final ShapeBorder? modalShape;
+  final ShapeBorder? editorShape;
 
   /// Custom background color for the modal bottom sheet.
-  final Color? modalBackgroundColor;
+  final Color? editorBackgroundColor;
 
   /// The Supabase storage bucket where avatars are stored.
   /// Defaults to `'avatars'`.
@@ -112,6 +124,13 @@ class SupaAvatar extends StatefulWidget {
   /// Defaults to `'avatar_url'`.
   final String supabaseUserAttributeImageUrlKey;
 
+  /// The type of editor to use for the avatar
+  ///
+  /// Defaults to [SupaAvatarEditorType.modal]
+  ///
+  /// If you want to use a dialog instead of a modal, set this to [SupaAvatarEditorType.dialog]
+  final SupaAvatarEditorType editorType;
+
   @override
   State<SupaAvatar> createState() => _SupaAvatarEditorState();
 }
@@ -131,31 +150,50 @@ class _SupaAvatarEditorState extends State<SupaAvatar> {
   }
 
   Future<void> _handleAvatarEdit(BuildContext context) async {
-    final result = await showModalBottomSheet<Map<String, dynamic>>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: widget.modalBackgroundColor,
-      shape: widget.modalShape ??
-          const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-          ),
-      builder: (_) => SupaAvatarModal(
-        cacheBuster: _cacheBuster,
-        supabaseStorageBucket: widget.supabaseStorageBucket,
-        supabaseStoragePath: widget.supabaseStoragePath,
-        supabaseUserAttributeImageUrlKey:
-            widget.supabaseUserAttributeImageUrlKey,
-        fallbackIcon: widget.fallbackIcon,
-        radius: widget.radius,
-        user: user,
-      ),
+    Future<Map<String, dynamic>?> result;
+
+    Widget supaAvatarEditor = SupaAvatarEditor(
+      cacheBuster: _cacheBuster,
+      supabaseStorageBucket: widget.supabaseStorageBucket,
+      supabaseStoragePath: widget.supabaseStoragePath,
+      supabaseUserAttributeImageUrlKey: widget.supabaseUserAttributeImageUrlKey,
+      fallbackIcon: widget.fallbackIcon,
+      radius: widget.radius,
+      user: user,
     );
 
-    if (result == null || user == null) return;
+    if (widget.editorType == SupaAvatarEditorType.dialog) {
+      result = showDialog<Map<String, dynamic>>(
+        context: context,
+        builder: (_) {
+          return Dialog(
+            backgroundColor: widget.editorBackgroundColor,
+            shape: widget.editorShape ??
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+            child: supaAvatarEditor,
+          );
+        },
+      );
+    } else {
+      result = showModalBottomSheet<Map<String, dynamic>>(
+          context: context,
+          isScrollControlled: true,
+          useSafeArea: true,
+          backgroundColor: widget.editorBackgroundColor,
+          shape: widget.editorShape ??
+              const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+          builder: (_) => supaAvatarEditor);
+    }
 
-    final file = result['file'] as File?;
-    final remove = result['remove'] == true;
+    final resolved = await result;
+    if (resolved == null || user == null) return;
+
+    final file = resolved['file'] as File?;
+    final remove = resolved['remove'] == true;
 
     setState(() => _isLoading = true);
 

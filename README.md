@@ -170,11 +170,12 @@ SupaAvatar(
   fallbackIcon: Icon(Icons.person_2_rounded, size: 32),
   cacheBuster: DateTime.now().millisecondsSinceEpoch.toString(),
 
-  // Modal customization
-  modalShape: RoundedRectangleBorder(
+  // editor customization
+  editorType: SupaAvatarEditorType.dialog, // defaults to SupaAvatarEditorType.modal
+  editorShape: RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
   ),
-  modalBackgroundColor: Colors.grey[900],
+  editorBackgroundColor: Colors.grey[900],
 
   // Snackbar colors
   snackBarBackgroundColor: Colors.green[600],
@@ -191,7 +192,7 @@ SupaAvatar(
 - The image is stored in `avatars/{userId}/{supabaseStoragePath}`.
 - The metadata field (`avatar_url` by default) is updated on upload/remove.
 - Uses `cacheBuster` to bypass CDN cache after upload.
-- Tapping on avatar opens a bottom sheet for edit options when `isEditable` is true.
+- Tapping on avatar opens a bottom sheet or dialog for edit options when `isEditable` is true.
 
 ---
 
