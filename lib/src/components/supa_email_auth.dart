@@ -159,6 +159,9 @@ typedef MetadataController = Object;
 /// ```
 /// {@endtemplate}
 class SupaEmailAuth extends StatefulWidget {
+  /// Whether the email field should automatically focus when the form is shown
+  final bool autofocus;
+
   /// The URL to redirect the user to when clicking on the link on the
   /// confirmation link after signing up.
   final String? redirectTo;
@@ -220,6 +223,7 @@ class SupaEmailAuth extends StatefulWidget {
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     super.key,
+    this.autofocus = true,
     this.redirectTo,
     this.resetPasswordRedirectTo,
     this.passwordValidator,
@@ -298,7 +302,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               keyboardType: TextInputType.emailAddress,
               autofillHints: const [AutofillHints.email],
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              autofocus: true,
+              autofocus: widget.autofocus,
               focusNode: _emailFocusNode,
               textInputAction: _isRecoveringPassword
                   ? TextInputAction.done
