@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-import 'constants.dart';
+import '../../core/constants.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,10 +18,14 @@ class Home extends StatelessWidget {
               'You are home',
               style: TextStyle(fontSize: 42),
             ),
+            const SizedBox(height: 20),
+            const SupaAvatar(
+              isEditable: true,
+              // editorType: SupaAvatarEditorType.dialog, // defaults to modal sheet
+            ),
             ElevatedButton(
               onPressed: () {
                 Supabase.instance.client.auth.signOut();
-                Navigator.of(context).pushReplacementNamed('/');
               },
               child: const Text(
                 'Log Out',

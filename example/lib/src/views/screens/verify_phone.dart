@@ -1,7 +1,11 @@
+import 'dart:developer';
+
+import 'package:example/src/core/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-import 'constants.dart';
+import '../../core/constants.dart';
 
 class VerifyPhone extends StatelessWidget {
   const VerifyPhone({Key? key}) : super(key: key);
@@ -16,7 +20,8 @@ class VerifyPhone extends StatelessWidget {
           children: [
             SupaVerifyPhone(
               onSuccess: (response) {
-                Navigator.of(context).pushReplacementNamed('/home');
+                log("Verify Phone Success: $response");
+               
               },
             ),
             TextButton(
@@ -25,7 +30,7 @@ class VerifyPhone extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/forgot_password');
+                context.goNamed(AppRoute.updatePassword.name);
               },
             ),
             TextButton(

@@ -1,16 +1,20 @@
+import 'dart:developer';
+
+import 'package:example/src/core/app_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-import 'constants.dart';
+import '../../core/constants.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({Key? key}) : super(key: key);
+class SignInUp extends StatelessWidget {
+  const SignInUp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     void navigateHome(AuthResponse response) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      log('Sign in/up success: ${response.user?.email}');
     }
 
     final darkModeThemeData = ThemeData.dark().copyWith(
@@ -162,14 +166,14 @@ class SignUp extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.email),
             onPressed: () {
-              Navigator.popAndPushNamed(context, '/magic_link');
+              context.goNamed(AppRoute.magicLink.name);
             },
             label: const Text('Sign in with Magic Link'),
           ),
           spacer,
           ElevatedButton.icon(
             onPressed: () {
-              Navigator.popAndPushNamed(context, '/phone_sign_in');
+              context.goNamed(AppRoute.phoneSignIn.name);
             },
             icon: const Icon(Icons.phone),
             label: const Text('Sign in with Phone'),
@@ -184,7 +188,7 @@ class SignUp extends StatelessWidget {
             enableNativeAppleAuth: false,
             socialProviders: OAuthProvider.values,
             onSuccess: (session) {
-              Navigator.of(context).pushReplacementNamed('/home');
+              
             },
           ),
         ],

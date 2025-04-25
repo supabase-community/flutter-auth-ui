@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 AppBar appBar(String title) => AppBar(
       title: Text(title),
@@ -17,3 +18,5 @@ const optionText = Text(
 const spacer = SizedBox(
   height: 12,
 );
+
+final supa = Supabase.instance.client;

@@ -1,7 +1,11 @@
+import 'dart:developer';
+
+import 'package:example/src/core/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
-import 'constants.dart';
+import '../../core/constants.dart';
 
 class UpdatePassword extends StatelessWidget {
   const UpdatePassword({Key? key}) : super(key: key);
@@ -18,7 +22,8 @@ class UpdatePassword extends StatelessWidget {
               accessToken:
                   Supabase.instance.client.auth.currentSession!.accessToken,
               onSuccess: (response) {
-                Navigator.of(context).pushReplacementNamed('/home');
+                log('Update Password Success: $response');
+                context.goNamed(AppRoute.home.name);
               },
             ),
             TextButton(
