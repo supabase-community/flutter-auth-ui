@@ -1,3 +1,8 @@
+## 0.5.5
+
+- feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/flutter-auth-ui/pull/129)
+- feat: Add autofocus option to SupaEmailAuth [#139](https://github.com/supabase-community/flutter-auth-ui/pull/139)
+
 ## 0.5.4
 
 - feat: Add autovalidation [#125](https://github.com/supabase-community/flutter-auth-ui/pull/125)
