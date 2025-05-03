@@ -24,7 +24,9 @@ extension on OAuthProvider {
         OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
         OAuthProvider.google => FontAwesomeIcons.google,
         OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
+        OAuthProvider.linkedinOidc => FontAwesomeIcons.linkedin,
         OAuthProvider.slack => FontAwesomeIcons.slack,
+        OAuthProvider.slackOidc => FontAwesomeIcons.slack,
         OAuthProvider.spotify => FontAwesomeIcons.spotify,
         OAuthProvider.twitch => FontAwesomeIcons.twitch,
         OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
@@ -44,8 +46,10 @@ extension on OAuthProvider {
         OAuthProvider.kakao => const Color(0xFFFFE812),
         OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
         OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
+        OAuthProvider.linkedinOidc => const Color.fromRGBO(0, 136, 209, 1),
         OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
         OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
+        OAuthProvider.slackOidc => const Color.fromRGBO(74, 21, 75, 1),
         OAuthProvider.spotify => Colors.green,
         OAuthProvider.twitch => Colors.purpleAccent,
         OAuthProvider.twitter => Colors.black,
@@ -54,8 +58,13 @@ extension on OAuthProvider {
         _ => Colors.black,
       };
 
-  String get labelText =>
-      'Continue with ${name[0].toUpperCase()}${name.substring(1)}';
+  String get capitalizedName {
+    String modifiedName = name;
+    if (name.endsWith("Oidc")) {
+      modifiedName = name.substring(0, name.length - 4);
+    }
+    return modifiedName[0].toUpperCase() + modifiedName.substring(1);
+  }
 }
 
 enum SocialButtonVariant {
