@@ -7,8 +7,8 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: 'https://hvjjvggueouofkqafawj.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2amp2Z2d1ZW91b2ZrcWFmYXdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5ODA2MTMsImV4cCI6MjA1OTU1NjYxM30.m0VSa8jdoNcJFmS18xMwtM0P9yblakd2QgEXkW5kAqU',
+    url: 'https://yoursupabaseurl.supabase.co',
+    anonKey: 'your_anon_key',
   );
   runApp(const MyApp());
 }
