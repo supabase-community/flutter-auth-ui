@@ -596,6 +596,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     _isRecoveringPassword = false;
                     _isEnteringOtp = false;
                   });
+                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                 },
                 child: Text(localization.backToSignIn),
               ),
