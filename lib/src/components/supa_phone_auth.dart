@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/_supa_password_field.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -10,7 +11,7 @@ class SupaPhoneAuth extends StatefulWidget {
   /// Method to be called when the auth action is success
   final void Function(AuthResponse response) onSuccess;
 
-  /// Method to be called when the auth action threw an excepction
+  /// Method to be called when the auth action threw an exception
   final void Function(Object error)? onError;
 
   /// Localization for the form
@@ -71,7 +72,10 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               controller: _phone,
             ),
             spacer(16),
-            TextFormField(
+            SupaPasswordField(
+              controller: _password,
+              labelText: localization.enterPassword,
+              prefixIcon: const Icon(Icons.lock),
               autofillHints: isSigningIn
                   ? [AutofillHints.password]
                   : [AutofillHints.newPassword],
@@ -82,12 +86,6 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                 }
                 return null;
               },
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.lock),
-                label: Text(localization.enterPassword),
-              ),
-              obscureText: true,
-              controller: _password,
             ),
             spacer(16),
             ElevatedButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/_supa_password_field.dart';
 import 'package:supabase_auth_ui/src/localizations/supa_reset_password_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -47,7 +48,10 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextFormField(
+          SupaPasswordField(
+            controller: _password,
+            labelText: localization.enterPassword,
+            prefixIcon: const Icon(Icons.lock),
             autofillHints: const [AutofillHints.newPassword],
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
@@ -55,11 +59,6 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               }
               return null;
             },
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock),
-              label: Text(localization.enterPassword),
-            ),
-            controller: _password,
           ),
           spacer(16),
           ElevatedButton(
