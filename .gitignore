@@ -31,3 +31,8 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .packages
 build/
+
+# Generated files
+**/generated_plugin_registrant.*
+**/generated_plugins.*
+**/GeneratedPluginRegistrant.*
