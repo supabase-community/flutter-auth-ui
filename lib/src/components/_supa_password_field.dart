@@ -58,15 +58,18 @@ class _SupaPasswordFieldState extends State<SupaPasswordField> {
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon,
         label: Text(widget.labelText),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility_off : Icons.visibility,
+        suffixIcon: Tooltip(
+          message: _obscureText ? 'Show password' : 'Hide password',
+          child: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
           ),
-          onPressed: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
         ),
       ),
     );
