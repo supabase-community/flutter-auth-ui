@@ -170,14 +170,15 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     required String? webClientId,
     required String? iosClientId,
   }) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize(
       clientId: iosClientId,
       serverClientId: webClientId,
     );
 
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
+    final googleUser = await googleSignIn.authenticate();
+    final googleAuth = googleUser.authentication;
+    final accessToken = googleAuth.idToken;
     final idToken = googleAuth.idToken;
 
     if (accessToken == null) {
@@ -229,7 +230,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     _gotrueSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
-      if (session != null && mounted) {
+      if (session != null && mounted && session.user.isAnonymous != true) {
         widget.onSuccess.call(session);
         if (widget.showSnackBars && widget.showSuccessSnackBar) {
           context.showSnackBar(localization.successSignInMessage);
