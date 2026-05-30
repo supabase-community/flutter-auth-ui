@@ -13,23 +13,23 @@ import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension on OAuthProvider {
-  IconData get iconData => switch (this) {
-        OAuthProvider.apple => FontAwesomeIcons.apple,
-        OAuthProvider.azure => FontAwesomeIcons.microsoft,
-        OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
-        OAuthProvider.discord => FontAwesomeIcons.discord,
-        OAuthProvider.facebook => FontAwesomeIcons.facebook,
-        OAuthProvider.figma => FontAwesomeIcons.figma,
-        OAuthProvider.github => FontAwesomeIcons.github,
-        OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
-        OAuthProvider.google => FontAwesomeIcons.google,
-        OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
-        OAuthProvider.slack => FontAwesomeIcons.slack,
-        OAuthProvider.spotify => FontAwesomeIcons.spotify,
-        OAuthProvider.twitch => FontAwesomeIcons.twitch,
-        OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
-        _ => Icons.close,
-      };
+  FaIconData get iconData => switch (this) {
+    OAuthProvider.apple => FontAwesomeIcons.apple,
+    OAuthProvider.azure => FontAwesomeIcons.microsoft,
+    OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
+    OAuthProvider.discord => FontAwesomeIcons.discord,
+    OAuthProvider.facebook => FontAwesomeIcons.facebook,
+    OAuthProvider.figma => FontAwesomeIcons.figma,
+    OAuthProvider.github => FontAwesomeIcons.github,
+    OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
+    OAuthProvider.google => FontAwesomeIcons.google,
+    OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
+    OAuthProvider.slack => FontAwesomeIcons.slack,
+    OAuthProvider.spotify => FontAwesomeIcons.spotify,
+    OAuthProvider.twitch => FontAwesomeIcons.twitch,
+    OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
+    _ => FontAwesomeIcons.xmark,
+  };
 
   Color get btnBgColor => switch (this) {
         OAuthProvider.apple => Colors.black,
@@ -257,7 +257,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
         Widget iconWidget = SizedBox(
           height: 48,
           width: 48,
-          child: Icon(
+          child: FaIcon(
             socialProvider.iconData,
             color: iconColor,
           ),
