@@ -254,12 +254,14 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
         Color? iconColor = coloredBg ? Colors.white : null;
 
-        Widget iconWidget = SizedBox(
-          height: 48,
-          width: 48,
-          child: FaIcon(
-            socialProvider.iconData,
-            color: iconColor,
+        Widget iconWidget = SizedBox.square(
+          dimension: 48,
+          child: Center(
+            child: FaIcon(
+              socialProvider.iconData,
+              size: 24,
+              color: iconColor,
+            ),
           ),
         );
         if (socialProvider == OAuthProvider.google && coloredBg) {
