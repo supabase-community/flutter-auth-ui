@@ -1,6 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/components/_supa_password_field.dart';
+import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
 import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

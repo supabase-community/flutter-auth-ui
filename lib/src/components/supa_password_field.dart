@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
 
-/// Internal password field component with visibility toggle
+/// Internal password field with a visibility toggle.
 class SupaPasswordField extends StatefulWidget {
-  /// Controller for the password field
   final TextEditingController controller;
-
-  /// Validator function for the password field
-  final String? Function(String?)? validator;
-
-  /// Label text for the password field
   final String labelText;
-
-  /// Prefix icon for the password field
+  final String? Function(String?)? validator;
   final Widget? prefixIcon;
-
-  /// Autofill hints for the password field
   final Iterable<String>? autofillHints;
-
-  /// Text input action for the password field
   final TextInputAction? textInputAction;
-
-  /// Callback when field is submitted
   final void Function(String)? onFieldSubmitted;
-
-  /// Whether the field should auto-validate
   final AutovalidateMode? autovalidateMode;
 
   const SupaPasswordField({
     super.key,
     required this.controller,
-    this.validator,
     required this.labelText,
+    this.validator,
     this.prefixIcon,
     this.autofillHints,
     this.textInputAction,
@@ -58,17 +43,12 @@ class _SupaPasswordFieldState extends State<SupaPasswordField> {
       decoration: InputDecoration(
         prefixIcon: widget.prefixIcon,
         label: Text(widget.labelText),
-        suffixIcon: Tooltip(
-          message: _obscureText ? 'Show password' : 'Hide password',
+        suffixIcon: Padding(
+          padding: const EdgeInsets.only(right: 8),
           child: IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility_off : Icons.visibility,
-            ),
-            onPressed: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
+            tooltip: _obscureText ? 'Show password' : 'Hide password',
+            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+            onPressed: () => setState(() => _obscureText = !_obscureText),
           ),
         ),
       ),
