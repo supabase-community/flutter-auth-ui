@@ -14,6 +14,9 @@ class SupaPhoneAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an exception
   final void Function(Object error)? onError;
 
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
   /// Localization for the form
   final SupaPhoneAuthLocalization localization;
 
@@ -22,6 +25,7 @@ class SupaPhoneAuth extends StatefulWidget {
     required this.authAction,
     required this.onSuccess,
     this.onError,
+    this.showSnackBars = true,
     this.localization = const SupaPhoneAuthLocalization(),
   });
 
@@ -124,13 +128,17 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                     widget.onSuccess(response);
                   }
                 } on AuthException catch (error) {
-                  if (widget.onError == null && context.mounted) {
+                  if (widget.onError == null &&
+                      widget.showSnackBars &&
+                      context.mounted) {
                     context.showErrorSnackBar(error.message);
                   } else {
                     widget.onError?.call(error);
                   }
                 } catch (error) {
-                  if (widget.onError == null && context.mounted) {
+                  if (widget.onError == null &&
+                      widget.showSnackBars &&
+                      context.mounted) {
                     context.showErrorSnackBar(
                         '${localization.unexpectedError}: $error');
                   } else {

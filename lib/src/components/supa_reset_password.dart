@@ -9,6 +9,9 @@ class SupaResetPassword extends StatefulWidget {
   /// accessToken of the user
   final String? accessToken;
 
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
   /// Method to be called when the auth action is success
   final void Function(UserResponse response) onSuccess;
 
@@ -21,6 +24,7 @@ class SupaResetPassword extends StatefulWidget {
   const SupaResetPassword({
     super.key,
     this.accessToken,
+    this.showSnackBars = true,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaResetPasswordLocalization(),
@@ -72,24 +76,29 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               }
               try {
                 final response = await supabase.auth.updateUser(
-                  UserAttributes(
-                    password: _password.text,
-                  ),
+                  UserAttributes(password: _password.text),
                 );
                 widget.onSuccess.call(response);
                 // FIX use_build_context_synchronously
                 if (!context.mounted) return;
-                context.showSnackBar(localization.passwordResetSent);
+                if (widget.showSnackBars) {
+                  context.showSnackBar(localization.passwordResetSent);
+                }
               } on AuthException catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(error.message);
                 } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(
-                      '${localization.passwordLengthError}: $error');
+                    '${localization.passwordLengthError}: $error',
+                  );
                 } else {
                   widget.onError?.call(error);
                 }
