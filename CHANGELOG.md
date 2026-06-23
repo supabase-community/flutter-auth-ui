@@ -7,6 +7,7 @@
 
 - feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/flutter-auth-ui/pull/129)
 - feat: Add autofocus option to SupaEmailAuth [#139](https://github.com/supabase-community/flutter-auth-ui/pull/139)
+- feat: Add showSnackBars option to make snack bars optional in SupaEmailAuth and SupaResetPassword [#150](https://github.com/supabase-community/flutter-auth-ui/pull/150)
 
 ## 0.5.4
 

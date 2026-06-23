@@ -224,8 +224,8 @@ class SupaEmailAuth extends StatefulWidget {
   /// Whether the confirm password field should be displayed
   final bool showConfirmPasswordField;
 
-  /// whether to show snack bars
-  final bool showSnacks;
+  /// Whether to show snack bars
+  final bool showSnackBars;
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
@@ -247,7 +247,7 @@ class SupaEmailAuth extends StatefulWidget {
     this.prefixIconEmail = const Icon(Icons.email),
     this.prefixIconPassword = const Icon(Icons.lock),
     this.showConfirmPasswordField = false,
-    this.showSnacks = true,
+    this.showSnackBars = true,
   });
 
   @override
@@ -567,20 +567,16 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         widget.onSignUpComplete.call(response);
       }
     } on AuthException catch (error) {
-      if (widget.onError == null && mounted) {
-        if (widget.showSnacks) {
-          context.showErrorSnackBar(error.message);
-        }
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar(error.message);
       } else {
         widget.onError?.call(error);
       }
       _emailFocusNode.requestFocus();
     } catch (error) {
-      if (widget.onError == null && mounted) {
-        if (widget.showSnacks) {
-          context.showErrorSnackBar(
-              '${widget.localization.unexpectedError}: $error');
-        }
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar(
+            '${widget.localization.unexpectedError}: $error');
       } else {
         widget.onError?.call(error);
       }
@@ -612,7 +608,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       widget.onPasswordResetEmailSent?.call(email);
       // FIX use_build_context_synchronously
       if (!mounted) return;
-      if (widget.showSnacks) {
+      if (widget.showSnackBars) {
         context.showSnackBar(widget.localization.passwordResetSent);
       }
       setState(() {

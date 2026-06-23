@@ -9,8 +9,8 @@ class SupaResetPassword extends StatefulWidget {
   /// accessToken of the user
   final String? accessToken;
 
-  /// whether to show snack bars
-  final bool showSnacks;
+  /// Whether to show snack bars
+  final bool showSnackBars;
 
   /// Method to be called when the auth action is success
   final void Function(UserResponse response) onSuccess;
@@ -24,7 +24,7 @@ class SupaResetPassword extends StatefulWidget {
   const SupaResetPassword({
     super.key,
     this.accessToken,
-    this.showSnacks = true,
+    this.showSnackBars = true,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaResetPasswordLocalization(),
@@ -81,17 +81,21 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
                 widget.onSuccess.call(response);
                 // FIX use_build_context_synchronously
                 if (!context.mounted) return;
-                if (widget.showSnacks) {
+                if (widget.showSnackBars) {
                   context.showSnackBar(localization.passwordResetSent);
                 }
               } on AuthException catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(error.message);
                 } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(
                     '${localization.passwordLengthError}: $error',
                   );
