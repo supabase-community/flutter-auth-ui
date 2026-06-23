@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -10,18 +11,32 @@ class SupaPhoneAuth extends StatefulWidget {
   /// Method to be called when the auth action is success
   final void Function(AuthResponse response) onSuccess;
 
-  /// Method to be called when the auth action threw an excepction
+  /// Method to be called when the auth action threw an exception
   final void Function(Object error)? onError;
+
+  /// Whether to show snack bars
+  final bool showSnackBars;
 
   /// Localization for the form
   final SupaPhoneAuthLocalization localization;
+
+  /// Whether pressing Enter on the on-screen keyboard should automatically
+  /// submit the form.
+  ///
+  /// When set to `false`, the user must explicitly click the submit button
+  /// to proceed with the authentication process.
+  ///
+  /// Defaults to `true` for backward compatibility.
+  final bool enableAutomaticFormSubmission;
 
   const SupaPhoneAuth({
     super.key,
     required this.authAction,
     required this.onSuccess,
     this.onError,
+    this.showSnackBars = true,
     this.localization = const SupaPhoneAuthLocalization(),
+    this.enableAutomaticFormSubmission = true,
   });
 
   @override
@@ -43,6 +58,53 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
     _phone.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitForm() async {
+    final localization = widget.localization;
+    final isSigningIn = widget.authAction == SupaAuthAction.signIn;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    try {
+      if (isSigningIn) {
+        final response = await supabase.auth.signInWithPassword(
+          phone: _phone.text,
+          password: _password.text,
+        );
+        widget.onSuccess(response);
+      } else {
+        late final AuthResponse response;
+        final user = supabase.auth.currentUser;
+        if (user?.isAnonymous == true) {
+          await supabase.auth.updateUser(
+            UserAttributes(
+              phone: _phone.text,
+              password: _password.text,
+            ),
+          );
+        } else {
+          response = await supabase.auth.signUp(
+            phone: _phone.text,
+            password: _password.text,
+          );
+        }
+        if (!mounted) return;
+        widget.onSuccess(response);
+      }
+    } on AuthException catch (error) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar(error.message);
+      } else {
+        widget.onError?.call(error);
+      }
+    } catch (error) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar('${localization.unexpectedError}: $error');
+      } else {
+        widget.onError?.call(error);
+      }
+    }
   }
 
   @override
@@ -71,7 +133,10 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               controller: _phone,
             ),
             spacer(16),
-            TextFormField(
+            SupaPasswordField(
+              controller: _password,
+              labelText: localization.enterPassword,
+              prefixIcon: const Icon(Icons.lock),
               autofillHints: isSigningIn
                   ? [AutofillHints.password]
                   : [AutofillHints.newPassword],
@@ -82,68 +147,19 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                 }
                 return null;
               },
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.lock),
-                label: Text(localization.enterPassword),
-              ),
-              obscureText: true,
-              controller: _password,
+              onFieldSubmitted: (_) async {
+                if (widget.enableAutomaticFormSubmission) {
+                  await _submitForm();
+                }
+              },
             ),
             spacer(16),
             ElevatedButton(
+              onPressed: _submitForm,
               child: Text(
                 isSigningIn ? localization.signIn : localization.signUp,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: () async {
-                if (!_formKey.currentState!.validate()) {
-                  return;
-                }
-                try {
-                  if (isSigningIn) {
-                    final response = await supabase.auth.signInWithPassword(
-                      phone: _phone.text,
-                      password: _password.text,
-                    );
-                    widget.onSuccess(response);
-                  } else {
-                    late final AuthResponse response;
-                    final user = supabase.auth.currentUser;
-                    if (user?.isAnonymous == true) {
-                      await supabase.auth.updateUser(
-                        UserAttributes(
-                          phone: _phone.text,
-                          password: _password.text,
-                        ),
-                      );
-                    } else {
-                      response = await supabase.auth.signUp(
-                        phone: _phone.text,
-                        password: _password.text,
-                      );
-                    }
-                    if (!mounted) return;
-                    widget.onSuccess(response);
-                  }
-                } on AuthException catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(error.message);
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                } catch (error) {
-                  if (widget.onError == null && context.mounted) {
-                    context.showErrorSnackBar(
-                        '${localization.unexpectedError}: $error');
-                  } else {
-                    widget.onError?.call(error);
-                  }
-                }
-                setState(() {
-                  _phone.text = '';
-                  _password.text = '';
-                });
-              },
             ),
             spacer(10),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
 import 'package:supabase_auth_ui/src/localizations/supa_reset_password_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,6 +8,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SupaResetPassword extends StatefulWidget {
   /// accessToken of the user
   final String? accessToken;
+
+  /// Whether to show snack bars
+  final bool showSnackBars;
 
   /// Method to be called when the auth action is success
   final void Function(UserResponse response) onSuccess;
@@ -17,12 +21,23 @@ class SupaResetPassword extends StatefulWidget {
   /// Localization for the form
   final SupaResetPasswordLocalization localization;
 
+  /// Whether pressing Enter on the on-screen keyboard should automatically
+  /// submit the form.
+  ///
+  /// When set to `false`, the user must explicitly click the submit button
+  /// to proceed with the authentication process.
+  ///
+  /// Defaults to `true` for backward compatibility.
+  final bool enableAutomaticFormSubmission;
+
   const SupaResetPassword({
     super.key,
     this.accessToken,
+    this.showSnackBars = true,
     required this.onSuccess,
     this.onError,
     this.localization = const SupaResetPasswordLocalization(),
+    this.enableAutomaticFormSubmission = true,
   });
 
   @override
@@ -39,6 +54,38 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
     super.dispose();
   }
 
+  Future<void> _updatePassword() async {
+    final localization = widget.localization;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    try {
+      final response = await supabase.auth.updateUser(
+        UserAttributes(password: _password.text),
+      );
+      widget.onSuccess.call(response);
+      // FIX use_build_context_synchronously
+      if (!mounted) return;
+      if (widget.showSnackBars) {
+        context.showSnackBar(localization.passwordResetSent);
+      }
+    } on AuthException catch (error) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar(error.message);
+      } else {
+        widget.onError?.call(error);
+      }
+    } catch (error) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
+        context.showErrorSnackBar(
+          '${localization.passwordLengthError}: $error',
+        );
+      } else {
+        widget.onError?.call(error);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = widget.localization;
@@ -47,7 +94,10 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextFormField(
+          SupaPasswordField(
+            controller: _password,
+            labelText: localization.enterPassword,
+            prefixIcon: const Icon(Icons.lock),
             autofillHints: const [AutofillHints.newPassword],
             validator: (value) {
               if (value == null || value.isEmpty || value.length < 6) {
@@ -55,47 +105,19 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
               }
               return null;
             },
-            decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.lock),
-              label: Text(localization.enterPassword),
-            ),
-            controller: _password,
+            onFieldSubmitted: (_) async {
+              if (widget.enableAutomaticFormSubmission) {
+                await _updatePassword();
+              }
+            },
           ),
           spacer(16),
           ElevatedButton(
+            onPressed: _updatePassword,
             child: Text(
               localization.updatePassword,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            onPressed: () async {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              try {
-                final response = await supabase.auth.updateUser(
-                  UserAttributes(
-                    password: _password.text,
-                  ),
-                );
-                widget.onSuccess.call(response);
-                // FIX use_build_context_synchronously
-                if (!context.mounted) return;
-                context.showSnackBar(localization.passwordResetSent);
-              } on AuthException catch (error) {
-                if (widget.onError == null && context.mounted) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
-              } catch (error) {
-                if (widget.onError == null && context.mounted) {
-                  context.showErrorSnackBar(
-                      '${localization.passwordLengthError}: $error');
-                } else {
-                  widget.onError?.call(error);
-                }
-              }
-            },
           ),
           spacer(10),
         ],

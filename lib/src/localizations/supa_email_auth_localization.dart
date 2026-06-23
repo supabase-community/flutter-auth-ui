@@ -15,6 +15,12 @@ class SupaEmailAuthLocalization {
   final String requiredFieldError;
   final String confirmPasswordError;
   final String confirmPassword;
+  final String enterOtpCode;
+  final String enterNewPassword;
+  final String changePassword;
+  final String passwordChangedSuccess;
+  final String otpCodeError;
+  final String otpDisabledError;
 
   const SupaEmailAuthLocalization({
     this.enterEmail = 'Enter your email',
@@ -34,5 +40,11 @@ class SupaEmailAuthLocalization {
     this.requiredFieldError = 'This field is required',
     this.confirmPasswordError = 'Passwords do not match',
     this.confirmPassword = 'Confirm Password',
+    this.enterOtpCode = 'Enter OTP code',
+    this.enterNewPassword = 'Enter new password',
+    this.changePassword = 'Change Password',
+    this.passwordChangedSuccess = 'Password successfully updated',
+    this.otpCodeError = 'Invalid OTP code',
+    this.otpDisabledError = 'OTP disabled',
   });
 }

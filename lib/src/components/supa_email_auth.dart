@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
 import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -187,7 +188,10 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(AuthResponse response) onSignUpComplete;
 
   /// Callback for sending the password reset email
-  final void Function()? onPasswordResetEmailSent;
+  ///
+  /// The [email] the reset was requested for is passed back so it can be
+  /// reused, for example to verify an OTP for that same email.
+  final void Function(String email)? onPasswordResetEmailSent;
 
   /// Callback for when the auth action threw an exception
   ///
@@ -217,8 +221,32 @@ class SupaEmailAuth extends StatefulWidget {
   final Widget? prefixIconEmail;
   final Widget? prefixIconPassword;
 
+  /// Icon or custom prefix widget for OTP input field
+  final Widget? prefixIconOtp;
+
   /// Whether the confirm password field should be displayed
   final bool showConfirmPasswordField;
+
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
+  /// Whether to use OTP for password recovery instead of magic link
+  final bool useOtpForPasswordRecovery;
+
+  /// Pre-filled email for the form
+  final String? prefilledEmail;
+
+  /// Pre-filled password for the form
+  final String? prefilledPassword;
+
+  /// Whether pressing Enter on the on-screen keyboard should automatically
+  /// submit the form.
+  ///
+  /// When set to `false`, the user must explicitly click the submit button
+  /// to proceed with the authentication process.
+  ///
+  /// Defaults to `true` for backward compatibility.
+  final bool enableAutomaticFormSubmission;
 
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
@@ -239,7 +267,13 @@ class SupaEmailAuth extends StatefulWidget {
     this.isInitiallySigningIn = true,
     this.prefixIconEmail = const Icon(Icons.email),
     this.prefixIconPassword = const Icon(Icons.lock),
+    this.prefixIconOtp = const Icon(Icons.security),
     this.showConfirmPasswordField = false,
+    this.showSnackBars = true,
+    this.useOtpForPasswordRecovery = false,
+    this.prefilledEmail,
+    this.prefilledPassword,
+    this.enableAutomaticFormSubmission = true,
   });
 
   @override
@@ -262,9 +296,23 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   /// Focus node for email field
   final FocusNode _emailFocusNode = FocusNode();
 
+  /// Controller for OTP input field
+  final _otpController = TextEditingController();
+
+  /// Controller for new password input field
+  final _newPasswordController = TextEditingController();
+
+  /// Controller for confirm new password input field
+  final _confirmNewPasswordController = TextEditingController();
+
+  /// Whether the user is entering OTP code
+  bool _isEnteringOtp = false;
+
   @override
   void initState() {
     super.initState();
+    _emailController.text = widget.prefilledEmail ?? '';
+    _passwordController.text = widget.prefilledPassword ?? '';
     _isSigningIn = widget.isInitiallySigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
       (metadataField) => MapEntry(
@@ -281,6 +329,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _otpController.dispose();
+    _newPasswordController.dispose();
+    _confirmNewPasswordController.dispose();
     for (final controller in _metadataControllers.values) {
       if (controller is TextEditingController) {
         controller.dispose();
@@ -321,14 +372,18 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               ),
               controller: _emailController,
               onFieldSubmitted: (_) {
-                if (_isRecoveringPassword) {
+                if (_isRecoveringPassword &&
+                    widget.enableAutomaticFormSubmission) {
                   _passwordRecovery();
                 }
               },
             ),
             if (!_isRecoveringPassword) ...[
               spacer(16),
-              TextFormField(
+              SupaPasswordField(
+                controller: _passwordController,
+                labelText: localization.enterPassword,
+                prefixIcon: widget.prefixIconPassword,
                 autofillHints: _isSigningIn
                     ? [AutofillHints.password]
                     : [AutofillHints.newPassword],
@@ -343,27 +398,19 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       }
                       return null;
                     },
-                decoration: InputDecoration(
-                  prefixIcon: widget.prefixIconPassword,
-                  label: Text(localization.enterPassword),
-                ),
-                obscureText: true,
-                controller: _passwordController,
                 onFieldSubmitted: (_) {
-                  if (widget.metadataFields == null || _isSigningIn) {
+                  if ((widget.metadataFields == null || _isSigningIn) &&
+                      widget.enableAutomaticFormSubmission) {
                     _signInSignUp();
                   }
                 },
               ),
               if (widget.showConfirmPasswordField && !_isSigningIn) ...[
                 spacer(16),
-                TextFormField(
+                SupaPasswordField(
                   controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    prefixIcon: widget.prefixIconPassword,
-                    label: Text(localization.confirmPassword),
-                  ),
-                  obscureText: true,
+                  labelText: localization.confirmPassword,
+                  prefixIcon: widget.prefixIconPassword,
                   validator: (value) {
                     if (value != _passwordController.text) {
                       return localization.confirmPasswordError;
@@ -453,7 +500,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                 if (metadataField !=
                                     widget.metadataFields!.last) {
                                   FocusScope.of(context).nextFocus();
-                                } else {
+                                } else if (widget
+                                    .enableAutomaticFormSubmission) {
                                   _signInSignUp();
                                 }
                               },
@@ -505,16 +553,81 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             ],
             if (_isSigningIn && _isRecoveringPassword) ...[
               spacer(16),
-              ElevatedButton(
-                onPressed: _passwordRecovery,
-                child: Text(localization.sendPasswordReset),
-              ),
+              if (!_isEnteringOtp) ...[
+                ElevatedButton(
+                  onPressed: _passwordRecovery,
+                  child: Text(localization.sendPasswordReset),
+                ),
+              ] else ...[
+                TextFormField(
+                  controller: _otpController,
+                  decoration: InputDecoration(
+                    label: Text(localization.enterOtpCode),
+                    prefixIcon: widget.prefixIconOtp,
+                  ),
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return localization.requiredFieldError;
+                    }
+                    return null;
+                  },
+                ),
+                spacer(16),
+                TextFormField(
+                  controller: _newPasswordController,
+                  decoration: InputDecoration(
+                    label: Text(localization.enterNewPassword),
+                    prefixIcon: widget.prefixIconPassword,
+                  ),
+                  obscureText: true,
+                  textInputAction: TextInputAction.next,
+                  validator: widget.passwordValidator ??
+                      (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 6) {
+                          return localization.passwordLengthError;
+                        }
+                        return null;
+                      },
+                ),
+                spacer(16),
+                TextFormField(
+                  controller: _confirmNewPasswordController,
+                  decoration: InputDecoration(
+                    label: Text(localization.confirmPassword),
+                    prefixIcon: widget.prefixIconPassword,
+                  ),
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  validator: (value) {
+                    if (value != _newPasswordController.text) {
+                      return localization.confirmPasswordError;
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) {
+                    if (widget.enableAutomaticFormSubmission) {
+                      _verifyOtpAndResetPassword();
+                    }
+                  },
+                ),
+                spacer(16),
+                ElevatedButton(
+                  onPressed: _verifyOtpAndResetPassword,
+                  child: Text(localization.changePassword),
+                ),
+              ],
               spacer(16),
               TextButton(
                 onPressed: () {
                   setState(() {
                     _isRecoveringPassword = false;
+                    _isEnteringOtp = false;
                   });
+                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                 },
                 child: Text(localization.backToSignIn),
               ),
@@ -565,14 +678,14 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         widget.onSignUpComplete.call(response);
       }
     } on AuthException catch (error) {
-      if (widget.onError == null && mounted) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
         context.showErrorSnackBar(error.message);
       } else {
         widget.onError?.call(error);
       }
       _emailFocusNode.requestFocus();
     } catch (error) {
-      if (widget.onError == null && mounted) {
+      if (widget.onError == null && widget.showSnackBars && mounted) {
         context.showErrorSnackBar(
             '${widget.localization.unexpectedError}: $error');
       } else {
@@ -599,17 +712,81 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       });
 
       final email = _emailController.text.trim();
+
       await supabase.auth.resetPasswordForEmail(
         email,
         redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
       );
-      widget.onPasswordResetEmailSent?.call();
-      // FIX use_build_context_synchronously
+      widget.onPasswordResetEmailSent?.call(email);
       if (!mounted) return;
-      context.showSnackBar(widget.localization.passwordResetSent);
+      if (widget.showSnackBars) {
+        context.showSnackBar(widget.localization.passwordResetSent);
+      }
+      setState(() {
+        if (widget.useOtpForPasswordRecovery) {
+          _isEnteringOtp = true;
+        } else {
+          _isRecoveringPassword = false;
+        }
+      });
+      if (!widget.useOtpForPasswordRecovery) {
+        widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
+      }
+    } on AuthException catch (error) {
+      widget.onError?.call(error);
+    } catch (error) {
+      widget.onError?.call(error);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _verifyOtpAndResetPassword() async {
+    try {
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await supabase.auth.verifyOTP(
+          type: OtpType.recovery,
+          email: _emailController.text.trim(),
+          token: _otpController.text.trim(),
+        );
+      } on AuthException catch (error) {
+        if (error.code == 'otp_expired') {
+          if (!mounted) return;
+          context.showErrorSnackBar(widget.localization.otpCodeError);
+          return;
+        } else if (error.code == 'otp_disabled') {
+          if (!mounted) return;
+          context.showErrorSnackBar(widget.localization.otpDisabledError);
+          return;
+        }
+        rethrow;
+      }
+
+      await supabase.auth.updateUser(
+        UserAttributes(password: _newPasswordController.text),
+      );
+
+      if (!mounted) return;
+      if (widget.showSnackBars) {
+        context.showSnackBar(widget.localization.passwordChangedSuccess);
+      }
       setState(() {
         _isRecoveringPassword = false;
+        _isEnteringOtp = false;
       });
+      widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
     } on AuthException catch (error) {
       widget.onError?.call(error);
     } catch (error) {

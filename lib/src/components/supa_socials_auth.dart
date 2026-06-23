@@ -14,22 +14,24 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension on OAuthProvider {
   FaIconData get iconData => switch (this) {
-    OAuthProvider.apple => FontAwesomeIcons.apple,
-    OAuthProvider.azure => FontAwesomeIcons.microsoft,
-    OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
-    OAuthProvider.discord => FontAwesomeIcons.discord,
-    OAuthProvider.facebook => FontAwesomeIcons.facebook,
-    OAuthProvider.figma => FontAwesomeIcons.figma,
-    OAuthProvider.github => FontAwesomeIcons.github,
-    OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
-    OAuthProvider.google => FontAwesomeIcons.google,
-    OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
-    OAuthProvider.slack => FontAwesomeIcons.slack,
-    OAuthProvider.spotify => FontAwesomeIcons.spotify,
-    OAuthProvider.twitch => FontAwesomeIcons.twitch,
-    OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
-    _ => FontAwesomeIcons.xmark,
-  };
+        OAuthProvider.apple => FontAwesomeIcons.apple,
+        OAuthProvider.azure => FontAwesomeIcons.microsoft,
+        OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
+        OAuthProvider.discord => FontAwesomeIcons.discord,
+        OAuthProvider.facebook => FontAwesomeIcons.facebook,
+        OAuthProvider.figma => FontAwesomeIcons.figma,
+        OAuthProvider.github => FontAwesomeIcons.github,
+        OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
+        OAuthProvider.google => FontAwesomeIcons.google,
+        OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
+        OAuthProvider.linkedinOidc => FontAwesomeIcons.linkedin,
+        OAuthProvider.slack => FontAwesomeIcons.slack,
+        OAuthProvider.slackOidc => FontAwesomeIcons.slack,
+        OAuthProvider.spotify => FontAwesomeIcons.spotify,
+        OAuthProvider.twitch => FontAwesomeIcons.twitch,
+        OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
+        _ => FontAwesomeIcons.xmark,
+      };
 
   Color get btnBgColor => switch (this) {
         OAuthProvider.apple => Colors.black,
@@ -44,8 +46,10 @@ extension on OAuthProvider {
         OAuthProvider.kakao => const Color(0xFFFFE812),
         OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
         OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
+        OAuthProvider.linkedinOidc => const Color.fromRGBO(0, 136, 209, 1),
         OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
         OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
+        OAuthProvider.slackOidc => const Color.fromRGBO(74, 21, 75, 1),
         OAuthProvider.spotify => Colors.green,
         OAuthProvider.twitch => Colors.purpleAccent,
         OAuthProvider.twitter => Colors.black,
@@ -54,8 +58,10 @@ extension on OAuthProvider {
         _ => Colors.black,
       };
 
-  String get labelText =>
-      'Continue with ${name[0].toUpperCase()}${name.substring(1)}';
+  String get labelText {
+    final modifiedName = name.replaceAll('Oidc', '');
+    return 'Continue with ${modifiedName[0].toUpperCase()}${modifiedName.substring(1)}';
+  }
 }
 
 enum SocialButtonVariant {
@@ -113,7 +119,12 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
   /// Whether to show a SnackBar after a successful sign in
+  ///
+  /// Has no effect when [showSnackBars] is `false`.
   final bool showSuccessSnackBar;
 
   /// OpenID scope(s) for provider authorization request (ex. '.default')
@@ -138,6 +149,7 @@ class SupaSocialsAuth extends StatefulWidget {
     required this.onSuccess,
     this.onError,
     this.socialButtonVariant = SocialButtonVariant.iconAndText,
+    this.showSnackBars = true,
     this.showSuccessSnackBar = true,
     this.scopes,
     this.queryParams,
@@ -158,20 +170,16 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     required String? webClientId,
     required String? iosClientId,
   }) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize(
       clientId: iosClientId,
       serverClientId: webClientId,
     );
 
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
+    final googleUser = await googleSignIn.authenticate();
+    final googleAuth = googleUser.authentication;
     final idToken = googleAuth.idToken;
 
-    if (accessToken == null) {
-      throw const AuthException(
-          'No Access Token found from Google sign in result.');
-    }
     if (idToken == null) {
       throw const AuthException(
           'No ID Token found from Google sign in result.');
@@ -180,7 +188,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     return supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
     );
   }
 
@@ -217,9 +224,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     _gotrueSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
-      if (session != null && mounted) {
+      if (session != null && mounted && session.user.isAnonymous != true) {
         widget.onSuccess.call(session);
-        if (widget.showSuccessSnackBar) {
+        if (widget.showSnackBars && widget.showSuccessSnackBar) {
           context.showSnackBar(localization.successSignInMessage);
         }
       }
@@ -362,13 +369,17 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               authScreenLaunchMode: widget.authScreenLaunchMode,
             );
           } on AuthException catch (error) {
-            if (widget.onError == null && context.mounted) {
+            if (widget.onError == null &&
+                widget.showSnackBars &&
+                context.mounted) {
               context.showErrorSnackBar(error.message);
             } else {
               widget.onError?.call(error);
             }
           } catch (error) {
-            if (widget.onError == null && context.mounted) {
+            if (widget.onError == null &&
+                widget.showSnackBars &&
+                context.mounted) {
               context
                   .showErrorSnackBar('${localization.unexpectedError}: $error');
             } else {

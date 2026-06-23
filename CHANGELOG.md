@@ -1,43 +1,53 @@
+## 0.6.0
+
+- BREAKING: `onPasswordResetEmailSent` now passes the email the reset was requested for, changing its signature from `void Function()?` to `void Function(String email)?` [#146](https://github.com/supabase-community/supabase_auth_ui/pull/146)
+- feat: Add a show/hide visibility toggle to password fields [#149](https://github.com/supabase-community/supabase_auth_ui/pull/149)
+- feat: Add showSnackBars option to make snack bars optional across all auth components [#150](https://github.com/supabase-community/supabase_auth_ui/pull/150)
+- feat: Add password recovery with OTP to SupaEmailAuth [#130](https://github.com/supabase-community/supabase_auth_ui/pull/130)
+- fix: Call `onToggleRecoverPassword(false)` when leaving the password recovery view [#148](https://github.com/supabase-community/supabase_auth_ui/pull/148)
+- feat: Add `prefilledEmail` and `prefilledPassword` to SupaEmailAuth [#143](https://github.com/supabase-community/supabase_auth_ui/pull/143)
+- feat: Add `enableAutomaticFormSubmission` flag to prevent automatic form submission when pressing Enter on on-screen keyboard in all auth components (SupaEmailAuth, SupaPhoneAuth, SupaMagicAuth, SupaResetPassword) [#143](https://github.com/supabase-community/supabase_auth_ui/pull/143)
+
 ## 0.5.5
 
-- feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/flutter-auth-ui/pull/129)
-- feat: Add autofocus option to SupaEmailAuth [#139](https://github.com/supabase-community/flutter-auth-ui/pull/139)
+- feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/supabase_auth_ui/pull/129)
+- feat: Add autofocus option to SupaEmailAuth [#139](https://github.com/supabase-community/supabase_auth_ui/pull/139)
 
 ## 0.5.4
 
-- feat: Add autovalidation [#125](https://github.com/supabase-community/flutter-auth-ui/pull/125)
-- fix: Remove hardcoded styling from checkboxes [#125](https://github.com/supabase-community/flutter-auth-ui/pull/125)
+- feat: Add autovalidation [#125](https://github.com/supabase-community/supabase_auth_ui/pull/125)
+- fix: Remove hardcoded styling from checkboxes [#125](https://github.com/supabase-community/supabase_auth_ui/pull/125)
 
 ## 0.5.3
 
-- feat: Add value property to BooleanMetaDataField to set initial state of checkbox [#120](https://github.com/supabase-community/flutter-auth-ui/pull/120)
-- feat: add custom password validation to SupaEmailAuth form [#121](https://github.com/supabase-community/flutter-auth-ui/pull/121)
+- feat: Add value property to BooleanMetaDataField to set initial state of checkbox [#120](https://github.com/supabase-community/supabase_auth_ui/pull/120)
+- feat: add custom password validation to SupaEmailAuth form [#121](https://github.com/supabase-community/supabase_auth_ui/pull/121)
 
 ## 0.5.2
 
-- feat: enhancement: allow user to decide launch mode [#110](https://github.com/supabase-community/flutter-auth-ui/pull/110)
-- fix: MetadataFields text field values being lost in SupaEmailAuth widget (Fixes #113) [#114](https://github.com/supabase-community/flutter-auth-ui/pull/114)
-- feat: Add BooleanMetaDataField to support checkbox inputs on sign-up form [#115](https://github.com/supabase-community/flutter-auth-ui/pull/115)
-- feat: Support for displaying sign-in or sign-up initially [#116](https://github.com/supabase-community/flutter-auth-ui/pull/116)
+- feat: enhancement: allow user to decide launch mode [#110](https://github.com/supabase-community/supabase_auth_ui/pull/110)
+- fix: MetadataFields text field values being lost in SupaEmailAuth widget (Fixes #113) [#114](https://github.com/supabase-community/supabase_auth_ui/pull/114)
+- feat: Add BooleanMetaDataField to support checkbox inputs on sign-up form [#115](https://github.com/supabase-community/supabase_auth_ui/pull/115)
+- feat: Support for displaying sign-in or sign-up initially [#116](https://github.com/supabase-community/supabase_auth_ui/pull/116)
 
 ## 0.5.1
 
-- feat: Improve form interaction and code organization in `SupaEmailAuth` [#106](https://github.com/supabase-community/flutter-auth-ui/pull/106)
-- feat: Enable custom icons for `SupaEmailAuth` [#108](https://github.com/supabase-community/flutter-auth-ui/pull/108)
+- feat: Improve form interaction and code organization in `SupaEmailAuth` [#106](https://github.com/supabase-community/supabase_auth_ui/pull/106)
+- feat: Enable custom icons for `SupaEmailAuth` [#108](https://github.com/supabase-community/supabase_auth_ui/pull/108)
 
 ## 0.5.0
 
-- feat: Allow password recovery email to be redirected to other URL [#98](https://github.com/supabase-community/flutter-auth-ui/pull/98)
-- feat: Add callback for internal state of `SupaEmailAuth` [#99](https://github.com/supabase-community/flutter-auth-ui/pull/99)
-- feat!: Upgrade anonymous users to regular users automatically [#100](https://github.com/supabase-community/flutter-auth-ui/pull/100)
-- feat!: Allow the OAuth provider labels to be overridden on `SupaSocialsAuth` [#101](https://github.com/supabase-community/flutter-auth-ui/pull/101)
+- feat: Allow password recovery email to be redirected to other URL [#98](https://github.com/supabase-community/supabase_auth_ui/pull/98)
+- feat: Add callback for internal state of `SupaEmailAuth` [#99](https://github.com/supabase-community/supabase_auth_ui/pull/99)
+- feat!: Upgrade anonymous users to regular users automatically [#100](https://github.com/supabase-community/supabase_auth_ui/pull/100)
+- feat!: Allow the OAuth provider labels to be overridden on `SupaSocialsAuth` [#101](https://github.com/supabase-community/supabase_auth_ui/pull/101)
 
 ## 0.4.4
 
 - feat: Update minimum supabase_flutter version to v2.3.4
-- fix: Add redirectTo for email password reset [#83](https://github.com/supabase-community/flutter-auth-ui/pull/83)
-- feat: Add TextInputAction to phone and email sign in [#82](https://github.com/supabase-community/flutter-auth-ui/pull/82)
-- fix: Fix autofill not opening when tapping on email field in SupaEmailAuth [#80](https://github.com/supabase-community/flutter-auth-ui/pull/80)
+- fix: Add redirectTo for email password reset [#83](https://github.com/supabase-community/supabase_auth_ui/pull/83)
+- feat: Add TextInputAction to phone and email sign in [#82](https://github.com/supabase-community/supabase_auth_ui/pull/82)
+- fix: Fix autofill not opening when tapping on email field in SupaEmailAuth [#80](https://github.com/supabase-community/supabase_auth_ui/pull/80)
 
 ## 0.4.3
 
@@ -80,17 +90,17 @@
 
 ## 0.2.1
 
-- feat: Make `SupaSocialsAuth` success SnackBar optional [#54](https://github.com/supabase-community/flutter-auth-ui/pull/54)
+- feat: Make `SupaSocialsAuth` success SnackBar optional [#54](https://github.com/supabase-community/supabase_auth_ui/pull/54)
 
 ## 0.2.0
 
-- BREAKING: `SupaEmailAuth` now contains sign-up, sign-in, and forget email in a single instance [#46](https://github.com/supabase-community/flutter-auth-ui/pull/46)
+- BREAKING: `SupaEmailAuth` now contains sign-up, sign-in, and forget email in a single instance [#46](https://github.com/supabase-community/supabase_auth_ui/pull/46)
 - feat: update Dart dependency to < 4.0.0 and flutter dependencies to >=3.0.0
 
 ## 0.1.1
 
-- feat: social aith buttons icon only option [#43](https://github.com/supabase-community/flutter-auth-ui/pull/43)
-- feat: email suggestion on email form fields [#44](https://github.com/supabase-community/flutter-auth-ui/pull/44)
+- feat: social aith buttons icon only option [#43](https://github.com/supabase-community/supabase_auth_ui/pull/43)
+- feat: email suggestion on email form fields [#44](https://github.com/supabase-community/supabase_auth_ui/pull/44)
 
 ## 0.1.0+2
 
