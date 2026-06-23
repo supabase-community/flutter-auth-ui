@@ -5,6 +5,8 @@
 - feat: Add showSnackBars option to make snack bars optional across all auth components [#150](https://github.com/supabase-community/flutter-auth-ui/pull/150)
 - feat: Add password recovery with OTP to SupaEmailAuth [#130](https://github.com/supabase-community/flutter-auth-ui/pull/130)
 - fix: Call `onToggleRecoverPassword(false)` when leaving the password recovery view [#148](https://github.com/supabase-community/flutter-auth-ui/pull/148)
+- feat: Add `prefilledEmail` and `prefilledPassword` to SupaEmailAuth [#143](https://github.com/supabase-community/flutter-auth-ui/pull/143)
+- feat: Add `enableAutomaticFormSubmission` flag to prevent automatic form submission when pressing Enter on on-screen keyboard in all auth components (SupaEmailAuth, SupaPhoneAuth, SupaMagicAuth, SupaResetPassword) [#143](https://github.com/supabase-community/flutter-auth-ui/pull/143)
 
 ## 0.5.5
 
