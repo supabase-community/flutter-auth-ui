@@ -16,13 +16,13 @@ void main() async {
   /// TODO: replace with your credentials
   await Supabase.initialize(
     url: 'https://yoursupabaseurl.supabase.co',
-    anonKey: 'your_anon_key',
+    publishableKey: 'your_publishable_key',
   );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override

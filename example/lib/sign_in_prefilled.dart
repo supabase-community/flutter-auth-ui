@@ -6,7 +6,7 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'constants.dart';
 
 class SignInPrefilled extends StatelessWidget {
-  const SignInPrefilled({Key? key}) : super(key: key);
+  const SignInPrefilled({super.key});
   @override
   Widget build(BuildContext context) {
     void navigateHome(AuthResponse response) {

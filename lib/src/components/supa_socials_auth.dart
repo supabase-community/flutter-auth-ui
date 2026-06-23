@@ -54,8 +54,7 @@ extension on OAuthProvider {
     OAuthProvider.twitch => Colors.purpleAccent,
     OAuthProvider.twitter => Colors.black,
     OAuthProvider.workos => const Color.fromRGBO(99, 99, 241, 1),
-    // ignore: unreachable_switch_case
-    _ => Colors.black,
+    OAuthProvider() => Colors.black,
   };
 
   String get labelText {

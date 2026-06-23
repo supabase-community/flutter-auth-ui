@@ -4,7 +4,7 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'constants.dart';
 
 class PhoneSignUp extends StatelessWidget {
-  const PhoneSignUp({Key? key}) : super(key: key);
+  const PhoneSignUp({super.key});
 
   @override
   Widget build(BuildContext context) {
