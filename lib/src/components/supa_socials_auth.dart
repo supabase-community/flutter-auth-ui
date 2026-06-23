@@ -170,20 +170,16 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     required String? webClientId,
     required String? iosClientId,
   }) async {
-    final GoogleSignIn googleSignIn = GoogleSignIn(
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize(
       clientId: iosClientId,
       serverClientId: webClientId,
     );
 
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
+    final googleUser = await googleSignIn.authenticate();
+    final googleAuth = googleUser.authentication;
     final idToken = googleAuth.idToken;
 
-    if (accessToken == null) {
-      throw const AuthException(
-          'No Access Token found from Google sign in result.');
-    }
     if (idToken == null) {
       throw const AuthException(
           'No ID Token found from Google sign in result.');
@@ -192,7 +188,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     return supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
     );
   }
 
@@ -229,7 +224,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     _gotrueSubscription =
         Supabase.instance.client.auth.onAuthStateChange.listen((data) {
       final session = data.session;
-      if (session != null && mounted) {
+      if (session != null && mounted && session.user.isAnonymous != true) {
         widget.onSuccess.call(session);
         if (widget.showSnackBars && widget.showSuccessSnackBar) {
           context.showSnackBar(localization.successSignInMessage);
