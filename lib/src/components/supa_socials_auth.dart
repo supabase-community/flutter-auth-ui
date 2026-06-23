@@ -58,12 +58,9 @@ extension on OAuthProvider {
         _ => Colors.black,
       };
 
-  String get capitalizedName {
-    String modifiedName = name;
-    if (name.endsWith("Oidc")) {
-      modifiedName = name.substring(0, name.length - 4);
-    }
-    return modifiedName[0].toUpperCase() + modifiedName.substring(1);
+  String get labelText {
+    final modifiedName = name.replaceAll('Oidc', '');
+    return 'Continue with ${modifiedName[0].toUpperCase()}${modifiedName.substring(1)}';
   }
 }
 
