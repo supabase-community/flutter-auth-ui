@@ -14,49 +14,49 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension on OAuthProvider {
   FaIconData get iconData => switch (this) {
-        OAuthProvider.apple => FontAwesomeIcons.apple,
-        OAuthProvider.azure => FontAwesomeIcons.microsoft,
-        OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
-        OAuthProvider.discord => FontAwesomeIcons.discord,
-        OAuthProvider.facebook => FontAwesomeIcons.facebook,
-        OAuthProvider.figma => FontAwesomeIcons.figma,
-        OAuthProvider.github => FontAwesomeIcons.github,
-        OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
-        OAuthProvider.google => FontAwesomeIcons.google,
-        OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
-        OAuthProvider.linkedinOidc => FontAwesomeIcons.linkedin,
-        OAuthProvider.slack => FontAwesomeIcons.slack,
-        OAuthProvider.slackOidc => FontAwesomeIcons.slack,
-        OAuthProvider.spotify => FontAwesomeIcons.spotify,
-        OAuthProvider.twitch => FontAwesomeIcons.twitch,
-        OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
-        _ => FontAwesomeIcons.xmark,
-      };
+    OAuthProvider.apple => FontAwesomeIcons.apple,
+    OAuthProvider.azure => FontAwesomeIcons.microsoft,
+    OAuthProvider.bitbucket => FontAwesomeIcons.bitbucket,
+    OAuthProvider.discord => FontAwesomeIcons.discord,
+    OAuthProvider.facebook => FontAwesomeIcons.facebook,
+    OAuthProvider.figma => FontAwesomeIcons.figma,
+    OAuthProvider.github => FontAwesomeIcons.github,
+    OAuthProvider.gitlab => FontAwesomeIcons.gitlab,
+    OAuthProvider.google => FontAwesomeIcons.google,
+    OAuthProvider.linkedin => FontAwesomeIcons.linkedin,
+    OAuthProvider.linkedinOidc => FontAwesomeIcons.linkedin,
+    OAuthProvider.slack => FontAwesomeIcons.slack,
+    OAuthProvider.slackOidc => FontAwesomeIcons.slack,
+    OAuthProvider.spotify => FontAwesomeIcons.spotify,
+    OAuthProvider.twitch => FontAwesomeIcons.twitch,
+    OAuthProvider.twitter => FontAwesomeIcons.xTwitter,
+    _ => FontAwesomeIcons.xmark,
+  };
 
   Color get btnBgColor => switch (this) {
-        OAuthProvider.apple => Colors.black,
-        OAuthProvider.azure => Colors.blueAccent,
-        OAuthProvider.bitbucket => Colors.blue,
-        OAuthProvider.discord => Colors.purple,
-        OAuthProvider.facebook => const Color(0xFF3b5998),
-        OAuthProvider.figma => const Color.fromRGBO(241, 77, 27, 1),
-        OAuthProvider.github => Colors.black,
-        OAuthProvider.gitlab => Colors.deepOrange,
-        OAuthProvider.google => Colors.white,
-        OAuthProvider.kakao => const Color(0xFFFFE812),
-        OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
-        OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
-        OAuthProvider.linkedinOidc => const Color.fromRGBO(0, 136, 209, 1),
-        OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
-        OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
-        OAuthProvider.slackOidc => const Color.fromRGBO(74, 21, 75, 1),
-        OAuthProvider.spotify => Colors.green,
-        OAuthProvider.twitch => Colors.purpleAccent,
-        OAuthProvider.twitter => Colors.black,
-        OAuthProvider.workos => const Color.fromRGBO(99, 99, 241, 1),
-        // ignore: unreachable_switch_case
-        _ => Colors.black,
-      };
+    OAuthProvider.apple => Colors.black,
+    OAuthProvider.azure => Colors.blueAccent,
+    OAuthProvider.bitbucket => Colors.blue,
+    OAuthProvider.discord => Colors.purple,
+    OAuthProvider.facebook => const Color(0xFF3b5998),
+    OAuthProvider.figma => const Color.fromRGBO(241, 77, 27, 1),
+    OAuthProvider.github => Colors.black,
+    OAuthProvider.gitlab => Colors.deepOrange,
+    OAuthProvider.google => Colors.white,
+    OAuthProvider.kakao => const Color(0xFFFFE812),
+    OAuthProvider.keycloak => const Color.fromRGBO(0, 138, 170, 1),
+    OAuthProvider.linkedin => const Color.fromRGBO(0, 136, 209, 1),
+    OAuthProvider.linkedinOidc => const Color.fromRGBO(0, 136, 209, 1),
+    OAuthProvider.notion => const Color.fromRGBO(69, 75, 78, 1),
+    OAuthProvider.slack => const Color.fromRGBO(74, 21, 75, 1),
+    OAuthProvider.slackOidc => const Color.fromRGBO(74, 21, 75, 1),
+    OAuthProvider.spotify => Colors.green,
+    OAuthProvider.twitch => Colors.purpleAccent,
+    OAuthProvider.twitter => Colors.black,
+    OAuthProvider.workos => const Color.fromRGBO(99, 99, 241, 1),
+    // ignore: unreachable_switch_case
+    _ => Colors.black,
+  };
 
   String get labelText {
     final modifiedName = name.replaceAll('Oidc', '');
@@ -182,7 +182,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
     if (idToken == null) {
       throw const AuthException(
-          'No ID Token found from Google sign in result.');
+        'No ID Token found from Google sign in result.',
+      );
     }
 
     return supabase.auth.signInWithIdToken(
@@ -207,7 +208,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final idToken = credential.identityToken;
     if (idToken == null) {
       throw const AuthException(
-          'Could not find ID Token from generated Apple sign in credential.');
+        'Could not find ID Token from generated Apple sign in credential.',
+      );
     }
 
     return supabase.auth.signInWithIdToken(
@@ -221,16 +223,16 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   void initState() {
     super.initState();
     localization = widget.localization;
-    _gotrueSubscription =
-        Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      final session = data.session;
-      if (session != null && mounted && session.user.isAnonymous != true) {
-        widget.onSuccess.call(session);
-        if (widget.showSnackBars && widget.showSuccessSnackBar) {
-          context.showSnackBar(localization.successSignInMessage);
-        }
-      }
-    });
+    _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange
+        .listen((data) {
+          final session = data.session;
+          if (session != null && mounted && session.user.isAnonymous != true) {
+            widget.onSuccess.call(session);
+            if (widget.showSnackBars && widget.showSuccessSnackBar) {
+              context.showSnackBar(localization.successSignInMessage);
+            }
+          }
+        });
   }
 
   @override
@@ -329,7 +331,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               final iosClientId = googleAuthConfig?.iosClientId;
               final shouldPerformNativeGoogleSignIn =
                   (webClientId != null && !kIsWeb && Platform.isAndroid) ||
-                      (iosClientId != null && !kIsWeb && Platform.isIOS);
+                  (iosClientId != null && !kIsWeb && Platform.isIOS);
               if (shouldPerformNativeGoogleSignIn) {
                 await _nativeGoogleSignIn(
                   webClientId: webClientId,
@@ -343,7 +345,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             if (socialProvider == OAuthProvider.apple) {
               final shouldPerformNativeAppleSignIn =
                   (isNativeAppleAuthEnabled && !kIsWeb && Platform.isIOS) ||
-                      (isNativeAppleAuthEnabled && !kIsWeb && Platform.isMacOS);
+                  (isNativeAppleAuthEnabled && !kIsWeb && Platform.isMacOS);
               if (shouldPerformNativeAppleSignIn) {
                 await _nativeAppleSignIn();
                 return;
@@ -380,8 +382,9 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             if (widget.onError == null &&
                 widget.showSnackBars &&
                 context.mounted) {
-              context
-                  .showErrorSnackBar('${localization.unexpectedError}: $error');
+              context.showErrorSnackBar(
+                '${localization.unexpectedError}: $error',
+              );
             } else {
               widget.onError?.call(error);
             }

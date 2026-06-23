@@ -18,17 +18,19 @@ extension ShowSnackBar on BuildContext {
     Color? backgroundColor,
     String? actionLabel,
   }) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(
-        message,
-        style: textColor == null ? null : TextStyle(color: textColor),
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: textColor == null ? null : TextStyle(color: textColor),
+        ),
+        backgroundColor: backgroundColor,
+        action: SnackBarAction(
+          label: actionLabel ?? 'ok',
+          onPressed: () {},
+        ),
       ),
-      backgroundColor: backgroundColor,
-      action: SnackBarAction(
-        label: actionLabel ?? 'ok',
-        onPressed: () {},
-      ),
-    ));
+    );
   }
 
   /// Displays a red snackbar indicating error
