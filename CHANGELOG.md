@@ -1,6 +1,7 @@
 ## 0.6.0
 
 - BREAKING: `onPasswordResetEmailSent` now passes the email the reset was requested for, changing its signature from `void Function()?` to `void Function(String email)?` [#146](https://github.com/supabase-community/flutter-auth-ui/pull/146)
+- feat: Add a show/hide visibility toggle to password fields [#149](https://github.com/supabase-community/flutter-auth-ui/pull/149)
 
 ## 0.5.5
 
