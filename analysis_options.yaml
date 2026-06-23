@@ -1,4 +1,1 @@
 include: package:supabase_lints/analysis_options_flutter.yaml
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options

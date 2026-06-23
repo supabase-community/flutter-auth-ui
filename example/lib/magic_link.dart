@@ -5,7 +5,7 @@ import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 import 'constants.dart';
 
 class MagicLink extends StatelessWidget {
-  const MagicLink({Key? key}) : super(key: key);
+  const MagicLink({super.key});
 
   @override
   Widget build(BuildContext context) {
