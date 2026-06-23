@@ -596,6 +596,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     _isRecoveringPassword = false;
                     _isEnteringOtp = false;
                   });
+                  widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
                 },
                 child: Text(localization.backToSignIn),
               ),
@@ -697,6 +698,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
           _isRecoveringPassword = false;
         }
       });
+      if (!widget.useOtpForPasswordRecovery) {
+        widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
+      }
     } on AuthException catch (error) {
       widget.onError?.call(error);
     } catch (error) {
@@ -751,6 +755,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         _isRecoveringPassword = false;
         _isEnteringOtp = false;
       });
+      widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
     } on AuthException catch (error) {
       widget.onError?.call(error);
     } catch (error) {
