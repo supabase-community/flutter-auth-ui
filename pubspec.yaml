@@ -30,6 +30,23 @@ dev_dependencies:
 melos:
   useRootAsPackage: true
 
+  scripts:
+    analyze:
+      run: flutter analyze --fatal-warnings --fatal-infos lib
+      description: Run static analysis on the package.
+    format:
+      run: dart format lib test -l 80 --set-exit-if-changed
+      description: Verify that the code is formatted.
+    format:fix:
+      run: dart format lib test -l 80
+      description: Format the code.
+    test:
+      run: flutter test
+      description: Run the tests.
+    lint:all:
+      run: melos run analyze && melos run format
+      description: Run all static analysis checks.
+
 flutter:
   assets:
     - assets/logos/

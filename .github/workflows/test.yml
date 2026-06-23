@@ -1,0 +1,75 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Flutter ${{ matrix.flutter-version == 'latest' && 'Latest' || format('v{0}', matrix.flutter-version) }} on ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        flutter-version: ['3.35.x', 'latest']
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          flutter-version: ${{ matrix.flutter-version != 'latest' && matrix.flutter-version || '' }}
+          channel: 'stable'
+          # Caching the latest stable is flaky: the cached SDK contains
+          # runner-image-specific binaries that break silently when the runner
+          # image is updated. Pinned versions like 3.35.x are stable to cache.
+          cache: ${{ matrix.flutter-version != 'latest' }}
+
+      - name: Show Flutter version
+        run: flutter --version
+
+      - name: Bootstrap workspace
+        uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5 # v3.8.0
+
+      - name: Verify formatting
+        if: ${{ matrix.flutter-version == 'latest' }}
+        run: melos run format
+
+      - name: Analyze
+        if: ${{ matrix.flutter-version == 'latest' }}
+        run: melos run analyze
+
+      - name: Run tests
+        run: melos run test
+
+      - name: Test web (JS)
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.flutter-version == 'latest' }}
+        run: flutter test --platform chrome
+
+  test-result:
+    name: Test result
+    needs: [test]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all jobs succeeded
+        run: |
+          if ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}; then
+            echo "One or more jobs failed or were cancelled."
+            exit 1
+          fi
+          echo "All required jobs passed or were skipped."

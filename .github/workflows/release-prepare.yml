@@ -1,0 +1,52 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Version as prerelease'
+        required: false
+        default: false
+        type: boolean
+      graduate:
+        description: 'Graduate prereleases to stable'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Generate token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          cache: true
+
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@2982f8e4fc92440a219490009d6d05195cb1a6a5 # v3.8.0
+        with:
+          run-versioning: ${{ inputs.prerelease == false }}
+          run-versioning-prerelease: ${{ inputs.prerelease == true }}
+          run-versioning-graduate: ${{ inputs.graduate == true }}
+          create-pr: true
+          pr-title: 'chore(release): publish packages'
+          token: ${{ steps.app-token.outputs.token }}
