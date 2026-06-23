@@ -187,7 +187,10 @@ class SupaEmailAuth extends StatefulWidget {
   final void Function(AuthResponse response) onSignUpComplete;
 
   /// Callback for sending the password reset email
-  final void Function()? onPasswordResetEmailSent;
+  ///
+  /// The [email] the reset was requested for is passed back so it can be
+  /// reused, for example to verify an OTP for that same email.
+  final void Function(String email)? onPasswordResetEmailSent;
 
   /// Callback for when the auth action threw an exception
   ///
@@ -603,7 +606,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         email,
         redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
       );
-      widget.onPasswordResetEmailSent?.call();
+      widget.onPasswordResetEmailSent?.call(email);
       // FIX use_build_context_synchronously
       if (!mounted) return;
       context.showSnackBar(widget.localization.passwordResetSent);
