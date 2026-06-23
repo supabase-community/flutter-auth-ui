@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
 import 'package:supabase_auth_ui/src/localizations/supa_email_auth_localization.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -331,7 +332,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
             ),
             if (!_isRecoveringPassword) ...[
               spacer(16),
-              TextFormField(
+              SupaPasswordField(
+                controller: _passwordController,
+                labelText: localization.enterPassword,
+                prefixIcon: widget.prefixIconPassword,
                 autofillHints: _isSigningIn
                     ? [AutofillHints.password]
                     : [AutofillHints.newPassword],
@@ -346,12 +350,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       }
                       return null;
                     },
-                decoration: InputDecoration(
-                  prefixIcon: widget.prefixIconPassword,
-                  label: Text(localization.enterPassword),
-                ),
-                obscureText: true,
-                controller: _passwordController,
                 onFieldSubmitted: (_) {
                   if (widget.metadataFields == null || _isSigningIn) {
                     _signInSignUp();
@@ -360,13 +358,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               ),
               if (widget.showConfirmPasswordField && !_isSigningIn) ...[
                 spacer(16),
-                TextFormField(
+                SupaPasswordField(
                   controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    prefixIcon: widget.prefixIconPassword,
-                    label: Text(localization.confirmPassword),
-                  ),
-                  obscureText: true,
+                  labelText: localization.confirmPassword,
+                  prefixIcon: widget.prefixIconPassword,
                   validator: (value) {
                     if (value != _passwordController.text) {
                       return localization.confirmPasswordError;
