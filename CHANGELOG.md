@@ -2,12 +2,12 @@
 
 - BREAKING: `onPasswordResetEmailSent` now passes the email the reset was requested for, changing its signature from `void Function()?` to `void Function(String email)?` [#146](https://github.com/supabase-community/flutter-auth-ui/pull/146)
 - feat: Add a show/hide visibility toggle to password fields [#149](https://github.com/supabase-community/flutter-auth-ui/pull/149)
+- feat: Add showSnackBars option to make snack bars optional in SupaEmailAuth and SupaResetPassword [#150](https://github.com/supabase-community/flutter-auth-ui/pull/150)
 
 ## 0.5.5
 
 - feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/flutter-auth-ui/pull/129)
 - feat: Add autofocus option to SupaEmailAuth [#139](https://github.com/supabase-community/flutter-auth-ui/pull/139)
-- feat: Add showSnackBars option to make snack bars optional in SupaEmailAuth and SupaResetPassword [#150](https://github.com/supabase-community/flutter-auth-ui/pull/150)
 
 ## 0.5.4
 
