@@ -233,6 +233,21 @@ class SupaEmailAuth extends StatefulWidget {
   /// Whether to use OTP for password recovery instead of magic link
   final bool useOtpForPasswordRecovery;
 
+  /// Pre-filled email for the form
+  final String? prefilledEmail;
+
+  /// Pre-filled password for the form
+  final String? prefilledPassword;
+
+  /// Whether pressing Enter on the on-screen keyboard should automatically
+  /// submit the form.
+  ///
+  /// When set to `false`, the user must explicitly click the submit button
+  /// to proceed with the authentication process.
+  ///
+  /// Defaults to `true` for backward compatibility.
+  final bool enableAutomaticFormSubmission;
+
   /// {@macro supa_email_auth}
   const SupaEmailAuth({
     super.key,
@@ -256,6 +271,9 @@ class SupaEmailAuth extends StatefulWidget {
     this.showConfirmPasswordField = false,
     this.showSnackBars = true,
     this.useOtpForPasswordRecovery = false,
+    this.prefilledEmail,
+    this.prefilledPassword,
+    this.enableAutomaticFormSubmission = true,
   });
 
   @override
@@ -293,6 +311,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   @override
   void initState() {
     super.initState();
+    _emailController.text = widget.prefilledEmail ?? '';
+    _passwordController.text = widget.prefilledPassword ?? '';
     _isSigningIn = widget.isInitiallySigningIn;
     _metadataControllers = Map.fromEntries((widget.metadataFields ?? []).map(
       (metadataField) => MapEntry(
@@ -352,7 +372,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
               ),
               controller: _emailController,
               onFieldSubmitted: (_) {
-                if (_isRecoveringPassword) {
+                if (_isRecoveringPassword &&
+                    widget.enableAutomaticFormSubmission) {
                   _passwordRecovery();
                 }
               },
@@ -378,7 +399,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                       return null;
                     },
                 onFieldSubmitted: (_) {
-                  if (widget.metadataFields == null || _isSigningIn) {
+                  if ((widget.metadataFields == null || _isSigningIn) &&
+                      widget.enableAutomaticFormSubmission) {
                     _signInSignUp();
                   }
                 },
@@ -478,7 +500,8 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                                 if (metadataField !=
                                     widget.metadataFields!.last) {
                                   FocusScope.of(context).nextFocus();
-                                } else {
+                                } else if (widget
+                                    .enableAutomaticFormSubmission) {
                                   _signInSignUp();
                                 }
                               },
@@ -543,6 +566,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     prefixIcon: widget.prefixIconOtp,
                   ),
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return localization.requiredFieldError;
@@ -558,6 +582,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     prefixIcon: widget.prefixIconPassword,
                   ),
                   obscureText: true,
+                  textInputAction: TextInputAction.next,
                   validator: widget.passwordValidator ??
                       (value) {
                         if (value == null ||
@@ -576,11 +601,17 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     prefixIcon: widget.prefixIconPassword,
                   ),
                   obscureText: true,
+                  textInputAction: TextInputAction.done,
                   validator: (value) {
                     if (value != _newPasswordController.text) {
                       return localization.confirmPasswordError;
                     }
                     return null;
+                  },
+                  onFieldSubmitted: (_) {
+                    if (widget.enableAutomaticFormSubmission) {
+                      _verifyOtpAndResetPassword();
+                    }
                   },
                 ),
                 spacer(16),

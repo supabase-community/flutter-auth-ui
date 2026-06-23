@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
 import './home.dart';
-import './sign_in.dart';
 import './magic_link.dart';
+import './phone_sign_in.dart';
+import './sign_in.dart';
+import './sign_in_prefilled.dart';
 import './update_password.dart';
-import 'phone_sign_in.dart';
 import './verify_phone.dart';
 
 void main() async {
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/phone_sign_in': (context) => const PhoneSignIn(),
         '/phone_sign_up': (context) => const PhoneSignUp(),
         '/verify_phone': (context) => const VerifyPhone(),
+        '/prefilled': (context) => const SignInPrefilled(),
         '/home': (context) => const Home(),
       },
       onUnknownRoute: (RouteSettings settings) {
