@@ -21,7 +21,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  melos: ^8.0.0
   supabase_lints: ^0.1.0
+
+melos:
+  useRootAsPackage: true
 
 flutter:
   assets:
