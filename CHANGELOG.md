@@ -1,3 +1,7 @@
+## 0.6.0
+
+- BREAKING: `onPasswordResetEmailSent` now passes the email the reset was requested for, changing its signature from `void Function()?` to `void Function(String email)?` [#146](https://github.com/supabase-community/flutter-auth-ui/pull/146)
+
 ## 0.5.5
 
 - feat: Add Confirm Password Field to SupaEmailAuth Component for Sign-Up Process [#129](https://github.com/supabase-community/flutter-auth-ui/pull/129)
