@@ -543,6 +543,12 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     prefixIcon: widget.prefixIconOtp,
                   ),
                   keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return localization.requiredFieldError;
+                    }
+                    return null;
+                  },
                 ),
                 spacer(16),
                 TextFormField(
@@ -588,6 +594,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                 onPressed: () {
                   setState(() {
                     _isRecoveringPassword = false;
+                    _isEnteringOtp = false;
                   });
                 },
                 child: Text(localization.backToSignIn),
@@ -674,28 +681,22 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
 
       final email = _emailController.text.trim();
 
-      if (widget.useOtpForPasswordRecovery) {
-        await supabase.auth.resetPasswordForEmail(
-          email,
-          redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
-        );
-        if (!mounted) return;
+      await supabase.auth.resetPasswordForEmail(
+        email,
+        redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
+      );
+      widget.onPasswordResetEmailSent?.call(email);
+      if (!mounted) return;
+      if (widget.showSnackBars) {
         context.showSnackBar(widget.localization.passwordResetSent);
-        setState(() {
-          _isEnteringOtp = true;
-        });
-      } else {
-        await supabase.auth.resetPasswordForEmail(
-          email,
-          redirectTo: widget.resetPasswordRedirectTo ?? widget.redirectTo,
-        );
-        widget.onPasswordResetEmailSent?.call(email);
-        if (!mounted) return;
-        context.showSnackBar(widget.localization.passwordResetSent);
-        setState(() {
-          _isRecoveringPassword = false;
-        });
       }
+      setState(() {
+        if (widget.useOtpForPasswordRecovery) {
+          _isEnteringOtp = true;
+        } else {
+          _isRecoveringPassword = false;
+        }
+      });
     } on AuthException catch (error) {
       widget.onError?.call(error);
     } catch (error) {

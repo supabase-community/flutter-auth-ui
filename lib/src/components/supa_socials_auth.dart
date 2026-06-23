@@ -178,13 +178,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
     final googleUser = await googleSignIn.authenticate();
     final googleAuth = googleUser.authentication;
-    final accessToken = googleAuth.idToken;
     final idToken = googleAuth.idToken;
 
-    if (accessToken == null) {
-      throw const AuthException(
-          'No Access Token found from Google sign in result.');
-    }
     if (idToken == null) {
       throw const AuthException(
           'No ID Token found from Google sign in result.');
@@ -193,7 +188,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     return supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
     );
   }
 
