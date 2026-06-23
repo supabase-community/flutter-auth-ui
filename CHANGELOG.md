@@ -4,6 +4,7 @@
 - feat: Add a show/hide visibility toggle to password fields [#149](https://github.com/supabase-community/flutter-auth-ui/pull/149)
 - feat: Add showSnackBars option to make snack bars optional across all auth components [#150](https://github.com/supabase-community/flutter-auth-ui/pull/150)
 - feat: Add password recovery with OTP to SupaEmailAuth [#130](https://github.com/supabase-community/flutter-auth-ui/pull/130)
+- fix: Call `onToggleRecoverPassword(false)` when leaving the password recovery view [#148](https://github.com/supabase-community/flutter-auth-ui/pull/148)
 
 ## 0.5.5
 
