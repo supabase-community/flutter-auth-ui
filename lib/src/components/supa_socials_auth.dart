@@ -119,7 +119,12 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
   /// Whether to show a SnackBar after a successful sign in
+  ///
+  /// Has no effect when [showSnackBars] is `false`.
   final bool showSuccessSnackBar;
 
   /// OpenID scope(s) for provider authorization request (ex. '.default')
@@ -144,6 +149,7 @@ class SupaSocialsAuth extends StatefulWidget {
     required this.onSuccess,
     this.onError,
     this.socialButtonVariant = SocialButtonVariant.iconAndText,
+    this.showSnackBars = true,
     this.showSuccessSnackBar = true,
     this.scopes,
     this.queryParams,
@@ -225,7 +231,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       final session = data.session;
       if (session != null && mounted) {
         widget.onSuccess.call(session);
-        if (widget.showSuccessSnackBar) {
+        if (widget.showSnackBars && widget.showSuccessSnackBar) {
           context.showSnackBar(localization.successSignInMessage);
         }
       }
@@ -366,13 +372,17 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               authScreenLaunchMode: widget.authScreenLaunchMode,
             );
           } on AuthException catch (error) {
-            if (widget.onError == null && context.mounted) {
+            if (widget.onError == null &&
+                widget.showSnackBars &&
+                context.mounted) {
               context.showErrorSnackBar(error.message);
             } else {
               widget.onError?.call(error);
             }
           } catch (error) {
-            if (widget.onError == null && context.mounted) {
+            if (widget.onError == null &&
+                widget.showSnackBars &&
+                context.mounted) {
               context
                   .showErrorSnackBar('${localization.unexpectedError}: $error');
             } else {

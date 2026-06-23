@@ -19,6 +19,9 @@ class SupaMagicAuth extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
+  /// Whether to show snack bars
+  final bool showSnackBars;
+
   /// Localization for the form
   final SupaMagicAuthLocalization localization;
 
@@ -27,6 +30,7 @@ class SupaMagicAuth extends StatefulWidget {
     this.redirectUrl,
     required this.onSuccess,
     this.onError,
+    this.showSnackBars = true,
     this.localization = const SupaMagicAuthLocalization(),
   });
 
@@ -112,17 +116,21 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
                   email: _email.text,
                   emailRedirectTo: widget.redirectUrl,
                 );
-                if (context.mounted) {
+                if (widget.showSnackBars && context.mounted) {
                   context.showSnackBar(localization.checkYourEmail);
                 }
               } on AuthException catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(error.message);
                 } else {
                   widget.onError?.call(error);
                 }
               } catch (error) {
-                if (widget.onError == null && context.mounted) {
+                if (widget.onError == null &&
+                    widget.showSnackBars &&
+                    context.mounted) {
                   context.showErrorSnackBar(
                       '${localization.unexpectedError}: $error');
                 } else {
