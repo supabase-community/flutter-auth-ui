@@ -29,7 +29,7 @@ class MagicLink extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.pushNamed(context, '/sign_in');
+                Navigator.pushNamed(context, '/');
               },
             ),
           ],

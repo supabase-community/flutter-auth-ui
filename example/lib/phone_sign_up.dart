@@ -26,7 +26,7 @@ class PhoneSignUp extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('/sign_in');
+                Navigator.of(context).pushNamed('/phone_sign_in');
               },
             ),
           ],
