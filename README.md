@@ -86,8 +86,6 @@ SupaEmailAuth(
               // do something, for example: navigate("terms_and_conditions");
             },
         ),
-        // Or use some other custom widget.
-        WidgetSpan()
       ],
     ),
   ]),
@@ -114,7 +112,7 @@ Use `SupaMagicAuth` widget to create a magic link signIn form. You need to setup
 
 ```dart
 SupaMagicAuth(
-  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
+  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://login-callback/',
   onSuccess: (Session response) {
     // do something, for example: navigate('home');
   },
@@ -153,7 +151,7 @@ SupaSocialsAuth(
     colored: true,
     redirectUrl: kIsWeb
           ? null
-          : 'io.supabase.flutter://reset-callback/',
+          : 'io.supabase.flutter://login-callback/',
     onSuccess: (Session response) {
         // do something, for example: navigate('home');
     },
@@ -201,7 +199,7 @@ SupaPhoneAuth(
 
 // Magic Link Auth
 SupaMagicAuth(
-  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://reset-callback/',
+  redirectUrl: kIsWeb ? null : 'io.supabase.flutter://login-callback/',
   enableAutomaticFormSubmission: false,
   onSuccess: (Session response) {
     // handle success
