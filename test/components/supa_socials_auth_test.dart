@@ -37,7 +37,12 @@ void main() {
 
     expect(find.text('Continue with Github'), findsOneWidget);
     expect(find.text('Continue with Google'), findsOneWidget);
-    expect(find.byType(ElevatedButton), findsNWidgets(2));
+    // `ElevatedButton.icon` returns an `ElevatedButton` subclass on some
+    // Flutter versions, which `find.byType` would miss, so match by predicate.
+    expect(
+      find.byWidgetPredicate((widget) => widget is ElevatedButton),
+      findsNWidgets(2),
+    );
   });
 
   testWidgets('renders icon-only buttons without labels in icon mode', (
@@ -54,7 +59,10 @@ void main() {
     );
 
     expect(find.text('Continue with Github'), findsNothing);
-    expect(find.byType(ElevatedButton), findsNothing);
+    expect(
+      find.byWidgetPredicate((widget) => widget is ElevatedButton),
+      findsNothing,
+    );
     expect(find.byType(InkResponse), findsOneWidget);
   });
 
