@@ -138,6 +138,29 @@ SupaResetPassword(
 ),
 ```
 
+## Phone Auth
+
+Use `SupaPhoneAuth` to create a phone and password sign-in/sign-up form. Pass `SupaAuthAction.signIn` or `SupaAuthAction.signUp` to control which action the form performs.
+
+```dart
+SupaPhoneAuth(
+  authAction: SupaAuthAction.signUp,
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+),
+```
+
+After signing up, use `SupaVerifyPhone` to verify the phone number with the OTP code that was sent over SMS.
+
+```dart
+SupaVerifyPhone(
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+),
+```
+
 ## Social Auth
 
 Use `SupaSocialsAuth` to create list of social login buttons. You need to setup deep links in your app to use social auth. Learn more about deep links on the [supabase_flutter README](https://pub.dev/packages/supabase_flutter#deep-links).
@@ -157,6 +180,59 @@ SupaSocialsAuth(
     },
     onError: (error) {
         // do something, for example: navigate("wait_for_email");
+    },
+),
+```
+
+### Native Google and Apple sign in
+
+On mobile and desktop you can use the native sign in dialogs instead of the
+browser-based OAuth flow. `SupaSocialsAuth` falls back to the web OAuth flow on
+any platform where the native flow is not available or not configured, so it is
+safe to leave these options enabled across all platforms.
+
+Before wiring up the UI, configure the providers in your Supabase project and
+in each platform as described in the
+[native Google sign in](https://supabase.com/docs/guides/auth/social-login/auth-google?platform=flutter#using-native-sign-in)
+and
+[native Apple sign in](https://supabase.com/docs/guides/auth/social-login/auth-apple?platform=flutter#using-native-sign-in)
+guides.
+
+#### Native Google
+
+Native Google sign in is used when you pass a `nativeGoogleAuthConfig` and the
+client ID for the current platform is set. Otherwise the web OAuth flow is used.
+
+- On Android, set `webClientId`.
+- On iOS, set `iosClientId`.
+
+The client IDs are the ones you registered with Google Cloud. See the
+[`google_sign_in`](https://pub.dev/packages/google_sign_in) package for the
+required platform setup (iOS URL scheme, etc.).
+
+#### Native Apple
+
+Native Apple sign in is enabled by default (`enableNativeAppleAuth: true`) and is
+used on iOS and macOS. On other platforms the web OAuth flow is used. It requires
+the "Sign in with Apple" capability to be added to your app in Xcode. See the
+[`sign_in_with_apple`](https://pub.dev/packages/sign_in_with_apple) package for
+the platform setup.
+
+```dart
+SupaSocialsAuth(
+    socialProviders: [
+        OAuthProvider.apple,
+        OAuthProvider.google,
+    ],
+    // Enables native Google sign in on Android and iOS.
+    nativeGoogleAuthConfig: const NativeGoogleAuthConfig(
+        webClientId: 'YOUR_WEB_CLIENT_ID',
+        iosClientId: 'YOUR_IOS_CLIENT_ID',
+    ),
+    // Native Apple sign in is used on iOS and macOS by default.
+    enableNativeAppleAuth: true,
+    onSuccess: (Session response) {
+        // do something, for example: navigate('home');
     },
 ),
 ```
@@ -215,6 +291,29 @@ SupaResetPassword(
   },
 ),
 ```
+
+## Localization
+
+Every widget accepts a `localization` parameter you can use to override the default English strings, for example to translate the UI or reword it.
+
+```dart
+SupaEmailAuth(
+  localization: const SupaEmailAuthLocalization(
+    enterEmail: 'What\'s your email?',
+    enterPassword: 'Enter your password',
+    signIn: 'Log in',
+    signUp: 'Create account',
+  ),
+  onSignInComplete: (response) {
+    // do something, for example: navigate('home');
+  },
+  onSignUpComplete: (response) {
+    // do something, for example: navigate("wait_for_email");
+  },
+),
+```
+
+Each widget has its own localization class with the strings it uses: `SupaEmailAuthLocalization`, `SupaMagicAuthLocalization`, `SupaPhoneAuthLocalization`, `SupaResetPasswordLocalization`, `SupaSocialsAuthLocalization`, and `SupaVerifyPhoneLocalization`.
 
 ## Contributing
 
