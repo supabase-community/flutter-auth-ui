@@ -226,7 +226,14 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange
         .listen((data) {
           final session = data.session;
-          if (session != null && mounted && session.user.isAnonymous != true) {
+          // Only react to a fresh sign in. The stream replays the initial
+          // session when the widget mounts and also emits events such as
+          // token refreshes and user updates, none of which should trigger
+          // onSuccess again.
+          if (data.event == AuthChangeEvent.signedIn &&
+              session != null &&
+              mounted &&
+              session.user.isAnonymous != true) {
             widget.onSuccess.call(session);
             if (widget.showSnackBars && widget.showSuccessSnackBar) {
               context.showSnackBar(localization.successSignInMessage);
