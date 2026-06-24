@@ -144,6 +144,29 @@ SupaResetPassword(
 ),
 ```
 
+## Phone Auth
+
+Use `SupaPhoneAuth` to create a phone and password sign-in/sign-up form. Pass `SupaAuthAction.signIn` or `SupaAuthAction.signUp` to control which action the form performs.
+
+```dart
+SupaPhoneAuth(
+  authAction: SupaAuthAction.signUp,
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+),
+```
+
+After signing up, use `SupaVerifyPhone` to verify the phone number with the OTP code that was sent over SMS.
+
+```dart
+SupaVerifyPhone(
+  onSuccess: (AuthResponse response) {
+    // do something, for example: navigate('home');
+  },
+),
+```
+
 ## Social Auth
 
 Use `SupaSocialsAuth` to create list of social login buttons. You need to setup deep links in your app to use social auth. Learn more about deep links on the [supabase_flutter README](https://pub.dev/packages/supabase_flutter#deep-links).
@@ -274,6 +297,29 @@ SupaResetPassword(
   },
 ),
 ```
+
+## Localization
+
+Every widget accepts a `localization` parameter you can use to override the default English strings, for example to translate the UI or reword it.
+
+```dart
+SupaEmailAuth(
+  localization: const SupaEmailAuthLocalization(
+    enterEmail: 'What\'s your email?',
+    enterPassword: 'Enter your password',
+    signIn: 'Log in',
+    signUp: 'Create account',
+  ),
+  onSignInComplete: (response) {
+    // do something, for example: navigate('home');
+  },
+  onSignUpComplete: (response) {
+    // do something, for example: navigate("wait_for_email");
+  },
+),
+```
+
+Each widget has its own localization class with the strings it uses: `SupaEmailAuthLocalization`, `SupaMagicAuthLocalization`, `SupaPhoneAuthLocalization`, `SupaResetPasswordLocalization`, `SupaSocialsAuthLocalization`, and `SupaVerifyPhoneLocalization`.
 
 ## Contributing
 
