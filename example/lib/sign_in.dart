@@ -175,6 +175,22 @@ class SignUp extends StatelessWidget {
             label: const Text('Sign in with Phone'),
           ),
           spacer,
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, '/prefilled');
+            },
+            icon: const Icon(Icons.edit),
+            label: const Text('Sign in with prefilled fields'),
+          ),
+          spacer,
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.pushNamed(context, '/update_password');
+            },
+            icon: const Icon(Icons.lock_reset),
+            label: const Text('Update password'),
+          ),
+          spacer,
           SupaSocialsAuth(
             colored: true,
             nativeGoogleAuthConfig: const NativeGoogleAuthConfig(
