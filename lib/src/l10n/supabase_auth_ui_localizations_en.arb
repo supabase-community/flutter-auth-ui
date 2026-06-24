@@ -1,0 +1,137 @@
+{
+  "@@locale": "en",
+  "enterEmail": "Enter your email",
+  "@enterEmail": {
+    "description": "Label for the email input field."
+  },
+  "validEmailError": "Please enter a valid email address",
+  "@validEmailError": {
+    "description": "Validation error shown when the email address is invalid."
+  },
+  "enterPassword": "Enter your password",
+  "@enterPassword": {
+    "description": "Label for the password input field."
+  },
+  "passwordLengthError": "Please enter a password that is at least 6 characters long",
+  "@passwordLengthError": {
+    "description": "Validation error shown when the password is too short."
+  },
+  "signIn": "Sign In",
+  "@signIn": {
+    "description": "Label for the sign in button."
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Label for the sign up button."
+  },
+  "forgotPassword": "Forgot your password?",
+  "@forgotPassword": {
+    "description": "Label for the forgot password button."
+  },
+  "dontHaveAccount": "Don't have an account? Sign up",
+  "@dontHaveAccount": {
+    "description": "Prompt shown to users without an account."
+  },
+  "haveAccount": "Already have an account? Sign in",
+  "@haveAccount": {
+    "description": "Prompt shown to users who already have an account."
+  },
+  "sendPasswordReset": "Send password reset email",
+  "@sendPasswordReset": {
+    "description": "Label for the button that sends a password reset email."
+  },
+  "passwordResetSent": "Password reset email has been sent",
+  "@passwordResetSent": {
+    "description": "Confirmation shown after a password reset email is sent."
+  },
+  "backToSignIn": "Back to sign in",
+  "@backToSignIn": {
+    "description": "Label for the button that returns to the sign in form."
+  },
+  "unexpectedError": "An unexpected error occurred",
+  "@unexpectedError": {
+    "description": "Generic error message shown when something goes wrong."
+  },
+  "requiredFieldError": "This field is required",
+  "@requiredFieldError": {
+    "description": "Validation error shown when a required field is empty."
+  },
+  "confirmPasswordError": "Passwords do not match",
+  "@confirmPasswordError": {
+    "description": "Validation error shown when the password confirmation does not match."
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Label for the confirm password input field."
+  },
+  "enterOtpCode": "Enter OTP code",
+  "@enterOtpCode": {
+    "description": "Label for the one time password input field."
+  },
+  "enterNewPassword": "Enter new password",
+  "@enterNewPassword": {
+    "description": "Label for the new password input field."
+  },
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Label for the change password button."
+  },
+  "passwordChangedSuccess": "Password successfully updated",
+  "@passwordChangedSuccess": {
+    "description": "Confirmation shown after the password is updated."
+  },
+  "otpCodeError": "Invalid OTP code",
+  "@otpCodeError": {
+    "description": "Validation error shown when the one time password code is invalid."
+  },
+  "otpDisabledError": "OTP disabled",
+  "@otpDisabledError": {
+    "description": "Error shown when one time password sign in is disabled."
+  },
+  "enterPhoneNumber": "Enter your phone number",
+  "@enterPhoneNumber": {
+    "description": "Label for the phone number input field."
+  },
+  "validPhoneNumberError": "Please enter a valid phone number",
+  "@validPhoneNumberError": {
+    "description": "Validation error shown when the phone number is invalid."
+  },
+  "continueWithMagicLink": "Continue with magic Link",
+  "@continueWithMagicLink": {
+    "description": "Label for the button that sends a magic link."
+  },
+  "checkYourEmail": "Check your email inbox!",
+  "@checkYourEmail": {
+    "description": "Confirmation shown after a magic link email is sent."
+  },
+  "successSignInMessage": "Successfully signed in!",
+  "@successSignInMessage": {
+    "description": "Confirmation shown after a successful social sign in."
+  },
+  "updatePassword": "Update Password",
+  "@updatePassword": {
+    "description": "Label for the update password button."
+  },
+  "enterOneTimeCode": "Please enter the one time code sent",
+  "@enterOneTimeCode": {
+    "description": "Validation error shown when the one time code is empty."
+  },
+  "enterCodeSent": "Enter the code sent",
+  "@enterCodeSent": {
+    "description": "Label for the one time code input field during phone verification."
+  },
+  "verifyPhone": "Verify Phone",
+  "@verifyPhone": {
+    "description": "Label for the verify phone button."
+  },
+  "continueWithProvider": "Continue with {provider}",
+  "@continueWithProvider": {
+    "description": "Label for a social sign in button.",
+    "placeholders": {
+      "provider": {
+        "type": "String",
+        "example": "GitHub"
+      }
+    }
+  }
+}

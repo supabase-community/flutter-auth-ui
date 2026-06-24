@@ -66,16 +66,14 @@ void main() {
     expect(find.byType(InkResponse), findsOneWidget);
   });
 
-  testWidgets('uses a custom label from localization when provided', (
+  testWidgets('uses a custom label from oAuthButtonLabels when provided', (
     tester,
   ) async {
     await tester.pumpWidget(
       wrapForTest(
         SupaSocialsAuth(
           socialProviders: const [OAuthProvider.azure],
-          localization: SupaSocialsAuthLocalization(
-            oAuthButtonLabels: {OAuthProvider.azure: 'Microsoft (Azure)'},
-          ),
+          oAuthButtonLabels: {OAuthProvider.azure: 'Microsoft (Azure)'},
           onSuccess: (_) {},
         ),
       ),

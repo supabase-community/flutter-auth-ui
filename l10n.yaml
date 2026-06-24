@@ -1,0 +1,6 @@
+arb-dir: lib/src/l10n
+template-arb-file: supabase_auth_ui_localizations_en.arb
+output-localization-file: supabase_auth_ui_localizations.dart
+output-class: SupabaseAuthUILocalizations
+output-dir: lib/src/l10n/generated
+nullable-getter: true

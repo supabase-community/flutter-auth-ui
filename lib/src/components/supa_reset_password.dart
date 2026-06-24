@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_reset_password_localization.dart';
+import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,9 +18,6 @@ class SupaResetPassword extends StatefulWidget {
   /// Method to be called when the auth action threw an excepction
   final void Function(Object error)? onError;
 
-  /// Localization for the form
-  final SupaResetPasswordLocalization localization;
-
   /// Whether pressing Enter on the on-screen keyboard should automatically
   /// submit the form.
   ///
@@ -36,7 +33,6 @@ class SupaResetPassword extends StatefulWidget {
     this.showSnackBars = true,
     required this.onSuccess,
     this.onError,
-    this.localization = const SupaResetPasswordLocalization(),
     this.enableAutomaticFormSubmission = true,
   });
 
@@ -55,7 +51,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
   }
 
   Future<void> _updatePassword() async {
-    final localization = widget.localization;
+    final localization = context.l10n;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -83,7 +79,7 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = widget.localization;
+    final localization = context.l10n;
     return Form(
       key: _formKey,
       child: Column(

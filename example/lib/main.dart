@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+      localizationsDelegates:
+          SupabaseAuthUILocalizations.localizationsDelegates,
+      supportedLocales: SupabaseAuthUILocalizations.supportedLocales,
       theme: ThemeData(
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),

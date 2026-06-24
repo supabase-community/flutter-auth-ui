@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_socials_auth_localization.dart';
+import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -57,9 +57,11 @@ extension on OAuthProvider {
     OAuthProvider() => Colors.black,
   };
 
-  String get labelText {
+  /// Human readable provider name, e.g. `Github` or `Linkedin`, used to build
+  /// the localized "Continue with ..." button label.
+  String get displayName {
     final modifiedName = name.replaceAll('Oidc', '');
-    return 'Continue with ${modifiedName[0].toUpperCase()}${modifiedName.substring(1)}';
+    return '${modifiedName[0].toUpperCase()}${modifiedName.substring(1)}';
   }
 
   /// Asset path for providers that ship a custom logo image instead of using
@@ -143,8 +145,22 @@ class SupaSocialsAuth extends StatefulWidget {
   /// Parameters to include in provider authorization request (ex. {'prompt': 'consent'})
   final Map<OAuthProvider, Map<String, String>>? queryParams;
 
-  /// Localization for the form
-  final SupaSocialsAuthLocalization localization;
+  /// Overrides the label shown on a provider's sign-in button.
+  ///
+  /// Defaults to a localized `Continue with [ProviderName]`.
+  ///
+  /// ```dart
+  /// SupaSocialsAuth(
+  ///   socialProviders: const [OAuthProvider.azure],
+  ///   oAuthButtonLabels: const {
+  ///     OAuthProvider.azure: 'Microsoft (Azure)',
+  ///   },
+  ///   onSuccess: (session) {
+  ///     // Handle success
+  ///   },
+  /// ),
+  /// ```
+  final Map<OAuthProvider, String>? oAuthButtonLabels;
 
   /// Custom LaunchMode support
   final LaunchMode authScreenLaunchMode;
@@ -163,7 +179,7 @@ class SupaSocialsAuth extends StatefulWidget {
     this.showSuccessSnackBar = true,
     this.scopes,
     this.queryParams,
-    this.localization = const SupaSocialsAuthLocalization(),
+    this.oAuthButtonLabels,
     this.authScreenLaunchMode = LaunchMode.platformDefault,
   });
 
@@ -173,7 +189,6 @@ class SupaSocialsAuth extends StatefulWidget {
 
 class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   late final StreamSubscription<AuthState> _gotrueSubscription;
-  late final SupaSocialsAuthLocalization localization;
 
   /// Performs Google sign in on Android and iOS
   Future<AuthResponse> _nativeGoogleSignIn({
@@ -255,7 +270,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
   @override
   void initState() {
     super.initState();
-    localization = widget.localization;
     _gotrueSubscription = Supabase.instance.client.auth.onAuthStateChange
         .listen((data) {
           final session = data.session;
@@ -269,7 +283,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               session.user.isAnonymous != true) {
             widget.onSuccess.call(session);
             if (widget.showSnackBars && widget.showSuccessSnackBar) {
-              context.showSnackBar(localization.successSignInMessage);
+              context.showSnackBar(context.l10n.successSignInMessage);
             }
           }
         });
@@ -283,6 +297,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.l10n;
     final providers = widget.socialProviders;
     final googleAuthConfig = widget.nativeGoogleAuthConfig;
     final isNativeAppleAuthEnabled = widget.enableNativeAppleAuth;
@@ -422,8 +437,10 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
                   style: authButtonStyle,
                   onPressed: onAuthButtonPressed,
                   label: Text(
-                    localization.oAuthButtonLabels[socialProvider] ??
-                        socialProvider.labelText,
+                    widget.oAuthButtonLabels?[socialProvider] ??
+                        localization.continueWithProvider(
+                          socialProvider.displayName,
+                        ),
                   ),
                 ),
         );

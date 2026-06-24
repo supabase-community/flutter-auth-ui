@@ -318,26 +318,75 @@ SupaResetPassword(
 
 ## Localization
 
-Every widget accepts a `localization` parameter you can use to override the default English strings, for example to translate the UI or reword it.
+The widgets resolve their strings through Flutter's standard localization
+mechanism. Register `SupabaseAuthUILocalizations.delegate` on your app and the
+strings are picked from the active locale:
 
 ```dart
-SupaEmailAuth(
-  localization: const SupaEmailAuthLocalization(
-    enterEmail: 'What\'s your email?',
-    enterPassword: 'Enter your password',
-    signIn: 'Log in',
-    signUp: 'Create account',
-  ),
-  onSignInComplete: (response) {
+MaterialApp(
+  localizationsDelegates: SupabaseAuthUILocalizations.localizationsDelegates,
+  supportedLocales: SupabaseAuthUILocalizations.supportedLocales,
+  home: const MyHomePage(),
+);
+```
+
+`SupabaseAuthUILocalizations.localizationsDelegates` bundles the package
+delegate together with the `GlobalMaterialLocalizations`,
+`GlobalWidgetsLocalizations`, and `GlobalCupertinoLocalizations` delegates. If
+you already register your own delegates, add `SupabaseAuthUILocalizations.delegate`
+to your existing list instead.
+
+The package ships English (`en`) out of the box and falls back to it when no
+delegate is registered.
+
+### Translating or overriding strings
+
+To translate the UI or reword it, supply your own
+`LocalizationsDelegate<SupabaseAuthUILocalizations>` that returns a subclass of
+`SupabaseAuthUILocalizations` with the strings you want, and register it before
+the bundled delegate:
+
+```dart
+class MyAuthLocalizations extends SupabaseAuthUILocalizations {
+  MyAuthLocalizations() : super('en');
+
+  @override
+  String get signIn => 'Log in';
+
+  @override
+  String get signUp => 'Create account';
+
+  // ...override the rest as needed.
+}
+
+class MyAuthLocalizationsDelegate
+    extends LocalizationsDelegate<SupabaseAuthUILocalizations> {
+  const MyAuthLocalizationsDelegate();
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'en';
+
+  @override
+  Future<SupabaseAuthUILocalizations> load(Locale locale) =>
+      SynchronousFuture(MyAuthLocalizations());
+
+  @override
+  bool shouldReload(covariant LocalizationsDelegate old) => false;
+}
+```
+
+The social sign-in button labels can be customized per provider through the
+`oAuthButtonLabels` parameter on `SupaSocialsAuth`:
+
+```dart
+SupaSocialsAuth(
+  socialProviders: const [OAuthProvider.azure],
+  oAuthButtonLabels: {OAuthProvider.azure: 'Microsoft (Azure)'},
+  onSuccess: (session) {
     // do something, for example: navigate('home');
-  },
-  onSignUpComplete: (response) {
-    // do something, for example: navigate("wait_for_email");
   },
 ),
 ```
-
-Each widget has its own localization class with the strings it uses: `SupaEmailAuthLocalization`, `SupaMagicAuthLocalization`, `SupaPhoneAuthLocalization`, `SupaResetPasswordLocalization`, `SupaSocialsAuthLocalization`, and `SupaVerifyPhoneLocalization`.
 
 ## Contributing
 

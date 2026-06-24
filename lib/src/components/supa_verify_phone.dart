@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_verify_phone_localization.dart';
+import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,15 +14,11 @@ class SupaVerifyPhone extends StatefulWidget {
   /// Whether to show snack bars
   final bool showSnackBars;
 
-  /// Localization for the form
-  final SupaVerifyPhoneLocalization localization;
-
   const SupaVerifyPhone({
     super.key,
     required this.onSuccess,
     this.onError,
     this.showSnackBars = true,
-    this.localization = const SupaVerifyPhoneLocalization(),
   });
 
   @override
@@ -42,7 +38,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = widget.localization;
+    final localization = context.l10n;
     var args = ModalRoute.of(context)?.settings.arguments;
     if (args != null) data = args as Map;
     return Form(
@@ -87,7 +83,7 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                     error,
                     onError: widget.onError,
                     showSnackBars: widget.showSnackBars,
-                    unexpectedErrorText: localization.unexpectedErrorOccurred,
+                    unexpectedErrorText: localization.unexpectedError,
                   );
                 }
               }

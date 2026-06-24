@@ -152,6 +152,8 @@ Future<void> initializeSupabaseForTest() async {
 /// needs (theme, directionality, scaffold for snack bars).
 Widget wrapForTest(Widget child) {
   return MaterialApp(
+    localizationsDelegates: SupabaseAuthUILocalizations.localizationsDelegates,
+    supportedLocales: SupabaseAuthUILocalizations.supportedLocales,
     home: Scaffold(
       body: SingleChildScrollView(child: child),
     ),
@@ -162,6 +164,8 @@ Widget wrapForTest(Widget child) {
 /// read `ModalRoute.of(context)?.settings.arguments` receive them.
 Widget wrapWithRouteArguments(Widget child, Object? arguments) {
   return MaterialApp(
+    localizationsDelegates: SupabaseAuthUILocalizations.localizationsDelegates,
+    supportedLocales: SupabaseAuthUILocalizations.supportedLocales,
     onGenerateRoute: (settings) => MaterialPageRoute(
       settings: RouteSettings(name: settings.name, arguments: arguments),
       builder: (_) => Scaffold(
