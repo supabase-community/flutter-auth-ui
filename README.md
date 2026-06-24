@@ -88,7 +88,8 @@ SupaEmailAuth(
         ),
       ],
     ),
-  ]),
+  ],
+)
 ```
 
 You can prefill the email and/or password fields by passing `prefilledEmail` and `prefilledPassword`. The corresponding fields will be initialized with these values, which the user can still edit.
@@ -105,6 +106,16 @@ SupaEmailAuth(
   },
 ),
 ```
+
+`SupaEmailAuth` exposes a few more options worth knowing about:
+
+- `passwordValidator`: provide your own password validation function to enforce password rules.
+- `showConfirmPasswordField`: show a "confirm password" field on the sign-up form.
+- `useOtpForPasswordRecovery`: recover the password with a one-time code instead of a magic link.
+- `extraMetadata`: pass static metadata on sign up that isn't tied to a form field.
+- `resetPasswordRedirectTo`: the deep link to redirect to after a password reset email.
+- `onPasswordResetEmailSent`, `onToggleSignIn`, `onToggleRecoverPassword`: callbacks for the corresponding events.
+- `prefixIconEmail`, `prefixIconPassword`, `prefixIconOtp`: override the default field icons.
 
 ## Magic Link Auth
 
@@ -237,10 +248,23 @@ SupaSocialsAuth(
 ),
 ```
 
+`SupaSocialsAuth` also supports:
+
+- `socialButtonVariant`: render the buttons as `SocialButtonVariant.iconAndText` (default) or `SocialButtonVariant.icon` for icon-only buttons.
+- `scopes`: request additional OAuth scopes per provider.
+- `queryParams`: pass custom query parameters per provider.
+- `colored`: use the provider brand colors (defaults to `true`).
+- `authScreenLaunchMode`: control how the OAuth browser screen is launched.
+
 ## Theming
 
-This library uses bare Flutter components so that you can control the appearance of the components using your own theme.
-See theme example in example/lib/sign_in.dart
+This library uses bare Flutter components so that you can control the appearance of the components using your own theme. The fields and buttons respect your `ThemeData`, so styling them through `InputDecorationTheme`, `ElevatedButtonTheme`, and the rest of your app theme works as expected.
+
+See the theme example in [`example/lib/sign_in.dart`](example/lib/sign_in.dart).
+
+## Example
+
+A full example app covering every widget is available in the [`example`](example) directory.
 
 ## Controlling Form Submission Behavior
 
