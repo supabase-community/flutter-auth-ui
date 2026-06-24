@@ -212,11 +212,34 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
       );
     }
 
-    return supabase.auth.signInWithIdToken(
+    final response = await supabase.auth.signInWithIdToken(
       provider: OAuthProvider.apple,
       idToken: idToken,
       nonce: rawNonce,
     );
+
+    // Apple only returns the user's name on the credential the first time the
+    // user signs in, and it is never part of the ID token, so persist it to the
+    // user's metadata here.
+    final givenName = credential.givenName;
+    final familyName = credential.familyName;
+    if (givenName != null || familyName != null) {
+      final fullName = [
+        givenName,
+        familyName,
+      ].where((name) => name != null && name.isNotEmpty).join(' ');
+      await supabase.auth.updateUser(
+        UserAttributes(
+          data: {
+            if (givenName != null) 'first_name': givenName,
+            if (familyName != null) 'last_name': familyName,
+            if (fullName.isNotEmpty) 'full_name': fullName,
+          },
+        ),
+      );
+    }
+
+    return response;
   }
 
   @override
