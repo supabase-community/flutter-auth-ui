@@ -397,12 +397,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                     : TextInputAction.done,
                 validator:
                     widget.passwordValidator ??
-                    (value) {
-                      if (value == null || value.isEmpty || value.length < 6) {
-                        return localization.passwordLengthError;
-                      }
-                      return null;
-                    },
+                    defaultPasswordValidator(localization.passwordLengthError),
                 onFieldSubmitted: (_) {
                   if ((widget.metadataFields == null || _isSigningIn) &&
                       widget.enableAutomaticFormSubmission) {
@@ -601,14 +596,9 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                   textInputAction: TextInputAction.next,
                   validator:
                       widget.passwordValidator ??
-                      (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length < 6) {
-                          return localization.passwordLengthError;
-                        }
-                        return null;
-                      },
+                      defaultPasswordValidator(
+                        localization.passwordLengthError,
+                      ),
                 ),
                 spacer(16),
                 TextFormField(
@@ -694,20 +684,15 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         }
         widget.onSignUpComplete.call(response);
       }
-    } on AuthException catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(error.message);
-      } else {
-        widget.onError?.call(error);
-      }
-      _emailFocusNode.requestFocus();
     } catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(
-          '${widget.localization.unexpectedError}: $error',
+      if (mounted) {
+        handleAuthError(
+          context,
+          error,
+          onError: widget.onError,
+          showSnackBars: widget.showSnackBars,
+          unexpectedErrorText: widget.localization.unexpectedError,
         );
-      } else {
-        widget.onError?.call(error);
       }
       _emailFocusNode.requestFocus();
     }
@@ -750,8 +735,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
       if (!widget.useOtpForPasswordRecovery) {
         widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
       }
-    } on AuthException catch (error) {
-      widget.onError?.call(error);
     } catch (error) {
       widget.onError?.call(error);
     } finally {
@@ -805,8 +788,6 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
         _isEnteringOtp = false;
       });
       widget.onToggleRecoverPassword?.call(_isRecoveringPassword);
-    } on AuthException catch (error) {
-      widget.onError?.call(error);
     } catch (error) {
       widget.onError?.call(error);
     } finally {
@@ -823,9 +804,10 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
   /// In case both MetadataFields and extraMetadata have the same
   /// key in their map, the MetadataFields (form fields) win
   Map<String, dynamic> _resolveData() {
-    var extra = widget.extraMetadata ?? <String, dynamic>{};
-    extra.addAll(_resolveMetadataFieldsData());
-    return extra;
+    return {
+      ...?widget.extraMetadata,
+      ..._resolveMetadataFieldsData(),
+    };
   }
 
   /// Resolve the user_metadata coming from the metadataFields

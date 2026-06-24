@@ -35,11 +35,6 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
   final _code = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _code.dispose();
     super.dispose();
@@ -85,23 +80,15 @@ class _SupaVerifyPhoneState extends State<SupaVerifyPhone> {
                   type: OtpType.sms,
                 );
                 widget.onSuccess(response);
-              } on AuthException catch (error) {
-                if (widget.onError == null &&
-                    widget.showSnackBars &&
-                    context.mounted) {
-                  context.showErrorSnackBar(error.message);
-                } else {
-                  widget.onError?.call(error);
-                }
               } catch (error) {
-                if (widget.onError == null &&
-                    widget.showSnackBars &&
-                    context.mounted) {
-                  context.showErrorSnackBar(
-                    '${localization.unexpectedErrorOccurred}: $error',
+                if (context.mounted) {
+                  handleAuthError(
+                    context,
+                    error,
+                    onError: widget.onError,
+                    showSnackBars: widget.showSnackBars,
+                    unexpectedErrorText: localization.unexpectedErrorOccurred,
                   );
-                } else {
-                  widget.onError?.call(error);
                 }
               }
               if (mounted) {

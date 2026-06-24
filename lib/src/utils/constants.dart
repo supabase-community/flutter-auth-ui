@@ -9,6 +9,40 @@ SizedBox spacer(double height) {
   );
 }
 
+/// Default validator shared by the password fields.
+///
+/// Ensures the password is non-empty and at least 6 characters long.
+String? Function(String?) defaultPasswordValidator(String lengthError) {
+  return (value) {
+    if (value == null || value.isEmpty || value.length < 6) {
+      return lengthError;
+    }
+    return null;
+  };
+}
+
+/// Handles an error thrown by an auth action in the same way across all forms.
+///
+/// Calls [onError] when provided, otherwise shows an error snack bar (when
+/// [showSnackBars] is `true` and the [context] is still mounted). [AuthException]s
+/// show their message, while any other error is prefixed with [unexpectedErrorText].
+void handleAuthError(
+  BuildContext context,
+  Object error, {
+  required void Function(Object error)? onError,
+  required bool showSnackBars,
+  required String unexpectedErrorText,
+}) {
+  if (onError == null && showSnackBars && context.mounted) {
+    final message = error is AuthException
+        ? error.message
+        : '$unexpectedErrorText: $error';
+    context.showErrorSnackBar(message);
+  } else {
+    onError?.call(error);
+  }
+}
+
 /// Set of extension methods to easily display a snackbar
 extension ShowSnackBar on BuildContext {
   /// Displays a basic snackbar

@@ -90,17 +90,15 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
       if (widget.showSnackBars && mounted) {
         context.showSnackBar(localization.checkYourEmail);
       }
-    } on AuthException catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(error.message);
-      } else {
-        widget.onError?.call(error);
-      }
     } catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar('${localization.unexpectedError}: $error');
-      } else {
-        widget.onError?.call(error);
+      if (mounted) {
+        handleAuthError(
+          context,
+          error,
+          onError: widget.onError,
+          showSnackBars: widget.showSnackBars,
+          unexpectedErrorText: localization.unexpectedError,
+        );
       }
     }
     if (mounted) {
