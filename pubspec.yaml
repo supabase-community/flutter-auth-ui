@@ -32,13 +32,13 @@ melos:
 
   scripts:
     analyze:
-      run: flutter analyze --fatal-warnings --fatal-infos lib
+      run: flutter analyze --fatal-warnings --fatal-infos lib example/lib
       description: Run static analysis on the package.
     format:
-      run: dart format lib test -l 80 --set-exit-if-changed
+      run: dart format lib test example/lib -l 80 --set-exit-if-changed
       description: Verify that the code is formatted.
     format:fix:
-      run: dart format lib test -l 80
+      run: dart format lib test example/lib -l 80
       description: Format the code.
     test:
       run: flutter test
