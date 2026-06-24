@@ -1,3 +1,46 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2026-06-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`supabase_auth_ui` - `v0.6.1`](#supabase_auth_ui---v061)
+
+---
+
+#### `supabase_auth_ui` - `v0.6.1`
+
+ - **FIX**: only fire onSuccess on SupaSocialsAuth for a fresh sign in ([#164](https://github.com/supabase-community/supabase_auth_ui/issues/164)).
+ - **FIX**: persist full name on native Apple sign in ([#163](https://github.com/supabase-community/supabase_auth_ui/issues/163)).
+ - **FIX**: pre-checked required BooleanMetaDataField passes validation ([#162](https://github.com/supabase-community/supabase_auth_ui/issues/162)).
+ - **FIX**: bump min Dart SDK to 3.9.0 and update dependencies ([#157](https://github.com/supabase-community/supabase_auth_ui/issues/157)).
+ - **FIX**: update font_awesome_flutter to v11.0.0 ([#152](https://github.com/supabase-community/supabase_auth_ui/issues/152)).
+ - **DOCS**: document native Google and Apple sign in setup ([#165](https://github.com/supabase-community/supabase_auth_ui/issues/165)).
+ - **DOCS**: fix invalid snippet and misleading redirect URLs in README ([#166](https://github.com/supabase-community/supabase_auth_ui/issues/166)).
+ - **DOCS**: use plain img for logo so it renders on pub.dev ([#161](https://github.com/supabase-community/supabase_auth_ui/issues/161)).
+
+## 0.6.1
+
+ - **FIX**: only fire onSuccess on SupaSocialsAuth for a fresh sign in ([#164](https://github.com/supabase-community/supabase_auth_ui/issues/164)).
+ - **FIX**: persist full name on native Apple sign in ([#163](https://github.com/supabase-community/supabase_auth_ui/issues/163)).
+ - **FIX**: pre-checked required BooleanMetaDataField passes validation ([#162](https://github.com/supabase-community/supabase_auth_ui/issues/162)).
+ - **FIX**: bump min Dart SDK to 3.9.0 and update dependencies ([#157](https://github.com/supabase-community/supabase_auth_ui/issues/157)).
+ - **FIX**: update font_awesome_flutter to v11.0.0 ([#152](https://github.com/supabase-community/supabase_auth_ui/issues/152)).
+ - **DOCS**: document native Google and Apple sign in setup ([#165](https://github.com/supabase-community/supabase_auth_ui/issues/165)).
+ - **DOCS**: fix invalid snippet and misleading redirect URLs in README ([#166](https://github.com/supabase-community/supabase_auth_ui/issues/166)).
+ - **DOCS**: use plain img for logo so it renders on pub.dev ([#161](https://github.com/supabase-community/supabase_auth_ui/issues/161)).
+
 ## 0.6.0
 
 - BREAKING: `onPasswordResetEmailSent` now passes the email the reset was requested for, changing its signature from `void Function()?` to `void Function(String email)?` [#146](https://github.com/supabase-community/supabase_auth_ui/pull/146)
