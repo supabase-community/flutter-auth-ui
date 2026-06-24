@@ -61,6 +61,17 @@ extension on OAuthProvider {
     final modifiedName = name.replaceAll('Oidc', '');
     return 'Continue with ${modifiedName[0].toUpperCase()}${modifiedName.substring(1)}';
   }
+
+  /// Asset path for providers that ship a custom logo image instead of using
+  /// a Font Awesome icon. Returns `null` when the Font Awesome icon should be
+  /// used.
+  String? get logoAsset => switch (this) {
+    OAuthProvider.notion => 'assets/logos/notion.png',
+    OAuthProvider.kakao => 'assets/logos/kakao.png',
+    OAuthProvider.keycloak => 'assets/logos/keycloak.png',
+    OAuthProvider.workos => 'assets/logos/workOS.png',
+    _ => null,
+  };
 }
 
 enum SocialButtonVariant {
@@ -266,8 +277,8 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
 
   @override
   void dispose() {
-    super.dispose();
     _gotrueSubscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -275,7 +286,7 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
     final providers = widget.socialProviders;
     final googleAuthConfig = widget.nativeGoogleAuthConfig;
     final isNativeAppleAuthEnabled = widget.enableNativeAppleAuth;
-    final coloredBg = widget.colored == true;
+    final coloredBg = widget.colored;
 
     if (providers.isEmpty) {
       return ErrorWidget(Exception('Social provider list cannot be empty'));
@@ -302,6 +313,18 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
             ),
           ),
         );
+        final logoAsset = socialProvider.logoAsset;
+        if (logoAsset != null) {
+          iconWidget = Image.asset(
+            logoAsset,
+            package: 'supabase_auth_ui',
+            color: socialProvider == OAuthProvider.workos && coloredBg
+                ? Colors.white
+                : null,
+            width: 48,
+            height: 48,
+          );
+        }
         if (socialProvider == OAuthProvider.google && coloredBg) {
           iconWidget = Image.asset(
             'assets/logos/google_light.png',
@@ -312,44 +335,6 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
           foregroundColor = Colors.black;
           backgroundColor = Colors.white;
           overlayColor = Colors.white;
-        }
-
-        switch (socialProvider) {
-          case OAuthProvider.notion:
-            iconWidget = Image.asset(
-              'assets/logos/notion.png',
-              package: 'supabase_auth_ui',
-              width: 48,
-              height: 48,
-            );
-            break;
-          case OAuthProvider.kakao:
-            iconWidget = Image.asset(
-              'assets/logos/kakao.png',
-              package: 'supabase_auth_ui',
-              width: 48,
-              height: 48,
-            );
-            break;
-          case OAuthProvider.keycloak:
-            iconWidget = Image.asset(
-              'assets/logos/keycloak.png',
-              package: 'supabase_auth_ui',
-              width: 48,
-              height: 48,
-            );
-            break;
-          case OAuthProvider.workos:
-            iconWidget = Image.asset(
-              'assets/logos/workOS.png',
-              package: 'supabase_auth_ui',
-              color: coloredBg ? Colors.white : null,
-              width: 48,
-              height: 48,
-            );
-            break;
-          default:
-            break;
         }
 
         onAuthButtonPressed() async {
@@ -399,23 +384,15 @@ class _SupaSocialsAuthState extends State<SupaSocialsAuth> {
               queryParams: widget.queryParams?[socialProvider],
               authScreenLaunchMode: widget.authScreenLaunchMode,
             );
-          } on AuthException catch (error) {
-            if (widget.onError == null &&
-                widget.showSnackBars &&
-                context.mounted) {
-              context.showErrorSnackBar(error.message);
-            } else {
-              widget.onError?.call(error);
-            }
           } catch (error) {
-            if (widget.onError == null &&
-                widget.showSnackBars &&
-                context.mounted) {
-              context.showErrorSnackBar(
-                '${localization.unexpectedError}: $error',
+            if (context.mounted) {
+              handleAuthError(
+                context,
+                error,
+                onError: widget.onError,
+                showSnackBars: widget.showSnackBars,
+                unexpectedErrorText: localization.unexpectedError,
               );
-            } else {
-              widget.onError?.call(error);
             }
           }
         }

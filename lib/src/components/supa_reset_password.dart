@@ -69,20 +69,15 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
       if (widget.showSnackBars) {
         context.showSnackBar(localization.passwordResetSent);
       }
-    } on AuthException catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(error.message);
-      } else {
-        widget.onError?.call(error);
-      }
     } catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(
-          '${localization.passwordLengthError}: $error',
-        );
-      } else {
-        widget.onError?.call(error);
-      }
+      if (!mounted) return;
+      handleAuthError(
+        context,
+        error,
+        onError: widget.onError,
+        showSnackBars: widget.showSnackBars,
+        unexpectedErrorText: localization.passwordLengthError,
+      );
     }
   }
 
@@ -99,12 +94,9 @@ class _SupaResetPasswordState extends State<SupaResetPassword> {
             labelText: localization.enterPassword,
             prefixIcon: const Icon(Icons.lock),
             autofillHints: const [AutofillHints.newPassword],
-            validator: (value) {
-              if (value == null || value.isEmpty || value.length < 6) {
-                return localization.passwordLengthError;
-              }
-              return null;
-            },
+            validator: defaultPasswordValidator(
+              localization.passwordLengthError,
+            ),
             onFieldSubmitted: (_) async {
               if (widget.enableAutomaticFormSubmission) {
                 await _updatePassword();

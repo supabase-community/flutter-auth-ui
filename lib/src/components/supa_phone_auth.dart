@@ -49,11 +49,6 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   final _password = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _phone.dispose();
     _password.dispose();
@@ -67,14 +62,13 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
       return;
     }
     try {
+      final AuthResponse response;
       if (isSigningIn) {
-        final response = await supabase.auth.signInWithPassword(
+        response = await supabase.auth.signInWithPassword(
           phone: _phone.text,
           password: _password.text,
         );
-        widget.onSuccess(response);
       } else {
-        late final AuthResponse response;
         final user = supabase.auth.currentUser;
         if (user?.isAnonymous == true) {
           await supabase.auth.updateUser(
@@ -83,27 +77,25 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
               password: _password.text,
             ),
           );
+          response = AuthResponse(session: supabase.auth.currentSession);
         } else {
           response = await supabase.auth.signUp(
             phone: _phone.text,
             password: _password.text,
           );
         }
-        if (!mounted) return;
-        widget.onSuccess(response);
       }
-    } on AuthException catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar(error.message);
-      } else {
-        widget.onError?.call(error);
-      }
+      if (!mounted) return;
+      widget.onSuccess(response);
     } catch (error) {
-      if (widget.onError == null && widget.showSnackBars && mounted) {
-        context.showErrorSnackBar('${localization.unexpectedError}: $error');
-      } else {
-        widget.onError?.call(error);
-      }
+      if (!mounted) return;
+      handleAuthError(
+        context,
+        error,
+        onError: widget.onError,
+        showSnackBars: widget.showSnackBars,
+        unexpectedErrorText: localization.unexpectedError,
+      );
     }
   }
 
@@ -141,12 +133,9 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
                   ? [AutofillHints.password]
                   : [AutofillHints.newPassword],
               textInputAction: TextInputAction.done,
-              validator: (value) {
-                if (value == null || value.isEmpty || value.length < 6) {
-                  return localization.passwordLengthError;
-                }
-                return null;
-              },
+              validator: defaultPasswordValidator(
+                localization.passwordLengthError,
+              ),
               onFieldSubmitted: (_) async {
                 if (widget.enableAutomaticFormSubmission) {
                   await _submitForm();
