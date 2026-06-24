@@ -167,6 +167,59 @@ SupaSocialsAuth(
 ),
 ```
 
+### Native Google and Apple sign in
+
+On mobile and desktop you can use the native sign in dialogs instead of the
+browser-based OAuth flow. `SupaSocialsAuth` falls back to the web OAuth flow on
+any platform where the native flow is not available or not configured, so it is
+safe to leave these options enabled across all platforms.
+
+Before wiring up the UI, configure the providers in your Supabase project and
+in each platform as described in the
+[native Google sign in](https://supabase.com/docs/guides/auth/social-login/auth-google?platform=flutter#using-native-sign-in)
+and
+[native Apple sign in](https://supabase.com/docs/guides/auth/social-login/auth-apple?platform=flutter#using-native-sign-in)
+guides.
+
+#### Native Google
+
+Native Google sign in is used when you pass a `nativeGoogleAuthConfig` and the
+client ID for the current platform is set. Otherwise the web OAuth flow is used.
+
+- On Android, set `webClientId`.
+- On iOS, set `iosClientId`.
+
+The client IDs are the ones you registered with Google Cloud. See the
+[`google_sign_in`](https://pub.dev/packages/google_sign_in) package for the
+required platform setup (iOS URL scheme, etc.).
+
+#### Native Apple
+
+Native Apple sign in is enabled by default (`enableNativeAppleAuth: true`) and is
+used on iOS and macOS. On other platforms the web OAuth flow is used. It requires
+the "Sign in with Apple" capability to be added to your app in Xcode. See the
+[`sign_in_with_apple`](https://pub.dev/packages/sign_in_with_apple) package for
+the platform setup.
+
+```dart
+SupaSocialsAuth(
+    socialProviders: [
+        OAuthProvider.apple,
+        OAuthProvider.google,
+    ],
+    // Enables native Google sign in on Android and iOS.
+    nativeGoogleAuthConfig: const NativeGoogleAuthConfig(
+        webClientId: 'YOUR_WEB_CLIENT_ID',
+        iosClientId: 'YOUR_IOS_CLIENT_ID',
+    ),
+    // Native Apple sign in is used on iOS and macOS by default.
+    enableNativeAppleAuth: true,
+    onSuccess: (Session response) {
+        // do something, for example: navigate('home');
+    },
+),
+```
+
 ## Theming
 
 This library uses bare Flutter components so that you can control the appearance of the components using your own theme.
