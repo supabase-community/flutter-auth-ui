@@ -434,6 +434,7 @@ class _SupaEmailAuthState extends State<SupaEmailAuth> {
                         // hasn't checked it when submitting the form.
                         if (metadataField is BooleanMetaDataField)
                           FormField<bool>(
+                            initialValue: metadataField.value,
                             validator: metadataField.isRequired
                                 ? (bool? value) {
                                     if (value != true) {
