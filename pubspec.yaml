@@ -24,6 +24,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  http: ^1.0.0
   melos: ^8.0.0
   supabase_lints: ^0.1.0
 
@@ -32,7 +33,7 @@ melos:
 
   scripts:
     analyze:
-      run: flutter analyze --fatal-warnings --fatal-infos lib example/lib
+      run: flutter analyze --fatal-warnings --fatal-infos lib test example/lib
       description: Run static analysis on the package.
     format:
       run: dart format lib test example/lib --set-exit-if-changed
