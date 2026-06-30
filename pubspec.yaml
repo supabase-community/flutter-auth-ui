@@ -14,12 +14,15 @@ workspace:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   supabase_flutter: ^2.15.0
   email_validator: ^3.0.0
   font_awesome_flutter: ^11.0.0
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^7.0.1
   crypto: ^3.0.7
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +52,7 @@ melos:
       description: Run all static analysis checks.
 
 flutter:
+  generate: true
   assets:
     - assets/logos/
 

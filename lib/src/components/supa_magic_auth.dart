@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_auth_ui/src/localizations/supa_magic_auth_localization.dart';
+import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,9 +22,6 @@ class SupaMagicAuth extends StatefulWidget {
   /// Whether to show snack bars
   final bool showSnackBars;
 
-  /// Localization for the form
-  final SupaMagicAuthLocalization localization;
-
   /// Whether pressing Enter on the on-screen keyboard should automatically
   /// submit the form.
   ///
@@ -40,7 +37,6 @@ class SupaMagicAuth extends StatefulWidget {
     required this.onSuccess,
     this.onError,
     this.showSnackBars = true,
-    this.localization = const SupaMagicAuthLocalization(),
     this.enableAutomaticFormSubmission = true,
   });
 
@@ -75,7 +71,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
   }
 
   Future<void> _signInWithMagicLink() async {
-    final localization = widget.localization;
+    final localization = context.l10n;
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -110,7 +106,7 @@ class _SupaMagicAuthState extends State<SupaMagicAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = widget.localization;
+    final localization = context.l10n;
     return Form(
       key: _formKey,
       child: Column(

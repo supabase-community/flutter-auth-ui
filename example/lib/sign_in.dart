@@ -117,12 +117,6 @@ class SignUp extends StatelessWidget {
                   onSignUpComplete: navigateHome,
                   prefixIconEmail: null,
                   prefixIconPassword: null,
-                  localization: const SupaEmailAuthLocalization(
-                    enterEmail: "email",
-                    enterPassword: "password",
-                    dontHaveAccount: "sign up",
-                    forgotPassword: "forgot password",
-                  ),
                   metadataFields: [
                     MetaDataField(
                       prefixIcon: const Icon(Icons.person),

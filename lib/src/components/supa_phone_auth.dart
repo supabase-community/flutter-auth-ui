@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_auth_ui/src/components/supa_password_field.dart';
+import 'package:supabase_auth_ui/src/l10n/l10n_extension.dart';
 import 'package:supabase_auth_ui/src/utils/constants.dart';
 import 'package:supabase_auth_ui/supabase_auth_ui.dart';
 
@@ -17,9 +18,6 @@ class SupaPhoneAuth extends StatefulWidget {
   /// Whether to show snack bars
   final bool showSnackBars;
 
-  /// Localization for the form
-  final SupaPhoneAuthLocalization localization;
-
   /// Whether pressing Enter on the on-screen keyboard should automatically
   /// submit the form.
   ///
@@ -35,7 +33,6 @@ class SupaPhoneAuth extends StatefulWidget {
     required this.onSuccess,
     this.onError,
     this.showSnackBars = true,
-    this.localization = const SupaPhoneAuthLocalization(),
     this.enableAutomaticFormSubmission = true,
   });
 
@@ -56,7 +53,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
   }
 
   Future<void> _submitForm() async {
-    final localization = widget.localization;
+    final localization = context.l10n;
     final isSigningIn = widget.authAction == SupaAuthAction.signIn;
     if (!_formKey.currentState!.validate()) {
       return;
@@ -101,7 +98,7 @@ class _SupaPhoneAuthState extends State<SupaPhoneAuth> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = widget.localization;
+    final localization = context.l10n;
     final isSigningIn = widget.authAction == SupaAuthAction.signIn;
     return AutofillGroup(
       child: Form(
